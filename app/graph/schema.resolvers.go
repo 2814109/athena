@@ -24,7 +24,7 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
 	return []*model.Todo{
 		{
-			ID:   "TODO-1",
+			ID:   "TODO-1 first",
 			Text: "My Todo 1",
 			User: &model.User{
 				ID:   "User-1",
