@@ -18,7 +18,16 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 			ID:   input.UserID,
 			Name: "name",
 		},
-	}, nil}
+	}, nil
+}
+
+// CreateUser is the resolver for the createUser field.
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	return &model.User{
+		ID:   "XXXX",
+		Name: input.Name,
+	}, nil
+}
 
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
