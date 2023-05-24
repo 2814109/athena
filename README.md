@@ -34,7 +34,7 @@ ping 0.0.0.0:5432
 ```
 
 ## Tips
-### sqlboilder.toml
+### sqlboiler.toml
 ```
 [psql]
   dbname = "postgres"
