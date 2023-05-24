@@ -18,5 +18,6 @@ migrate create -ext sql -dir db/migrations -seq ${file_name}
 
 ### migration command
 ```
-migrate --path db/migrations --database 'postgresql://${user_name}:${user_passward}@localhost:5432/postgres?sslmode=disable' -verbose up
+migrate --path db/migrations --database 'postgres://${user_name}:${user_passward}@localhost:5432/postgres?sslmode=disable' -verbose up
 ```
+- [Ref: Org](https://github.com/golang-migrate/migrate/blob/master/database/postgres/TUTORIAL.md)
