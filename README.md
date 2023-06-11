@@ -11,7 +11,7 @@ go run github.com/99designs/gqlgen generate
 - to create types or input
 
 ## how to migrate
-### create schema file
+### create sql file
 ```
 migrate create -ext sql -dir db/migrations -seq ${file_name}
 ```
