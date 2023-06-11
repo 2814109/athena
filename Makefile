@@ -16,3 +16,6 @@ migrate-down:
 
 migrate-force:
 	migrate --path db/migrations --database 'postgres://${PSQL_USER}:${PSQL_PASS}@localhost:5432/${PSQL_DBNAME}?sslmode=disable' -verbose force 1
+
+create-migration-%:
+	migrate create -ext sql -dir db/migrations -seq ${@:create-migration-%=%}
