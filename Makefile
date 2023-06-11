@@ -13,3 +13,6 @@ migrate-up:
 
 migrate-down:
 	migrate --path db/migrations --database 'postgres://${PSQL_USER}:${PSQL_PASS}@localhost:5432/${PSQL_DBNAME}?sslmode=disable' -verbose down
+
+migrate-force:
+	migrate --path db/migrations --database 'postgres://${PSQL_USER}:${PSQL_PASS}@localhost:5432/${PSQL_DBNAME}?sslmode=disable' -verbose force 1
