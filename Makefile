@@ -19,3 +19,6 @@ migrate-force:
 
 create-migration-%:
 	migrate create -ext sql -dir db/migrations -seq ${@:create-migration-%=%}
+
+gen-models:
+	cd app & sqlboiler postgres
