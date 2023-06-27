@@ -47,3 +47,10 @@ ping 0.0.0.0:5432
   schema = "public"
   blacklist = ["migrations", "other"]
 ```
+
+## generate models
+- in docker container of app
+
+```
+sqlboiler psql
+```
