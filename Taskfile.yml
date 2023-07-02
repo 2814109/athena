@@ -1,0 +1,13 @@
+version: '3'
+
+tasks:
+  setup:
+    cmds:
+      - docker-compose build --no-cache && docker-compose up -d
+  gqlgen-generate:
+    cmds:
+      - go run ./app/cmd/gqlgen_generate
+  hello:
+    cmds:
+      - echo 'Hello World from Task!'
+    silent: true

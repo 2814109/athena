@@ -6,7 +6,7 @@ import (
 )
 
 func ValidationFieldHook(td *ast.Definition, fd *ast.FieldDefinition, f *modelgen.Field) (*modelgen.Field, error) {
-	c := fd.Directives.ForName("validation")
+	c := fd.Directives.ForName("constraint")
 	if c != nil {
 		formatConstraint := c.Arguments.ForName("format")
 		if formatConstraint != nil {
