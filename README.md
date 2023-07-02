@@ -54,3 +54,12 @@ ping 0.0.0.0:5432
 ```
 sqlboiler psql
 ```
+
+
+## Break throw
+- if local module import error occurred
+```
+at Vscode command
+
+>Go: Restart language server
+```
