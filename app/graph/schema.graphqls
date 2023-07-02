@@ -2,9 +2,18 @@
 #
 # https://gqlgen.com/getting-started/
 
+directive @validation(
+  format: String
+) on INPUT_FIELD_DEFINITION
+
+directive @constraint(
+  format: String
+) on INPUT_FIELD_DEFINITION
+
+
 type Todo {
   id: ID!
-  text: String!
+  text: String! @constraint(format: "reqired,len=10")
   done: Boolean!
   user: User!
 }
