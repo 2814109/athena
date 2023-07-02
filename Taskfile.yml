@@ -6,7 +6,7 @@ tasks:
       - docker-compose build --no-cache && docker-compose up -d
   gqlgen-generate:
     cmds:
-      - go run ./app/cmd/gqlgen_generate
+      - cd ./app && go run ./cmd/gqlgen_generate.go
   hello:
     cmds:
       - echo 'Hello World from Task!'
