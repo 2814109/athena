@@ -23,7 +23,9 @@ func errorMessageMapper(fieldError validator.FieldError) string {
 		return fmt.Sprintf("%s文字以下で入力してください", fieldError.Param())
 	case "timezone":
 		return "IANA Time Zone databaseの形式で入力してください"
+	case "newline":
+		return fmt.Sprintf("%sに改行コードを含めることはできません", fieldError.Field())
 	default:
-		return "予期せぬエラーが発生しました"
+		return fmt.Sprintf("項目%sにエラーコード:%sが発生しました", fieldError.Field(), fieldError.Tag())
 	}
 }

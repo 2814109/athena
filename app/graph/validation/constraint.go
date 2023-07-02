@@ -1,6 +1,9 @@
 package validation
 
 import (
+	"log"
+	"my_gql_server/graph/validation/custom"
+
 	"github.com/go-playground/validator/v10"
 )
 
@@ -9,6 +12,11 @@ type CaughtValidationErrors map[string]string
 func constraint(model any) (CaughtValidationErrors, error) {
 
 	validate := validator.New()
+
+	err := validate.RegisterValidation("newline", custom.Newline)
+	if err != nil {
+		log.Println("Error registering custom validation :", err.Error())
+	}
 
 	validationErrors := map[string]string{}
 

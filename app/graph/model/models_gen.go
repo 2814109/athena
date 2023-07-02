@@ -10,7 +10,7 @@ import (
 
 type NewTodo struct {
 	Status *StatusPattern `json:"status,omitempty"`
-	Text   string         `json:"text" validate:"required_if=Status ACTIVE"`
+	Text   string         `json:"text" validate:"required_if=Status ACTIVE,newline,omitempty"`
 	UserID string         `json:"userId"`
 }
 
