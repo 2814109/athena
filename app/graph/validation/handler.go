@@ -1,12 +1,14 @@
 package validation
 
 import (
+	"log"
 	"my_gql_server/graph/custom_error"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 func Handler(m any) *gqlerror.Error {
+	log.Panicf("exec handler")
 
 	validationErrors, err := constraint(m)
 	if err != nil {

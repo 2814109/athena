@@ -42,7 +42,6 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
-	Constraint func(ctx context.Context, obj interface{}, next graphql.Resolver, format *string) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -233,7 +232,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(parsedSchema, parsedSchema.Types[name]), nil
 }
 
-//go:embed "schemas/inputs/input.graphqls" "schemas/schema.graphqls"
+//go:embed "schemas/inputs/index.graphqls" "schemas/mutations/mutation.graphqls" "schemas/queries/query.graphqls" "schemas/schema.graphqls" "schemas/types/index.graphqls"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -245,29 +244,17 @@ func sourceData(filename string) string {
 }
 
 var sources = []*ast.Source{
-	{Name: "schemas/inputs/input.graphqls", Input: sourceData("schemas/inputs/input.graphqls"), BuiltIn: false},
+	{Name: "schemas/inputs/index.graphqls", Input: sourceData("schemas/inputs/index.graphqls"), BuiltIn: false},
+	{Name: "schemas/mutations/mutation.graphqls", Input: sourceData("schemas/mutations/mutation.graphqls"), BuiltIn: false},
+	{Name: "schemas/queries/query.graphqls", Input: sourceData("schemas/queries/query.graphqls"), BuiltIn: false},
 	{Name: "schemas/schema.graphqls", Input: sourceData("schemas/schema.graphqls"), BuiltIn: false},
+	{Name: "schemas/types/index.graphqls", Input: sourceData("schemas/types/index.graphqls"), BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
-
-func (ec *executionContext) dir_constraint_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["format"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("format"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["format"] = arg0
-	return args, nil
-}
 
 func (ec *executionContext) field_Mutation_createTodo_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -2722,28 +2709,11 @@ func (ec *executionContext) unmarshalInputNewTodo(ctx context.Context, obj inter
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("text"))
-			directive0 := func(ctx context.Context) (interface{}, error) { return ec.unmarshalNString2string(ctx, v) }
-			directive1 := func(ctx context.Context) (interface{}, error) {
-				format, err := ec.unmarshalOString2ᚖstring(ctx, "reqired,len=10")
-				if err != nil {
-					return nil, err
-				}
-				if ec.directives.Constraint == nil {
-					return nil, errors.New("directive constraint is not implemented")
-				}
-				return ec.directives.Constraint(ctx, obj, directive0, format)
-			}
-
-			tmp, err := directive1(ctx)
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
-				return it, graphql.ErrorOnPath(ctx, err)
+				return it, err
 			}
-			if data, ok := tmp.(string); ok {
-				it.Text = data
-			} else {
-				err := fmt.Errorf(`unexpected type %T from directive, should be string`, tmp)
-				return it, graphql.ErrorOnPath(ctx, err)
-			}
+			it.Text = data
 		case "userId":
 			var err error
 

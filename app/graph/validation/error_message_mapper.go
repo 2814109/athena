@@ -18,6 +18,7 @@ func errorMessageMapper(fe validator.FieldError) string {
 		return fmt.Sprintf("%s文字以下で入力してください", fe.Param())
 	case "timezone":
 		return "IANA Time Zone databaseの形式で入力してください"
+	default:
+		return "予期せぬエラーが発生しました"
 	}
-	return fe.Error()
 }

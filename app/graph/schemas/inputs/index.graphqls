@@ -1,0 +1,12 @@
+directive @constraint(
+	format: String
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+input NewTodo {
+  text: String! @constraint(format: "required")
+  userId: String!
+}
+
+input NewUser {
+  name: String!
+}
