@@ -2,9 +2,16 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
 type NewTodo struct {
-	Text   string `json:"text" validate:"required"`
-	UserID string `json:"userId"`
+	Status *StatusPattern `json:"status,omitempty"`
+	Text   string         `json:"text" validate:"required_if=Status ACTIVE"`
+	UserID string         `json:"userId"`
 }
 
 type NewUser struct {
@@ -21,4 +28,47 @@ type Todo struct {
 type User struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
+}
+
+type StatusPattern string
+
+const (
+	StatusPatternActive   StatusPattern = "ACTIVE"
+	StatusPatternInactive StatusPattern = "INACTIVE"
+	StatusPatternPending  StatusPattern = "PENDING"
+)
+
+var AllStatusPattern = []StatusPattern{
+	StatusPatternActive,
+	StatusPatternInactive,
+	StatusPatternPending,
+}
+
+func (e StatusPattern) IsValid() bool {
+	switch e {
+	case StatusPatternActive, StatusPatternInactive, StatusPatternPending:
+		return true
+	}
+	return false
+}
+
+func (e StatusPattern) String() string {
+	return string(e)
+}
+
+func (e *StatusPattern) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = StatusPattern(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid StatusPattern", str)
+	}
+	return nil
+}
+
+func (e StatusPattern) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

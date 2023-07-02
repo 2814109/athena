@@ -2,8 +2,15 @@ directive @constraint(
 	format: String
 ) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
+enum StatusPattern {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
 input NewTodo {
-  text: String! @constraint(format: "required")
+  status: StatusPattern
+  text: String! @constraint(format: "required_if=Status ACTIVE")
   userId: String!
 }
 

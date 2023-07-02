@@ -2698,13 +2698,22 @@ func (ec *executionContext) unmarshalInputNewTodo(ctx context.Context, obj inter
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"text", "userId"}
+	fieldsInOrder := [...]string{"status", "text", "userId"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
+		case "status":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+			data, err := ec.unmarshalOStatusPattern2ᚖmy_gql_serverᚋgraphᚋmodelᚐStatusPattern(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Status = data
 		case "text":
 			var err error
 
@@ -3685,6 +3694,22 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) unmarshalOStatusPattern2ᚖmy_gql_serverᚋgraphᚋmodelᚐStatusPattern(ctx context.Context, v interface{}) (*model.StatusPattern, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.StatusPattern)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOStatusPattern2ᚖmy_gql_serverᚋgraphᚋmodelᚐStatusPattern(ctx context.Context, sel ast.SelectionSet, v *model.StatusPattern) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
