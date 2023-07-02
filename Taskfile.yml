@@ -7,7 +7,3 @@ tasks:
   gqlgen-generate:
     cmds:
       - cd ./app && go run ./cmd/gqlgen_generate.go
-  hello:
-    cmds:
-      - echo 'Hello World from Task!'
-    silent: true
