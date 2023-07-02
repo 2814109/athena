@@ -23,14 +23,7 @@ type Query {
   todos: [Todo!]!
 }
 
-input NewTodo {
-  text: String! @constraint(format: "reqired,len=10")
-  userId: String!
-}
 
-input NewUser {
-  name: String!
-}
 
 type Mutation {
   createTodo(input: NewTodo!): Todo!
