@@ -4,21 +4,23 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func constraint(model any) (map[string]string, error) {
+type CaughtValidationErrors map[string]string
+
+func constraint(model any) (CaughtValidationErrors, error) {
+
 	validate := validator.New()
 
-	if err := validate.Struct(model); err != nil {
-		if _, ok := err.(*validator.InvalidValidationError); ok {
-			return nil, err
-		}
+	validationErrors := map[string]string{}
 
-		errs := err.(validator.ValidationErrors)
-		validationErrors := make(map[string]string, len(errs))
-		for _, ve := range errs {
-			validationErrors[ve.StructNamespace()] = errorMessageMapper(ve)
-		}
+	err := validate.Struct(model)
 
-		return validationErrors, nil
+	if _, ok := err.(*validator.InvalidValidationError); ok {
+		return nil, err
 	}
-	return nil, nil
+
+	errs := err.(validator.ValidationErrors)
+	for _, ve := range errs {
+		validationErrors[ve.StructNamespace()] = errorMessageMapper(ve)
+	}
+	return validationErrors, nil
 }

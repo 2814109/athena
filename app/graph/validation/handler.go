@@ -8,9 +8,11 @@ import (
 )
 
 func Handler(m any) *gqlerror.Error {
-	log.Panicf("exec handler")
+	log.Print("exec handler")
 
 	validationErrors, err := constraint(m)
+	log.Print("constraint run")
+
 	if err != nil {
 		return &gqlerror.Error{
 			Message:    custom_error.ErrorMessage(custom_error.InternalServerError),
