@@ -17,4 +17,11 @@ tasks:
     cmds:
       - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose down
   migrate-force:
-    migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose force 1
+    comds:
+      - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose force 1
+  create-db-schema:
+    cmds:
+      - docker run -v "$PWD/db/schema:/output" --net="host" schemaspy/schemaspy:latest -t pgsql \\ -host localhost:5432 -db $PSQL_DBNAME -u $PSQL_USER -p $PSQL_PASS -connprops useSSL\\\\=false -all
+  open-schema:
+    cmds:
+      - open -a "Google Chrome" $PWD/db/schema/index.html
