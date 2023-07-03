@@ -11,6 +11,8 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 
 	"github.com/joho/godotenv"
+
+	models "my_gql_server/my_models"
 )
 
 func main() {
@@ -36,5 +38,11 @@ func main() {
 	ctx := context.Background()
 
 	log.Printf("context : %s", ctx)
+
+	status := models.Status{
+		Label: "test",
+	}
+
+	status.Insert(ctx, connectDB, boil.Infer())
 
 }
