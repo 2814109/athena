@@ -25,3 +25,6 @@ tasks:
   open-schema:
     cmds:
       - open -a "Google Chrome" $PWD/db/schema/index.html
+  dummydata-insert:
+    cmds:
+      - cd ./app && go run ./cmd/dummy_data_generate/main.go
