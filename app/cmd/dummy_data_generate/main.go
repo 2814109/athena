@@ -12,7 +12,7 @@ import (
 
 	"github.com/joho/godotenv"
 
-	models "my_gql_server/my_models"
+	"my_gql_server/Infrastructures/dummy"
 )
 
 func main() {
@@ -36,10 +36,6 @@ func main() {
 
 	ctx := context.Background()
 
-	status := models.Status{
-		Label: "test",
-	}
-
-	status.Insert(ctx, connectDB, boil.Infer())
+	dummy.CreateDummyStatus(ctx, connectDB)
 
 }

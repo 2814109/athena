@@ -9,7 +9,7 @@ tasks:
       - docker-compose build --no-cache && docker-compose up -d
   schema-gen:
     cmds:
-      - cd ./app && go run ./cmd/gqlgen_generate.go
+      - cd ./app && go run ./cmd/gqlgen_generate/main.go
   migration-up:
     cmds:
       - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose up
