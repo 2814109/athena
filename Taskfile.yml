@@ -28,3 +28,4 @@ tasks:
   dummydata-insert:
     cmds:
       - cd ./app && go run ./cmd/dummy_data_generate/main.go
+      

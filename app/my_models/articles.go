@@ -23,37 +23,37 @@ import (
 
 // Article is an object representing the database table.
 type Article struct {
-	ArticleID   int    `boil:"article_id" json:"article_id" toml:"article_id" yaml:"article_id"`
+	ID          int    `boil:"id" json:"id" toml:"id" yaml:"id"`
 	Title       string `boil:"title" json:"title" toml:"title" yaml:"title"`
 	Description string `boil:"description" json:"description" toml:"description" yaml:"description"`
-	StatusID    int    `boil:"status_id" json:"status_id" toml:"status_id" yaml:"status_id"`
+	Status      string `boil:"status" json:"status" toml:"status" yaml:"status"`
 
 	R *articleR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L articleL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var ArticleColumns = struct {
-	ArticleID   string
+	ID          string
 	Title       string
 	Description string
-	StatusID    string
+	Status      string
 }{
-	ArticleID:   "article_id",
+	ID:          "id",
 	Title:       "title",
 	Description: "description",
-	StatusID:    "status_id",
+	Status:      "status",
 }
 
 var ArticleTableColumns = struct {
-	ArticleID   string
+	ID          string
 	Title       string
 	Description string
-	StatusID    string
+	Status      string
 }{
-	ArticleID:   "articles.article_id",
+	ID:          "articles.id",
 	Title:       "articles.title",
 	Description: "articles.description",
-	StatusID:    "articles.status_id",
+	Status:      "articles.status",
 }
 
 // Generated where
@@ -105,27 +105,27 @@ func (w whereHelperstring) NIN(slice []string) qm.QueryMod {
 }
 
 var ArticleWhere = struct {
-	ArticleID   whereHelperint
+	ID          whereHelperint
 	Title       whereHelperstring
 	Description whereHelperstring
-	StatusID    whereHelperint
+	Status      whereHelperstring
 }{
-	ArticleID:   whereHelperint{field: "\"articles\".\"article_id\""},
+	ID:          whereHelperint{field: "\"articles\".\"id\""},
 	Title:       whereHelperstring{field: "\"articles\".\"title\""},
 	Description: whereHelperstring{field: "\"articles\".\"description\""},
-	StatusID:    whereHelperint{field: "\"articles\".\"status_id\""},
+	Status:      whereHelperstring{field: "\"articles\".\"status\""},
 }
 
 // ArticleRels is where relationship names are stored.
 var ArticleRels = struct {
-	Status string
+	ArticleStatus string
 }{
-	Status: "Status",
+	ArticleStatus: "ArticleStatus",
 }
 
 // articleR is where relationships are stored.
 type articleR struct {
-	Status *Status `boil:"Status" json:"Status" toml:"Status" yaml:"Status"`
+	ArticleStatus *Status `boil:"ArticleStatus" json:"ArticleStatus" toml:"ArticleStatus" yaml:"ArticleStatus"`
 }
 
 // NewStruct creates a new relationship struct
@@ -133,21 +133,21 @@ func (*articleR) NewStruct() *articleR {
 	return &articleR{}
 }
 
-func (r *articleR) GetStatus() *Status {
+func (r *articleR) GetArticleStatus() *Status {
 	if r == nil {
 		return nil
 	}
-	return r.Status
+	return r.ArticleStatus
 }
 
 // articleL is where Load methods for each relationship are stored.
 type articleL struct{}
 
 var (
-	articleAllColumns            = []string{"article_id", "title", "description", "status_id"}
-	articleColumnsWithoutDefault = []string{"title", "description"}
-	articleColumnsWithDefault    = []string{"article_id", "status_id"}
-	articlePrimaryKeyColumns     = []string{"article_id"}
+	articleAllColumns            = []string{"id", "title", "description", "status"}
+	articleColumnsWithoutDefault = []string{"title", "description", "status"}
+	articleColumnsWithDefault    = []string{"id"}
+	articlePrimaryKeyColumns     = []string{"id"}
 	articleGeneratedColumns      = []string{}
 )
 
@@ -429,10 +429,10 @@ func (q articleQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bo
 	return count > 0, nil
 }
 
-// Status pointed to by the foreign key.
-func (o *Article) Status(mods ...qm.QueryMod) statusQuery {
+// ArticleStatus pointed to by the foreign key.
+func (o *Article) ArticleStatus(mods ...qm.QueryMod) statusQuery {
 	queryMods := []qm.QueryMod{
-		qm.Where("\"status_id\" = ?", o.StatusID),
+		qm.Where("\"label\" = ?", o.Status),
 	}
 
 	queryMods = append(queryMods, mods...)
@@ -440,9 +440,9 @@ func (o *Article) Status(mods ...qm.QueryMod) statusQuery {
 	return Statuses(queryMods...)
 }
 
-// LoadStatus allows an eager lookup of values, cached into the
+// LoadArticleStatus allows an eager lookup of values, cached into the
 // loaded structs of the objects. This is for an N-1 relationship.
-func (articleL) LoadStatus(ctx context.Context, e boil.ContextExecutor, singular bool, maybeArticle interface{}, mods queries.Applicator) error {
+func (articleL) LoadArticleStatus(ctx context.Context, e boil.ContextExecutor, singular bool, maybeArticle interface{}, mods queries.Applicator) error {
 	var slice []*Article
 	var object *Article
 
@@ -473,7 +473,7 @@ func (articleL) LoadStatus(ctx context.Context, e boil.ContextExecutor, singular
 		if object.R == nil {
 			object.R = &articleR{}
 		}
-		args = append(args, object.StatusID)
+		args = append(args, object.Status)
 
 	} else {
 	Outer:
@@ -483,12 +483,12 @@ func (articleL) LoadStatus(ctx context.Context, e boil.ContextExecutor, singular
 			}
 
 			for _, a := range args {
-				if a == obj.StatusID {
+				if a == obj.Status {
 					continue Outer
 				}
 			}
 
-			args = append(args, obj.StatusID)
+			args = append(args, obj.Status)
 
 		}
 	}
@@ -499,7 +499,7 @@ func (articleL) LoadStatus(ctx context.Context, e boil.ContextExecutor, singular
 
 	query := NewQuery(
 		qm.From(`statuses`),
-		qm.WhereIn(`statuses.status_id in ?`, args...),
+		qm.WhereIn(`statuses.label in ?`, args...),
 	)
 	if mods != nil {
 		mods.Apply(query)
@@ -536,7 +536,7 @@ func (articleL) LoadStatus(ctx context.Context, e boil.ContextExecutor, singular
 
 	if singular {
 		foreign := resultSlice[0]
-		object.R.Status = foreign
+		object.R.ArticleStatus = foreign
 		if foreign.R == nil {
 			foreign.R = &statusR{}
 		}
@@ -546,8 +546,8 @@ func (articleL) LoadStatus(ctx context.Context, e boil.ContextExecutor, singular
 
 	for _, local := range slice {
 		for _, foreign := range resultSlice {
-			if local.StatusID == foreign.StatusID {
-				local.R.Status = foreign
+			if local.Status == foreign.Label {
+				local.R.ArticleStatus = foreign
 				if foreign.R == nil {
 					foreign.R = &statusR{}
 				}
@@ -560,10 +560,10 @@ func (articleL) LoadStatus(ctx context.Context, e boil.ContextExecutor, singular
 	return nil
 }
 
-// SetStatus of the article to the related item.
-// Sets o.R.Status to related.
+// SetArticleStatus of the article to the related item.
+// Sets o.R.ArticleStatus to related.
 // Adds o to related.R.Articles.
-func (o *Article) SetStatus(ctx context.Context, exec boil.ContextExecutor, insert bool, related *Status) error {
+func (o *Article) SetArticleStatus(ctx context.Context, exec boil.ContextExecutor, insert bool, related *Status) error {
 	var err error
 	if insert {
 		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
@@ -573,10 +573,10 @@ func (o *Article) SetStatus(ctx context.Context, exec boil.ContextExecutor, inse
 
 	updateQuery := fmt.Sprintf(
 		"UPDATE \"articles\" SET %s WHERE %s",
-		strmangle.SetParamNames("\"", "\"", 1, []string{"status_id"}),
+		strmangle.SetParamNames("\"", "\"", 1, []string{"status"}),
 		strmangle.WhereClause("\"", "\"", 2, articlePrimaryKeyColumns),
 	)
-	values := []interface{}{related.StatusID, o.ArticleID}
+	values := []interface{}{related.Label, o.ID}
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -587,13 +587,13 @@ func (o *Article) SetStatus(ctx context.Context, exec boil.ContextExecutor, inse
 		return errors.Wrap(err, "failed to update local table")
 	}
 
-	o.StatusID = related.StatusID
+	o.Status = related.Label
 	if o.R == nil {
 		o.R = &articleR{
-			Status: related,
+			ArticleStatus: related,
 		}
 	} else {
-		o.R.Status = related
+		o.R.ArticleStatus = related
 	}
 
 	if related.R == nil {
@@ -620,7 +620,7 @@ func Articles(mods ...qm.QueryMod) articleQuery {
 
 // FindArticle retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindArticle(ctx context.Context, exec boil.ContextExecutor, articleID int, selectCols ...string) (*Article, error) {
+func FindArticle(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*Article, error) {
 	articleObj := &Article{}
 
 	sel := "*"
@@ -628,10 +628,10 @@ func FindArticle(ctx context.Context, exec boil.ContextExecutor, articleID int, 
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from \"articles\" where \"article_id\"=$1", sel,
+		"select %s from \"articles\" where \"id\"=$1", sel,
 	)
 
-	q := queries.Raw(query, articleID)
+	q := queries.Raw(query, iD)
 
 	err := q.Bind(ctx, exec, articleObj)
 	if err != nil {
@@ -983,7 +983,7 @@ func (o *Article) Delete(ctx context.Context, exec boil.ContextExecutor) (int64,
 	}
 
 	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), articlePrimaryKeyMapping)
-	sql := "DELETE FROM \"articles\" WHERE \"article_id\"=$1"
+	sql := "DELETE FROM \"articles\" WHERE \"id\"=$1"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -1080,7 +1080,7 @@ func (o ArticleSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) 
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Article) Reload(ctx context.Context, exec boil.ContextExecutor) error {
-	ret, err := FindArticle(ctx, exec, o.ArticleID)
+	ret, err := FindArticle(ctx, exec, o.ID)
 	if err != nil {
 		return err
 	}
@@ -1119,16 +1119,16 @@ func (o *ArticleSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor)
 }
 
 // ArticleExists checks if the Article row exists.
-func ArticleExists(ctx context.Context, exec boil.ContextExecutor, articleID int) (bool, error) {
+func ArticleExists(ctx context.Context, exec boil.ContextExecutor, iD int) (bool, error) {
 	var exists bool
-	sql := "select exists(select 1 from \"articles\" where \"article_id\"=$1 limit 1)"
+	sql := "select exists(select 1 from \"articles\" where \"id\"=$1 limit 1)"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
 		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, articleID)
+		fmt.Fprintln(writer, iD)
 	}
-	row := exec.QueryRowContext(ctx, sql, articleID)
+	row := exec.QueryRowContext(ctx, sql, iD)
 
 	err := row.Scan(&exists)
 	if err != nil {
@@ -1140,5 +1140,5 @@ func ArticleExists(ctx context.Context, exec boil.ContextExecutor, articleID int
 
 // Exists checks if the Article row exists.
 func (o *Article) Exists(ctx context.Context, exec boil.ContextExecutor) (bool, error) {
-	return ArticleExists(ctx, exec, o.ArticleID)
+	return ArticleExists(ctx, exec, o.ID)
 }

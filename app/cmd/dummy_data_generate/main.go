@@ -19,13 +19,19 @@ func main() {
 
 	err := godotenv.Load("../.env")
 
+	var PSQL_DBNAME string
+	var PSQL_USER string
+	var PSQL_PASS string
+
 	if err != nil {
 		log.Printf("読み込み出来ませんでした: %v", err)
 	}
 
-	PSQL_DBNAME := os.Getenv("PSQL_DBNAME")
-	PSQL_USER := os.Getenv("PSQL_USER")
-	connectDB, err := sql.Open("postgres", fmt.Sprintf("dbname=%s user=%s", PSQL_DBNAME, PSQL_USER))
+	PSQL_DBNAME = os.Getenv("PSQL_DBNAME")
+	PSQL_USER = os.Getenv("PSQL_USER")
+	PSQL_PASS = os.Getenv("PSQL_PASS")
+
+	connectDB, err := sql.Open("postgres", fmt.Sprintf("dbname=%s user=%s password=%s sslmode=disable", PSQL_DBNAME, PSQL_USER, PSQL_PASS))
 
 	if err != nil {
 		log.Fatalf("error : %s", err)
@@ -37,5 +43,6 @@ func main() {
 	ctx := context.Background()
 
 	dummy.CreateDummyStatus(ctx, connectDB)
+	dummy.CreateDummyArticle(ctx, connectDB)
 
 }

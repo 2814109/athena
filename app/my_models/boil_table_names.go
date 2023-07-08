@@ -8,11 +8,13 @@ var TableNames = struct {
 	Categories       string
 	SchemaMigrations string
 	Statuses         string
+	Todos            string
 	Users            string
 }{
 	Articles:         "articles",
 	Categories:       "categories",
 	SchemaMigrations: "schema_migrations",
 	Statuses:         "statuses",
+	Todos:            "todos",
 	Users:            "users",
 }
