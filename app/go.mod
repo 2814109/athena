@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/99designs/gqlgen v0.17.31
+	github.com/brianvoe/gofakeit/v6 v6.23.0
 	github.com/friendsofgo/errors v0.9.2
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9

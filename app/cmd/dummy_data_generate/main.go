@@ -12,7 +12,7 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"my_gql_server/Infrastructures/dummy"
+	"my_gql_server/infrastructures/dummy"
 )
 
 func main() {

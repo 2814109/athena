@@ -9,12 +9,14 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 
 	_ "github.com/lib/pq"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
 )
 
 func CreateDummyStatus(ctx context.Context, connectDB *sql.DB) {
 
 	status := models.Status{
-		Label: "test",
+		Label: gofakeit.Name(),
 	}
 
 	status.Insert(ctx, connectDB, boil.Infer())
