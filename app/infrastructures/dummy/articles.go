@@ -18,7 +18,7 @@ import (
 	lop "github.com/samber/lo/parallel"
 )
 
-func CreateDummyArticlesMap(ctx context.Context, connectDB *sql.DB) {
+func CreateDummyArticles(ctx context.Context, connectDB *sql.DB) {
 
 	count := 100
 	statuses, err := models.Statuses().All(ctx, connectDB)

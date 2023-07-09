@@ -45,6 +45,10 @@ func main() {
 	dummy.CreateDummyUsers(ctx, connectDB)
 	dummy.UpsertDummyStatuses(ctx, connectDB)
 
-	dummy.CreateDummyArticlesMap(ctx, connectDB)
+	dummy.CreateDummyArticles(ctx, connectDB)
+
+	dummy.UpsertDummyCategories(ctx, connectDB)
+
+	dummy.CreateDummyItems(ctx, connectDB)
 
 }

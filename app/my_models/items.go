@@ -25,7 +25,7 @@ import (
 // Item is an object representing the database table.
 type Item struct {
 	ID           int       `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Item         string    `boil:"item" json:"item" toml:"item" yaml:"item"`
+	Label        string    `boil:"label" json:"label" toml:"label" yaml:"label"`
 	CategoryName string    `boil:"category_name" json:"category_name" toml:"category_name" yaml:"category_name"`
 	CreatedAt    time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt    null.Time `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
@@ -37,14 +37,14 @@ type Item struct {
 
 var ItemColumns = struct {
 	ID           string
-	Item         string
+	Label        string
 	CategoryName string
 	CreatedAt    string
 	UpdatedAt    string
 	UserID       string
 }{
 	ID:           "id",
-	Item:         "item",
+	Label:        "label",
 	CategoryName: "category_name",
 	CreatedAt:    "created_at",
 	UpdatedAt:    "updated_at",
@@ -53,14 +53,14 @@ var ItemColumns = struct {
 
 var ItemTableColumns = struct {
 	ID           string
-	Item         string
+	Label        string
 	CategoryName string
 	CreatedAt    string
 	UpdatedAt    string
 	UserID       string
 }{
 	ID:           "items.id",
-	Item:         "items.item",
+	Label:        "items.label",
 	CategoryName: "items.category_name",
 	CreatedAt:    "items.created_at",
 	UpdatedAt:    "items.updated_at",
@@ -116,14 +116,14 @@ func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsN
 
 var ItemWhere = struct {
 	ID           whereHelperint
-	Item         whereHelperstring
+	Label        whereHelperstring
 	CategoryName whereHelperstring
 	CreatedAt    whereHelpertime_Time
 	UpdatedAt    whereHelpernull_Time
 	UserID       whereHelperint
 }{
 	ID:           whereHelperint{field: "\"items\".\"id\""},
-	Item:         whereHelperstring{field: "\"items\".\"item\""},
+	Label:        whereHelperstring{field: "\"items\".\"label\""},
 	CategoryName: whereHelperstring{field: "\"items\".\"category_name\""},
 	CreatedAt:    whereHelpertime_Time{field: "\"items\".\"created_at\""},
 	UpdatedAt:    whereHelpernull_Time{field: "\"items\".\"updated_at\""},
@@ -168,8 +168,8 @@ func (r *itemR) GetCategoryNameCategory() *Category {
 type itemL struct{}
 
 var (
-	itemAllColumns            = []string{"id", "item", "category_name", "created_at", "updated_at", "user_id"}
-	itemColumnsWithoutDefault = []string{"item", "category_name", "created_at"}
+	itemAllColumns            = []string{"id", "label", "category_name", "created_at", "updated_at", "user_id"}
+	itemColumnsWithoutDefault = []string{"label", "category_name", "created_at"}
 	itemColumnsWithDefault    = []string{"id", "updated_at", "user_id"}
 	itemPrimaryKeyColumns     = []string{"id"}
 	itemGeneratedColumns      = []string{}
