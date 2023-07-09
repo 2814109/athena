@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/friendsofgo/errors"
-	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -28,7 +27,7 @@ type Item struct {
 	Label        string    `boil:"label" json:"label" toml:"label" yaml:"label"`
 	CategoryName string    `boil:"category_name" json:"category_name" toml:"category_name" yaml:"category_name"`
 	CreatedAt    time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt    null.Time `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	UpdatedAt    time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	UserID       int       `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 
 	R *itemR `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -90,43 +89,19 @@ func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.GTE, x)
 }
 
-type whereHelpernull_Time struct{ field string }
-
-func (w whereHelpernull_Time) EQ(x null.Time) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_Time) NEQ(x null.Time) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_Time) LT(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_Time) LTE(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_Time) GT(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_Time) GTE(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
-func (w whereHelpernull_Time) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
-
 var ItemWhere = struct {
 	ID           whereHelperint
 	Label        whereHelperstring
 	CategoryName whereHelperstring
 	CreatedAt    whereHelpertime_Time
-	UpdatedAt    whereHelpernull_Time
+	UpdatedAt    whereHelpertime_Time
 	UserID       whereHelperint
 }{
 	ID:           whereHelperint{field: "\"items\".\"id\""},
 	Label:        whereHelperstring{field: "\"items\".\"label\""},
 	CategoryName: whereHelperstring{field: "\"items\".\"category_name\""},
 	CreatedAt:    whereHelpertime_Time{field: "\"items\".\"created_at\""},
-	UpdatedAt:    whereHelpernull_Time{field: "\"items\".\"updated_at\""},
+	UpdatedAt:    whereHelpertime_Time{field: "\"items\".\"updated_at\""},
 	UserID:       whereHelperint{field: "\"items\".\"user_id\""},
 }
 
@@ -169,8 +144,8 @@ type itemL struct{}
 
 var (
 	itemAllColumns            = []string{"id", "label", "category_name", "created_at", "updated_at", "user_id"}
-	itemColumnsWithoutDefault = []string{"label", "category_name", "created_at"}
-	itemColumnsWithDefault    = []string{"id", "updated_at", "user_id"}
+	itemColumnsWithoutDefault = []string{"label", "category_name", "created_at", "updated_at"}
+	itemColumnsWithDefault    = []string{"id", "user_id"}
 	itemPrimaryKeyColumns     = []string{"id"}
 	itemGeneratedColumns      = []string{}
 )
@@ -864,8 +839,8 @@ func (o *Item) Insert(ctx context.Context, exec boil.ContextExecutor, columns bo
 		if o.CreatedAt.IsZero() {
 			o.CreatedAt = currTime
 		}
-		if queries.MustTime(o.UpdatedAt).IsZero() {
-			queries.SetScanner(&o.UpdatedAt, currTime)
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
 		}
 	}
 
@@ -946,7 +921,7 @@ func (o *Item) Update(ctx context.Context, exec boil.ContextExecutor, columns bo
 	if !boil.TimestampsAreSkipped(ctx) {
 		currTime := time.Now().In(boil.GetLocation())
 
-		queries.SetScanner(&o.UpdatedAt, currTime)
+		o.UpdatedAt = currTime
 	}
 
 	var err error
@@ -1085,7 +1060,7 @@ func (o *Item) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnCo
 		if o.CreatedAt.IsZero() {
 			o.CreatedAt = currTime
 		}
-		queries.SetScanner(&o.UpdatedAt, currTime)
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

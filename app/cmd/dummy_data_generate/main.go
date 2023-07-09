@@ -49,6 +49,8 @@ func main() {
 
 	dummy.UpsertDummyCategories(ctx, connectDB)
 
-	dummy.CreateDummyItems(ctx, connectDB)
+	// dummy.CreateDummyItems(ctx, connectDB)
+
+	dummy.AnnualItems(ctx, connectDB)
 
 }
