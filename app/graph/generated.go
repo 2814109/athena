@@ -280,7 +280,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(parsedSchema, parsedSchema.Types[name]), nil
 }
 
-//go:embed "schemas/inputs/index.graphqls" "schemas/mutations/mutation.graphqls" "schemas/queries/query.graphqls" "schemas/schema.graphqls" "schemas/types/index.graphqls"
+//go:embed "schemas/inputs/input.graphqls" "schemas/mutations/mutation.graphqls" "schemas/queries/query.graphqls" "schemas/schema.graphqls" "schemas/types/type.graphqls"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -292,11 +292,11 @@ func sourceData(filename string) string {
 }
 
 var sources = []*ast.Source{
-	{Name: "schemas/inputs/index.graphqls", Input: sourceData("schemas/inputs/index.graphqls"), BuiltIn: false},
+	{Name: "schemas/inputs/input.graphqls", Input: sourceData("schemas/inputs/input.graphqls"), BuiltIn: false},
 	{Name: "schemas/mutations/mutation.graphqls", Input: sourceData("schemas/mutations/mutation.graphqls"), BuiltIn: false},
 	{Name: "schemas/queries/query.graphqls", Input: sourceData("schemas/queries/query.graphqls"), BuiltIn: false},
 	{Name: "schemas/schema.graphqls", Input: sourceData("schemas/schema.graphqls"), BuiltIn: false},
-	{Name: "schemas/types/index.graphqls", Input: sourceData("schemas/types/index.graphqls"), BuiltIn: false},
+	{Name: "schemas/types/type.graphqls", Input: sourceData("schemas/types/type.graphqls"), BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
