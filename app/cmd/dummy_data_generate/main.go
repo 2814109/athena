@@ -46,4 +46,6 @@ func main() {
 	dummy.CreateDummyArticle(ctx, connectDB)
 	dummy.CreateDummyArticles(ctx, connectDB)
 
+	dummy.CreateDummyArticlesMap(ctx, connectDB)
+
 }
