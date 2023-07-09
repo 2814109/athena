@@ -42,6 +42,7 @@ func main() {
 
 	ctx := context.Background()
 
+	dummy.CreateDummyUsers(ctx, connectDB)
 	dummy.UpsertDummyStatuses(ctx, connectDB)
 	dummy.CreateDummyArticle(ctx, connectDB)
 	dummy.CreateDummyArticles(ctx, connectDB)
