@@ -15,25 +15,12 @@ import (
 	"github.com/samber/lo"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 
-	lop "github.com/samber/lo/parallel"
+	"my_gql_server/infrastructures/dummy/libs"
 )
 
 func AnnualItems(ctx context.Context, connectDB *sql.DB) {
-
-	catetories, users, err := resorces(ctx, connectDB)
-
-	if err != nil {
-		log.Printf("error : %s", err)
-
-	}
-
-	categoryClassificationList := lop.Map(catetories, func(category *models.Category, _ int) string {
-		return category.Classification
-	})
-
-	userIdList := lop.Map(users, func(user *models.User, _ int) int {
-		return user.ID
-	})
+	categoryClassificationList := libs.GetCategoryClassificationList(ctx, connectDB)
+	userIdList := libs.GetUserIdList(ctx, connectDB)
 
 	startDate := time.Date(time.Now().Year(), time.January, 1, 0, 0, 0, 0, time.UTC)
 	endDate := time.Date(time.Now().Year(), time.December, 31, 23, 59, 59, 0, time.UTC)
@@ -70,19 +57,4 @@ func AnnualItems(ctx context.Context, connectDB *sql.DB) {
 
 	})
 
-}
-
-func resorces(ctx context.Context, connectDB *sql.DB) (models.CategorySlice, models.UserSlice, error) {
-	catetories, err := models.Categories().All(ctx, connectDB)
-	if err != nil {
-		log.Printf("error : %s", err)
-		return nil, nil, err
-	}
-	users, err := models.Users().All(ctx, connectDB)
-	if err != nil {
-		log.Printf("error : %s", err)
-		return nil, nil, err
-	}
-
-	return catetories, users, nil
 }
