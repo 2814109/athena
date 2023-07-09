@@ -23,7 +23,6 @@ import (
 
 // Category is an object representing the database table.
 type Category struct {
-	CategoryID     int    `boil:"category_id" json:"category_id" toml:"category_id" yaml:"category_id"`
 	Classification string `boil:"classification" json:"classification" toml:"classification" yaml:"classification"`
 
 	R *categoryR `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -31,37 +30,35 @@ type Category struct {
 }
 
 var CategoryColumns = struct {
-	CategoryID     string
 	Classification string
 }{
-	CategoryID:     "category_id",
 	Classification: "classification",
 }
 
 var CategoryTableColumns = struct {
-	CategoryID     string
 	Classification string
 }{
-	CategoryID:     "categories.category_id",
 	Classification: "categories.classification",
 }
 
 // Generated where
 
 var CategoryWhere = struct {
-	CategoryID     whereHelperint
 	Classification whereHelperstring
 }{
-	CategoryID:     whereHelperint{field: "\"categories\".\"category_id\""},
 	Classification: whereHelperstring{field: "\"categories\".\"classification\""},
 }
 
 // CategoryRels is where relationship names are stored.
 var CategoryRels = struct {
-}{}
+	CategoryNameItems string
+}{
+	CategoryNameItems: "CategoryNameItems",
+}
 
 // categoryR is where relationships are stored.
 type categoryR struct {
+	CategoryNameItems ItemSlice `boil:"CategoryNameItems" json:"CategoryNameItems" toml:"CategoryNameItems" yaml:"CategoryNameItems"`
 }
 
 // NewStruct creates a new relationship struct
@@ -69,14 +66,21 @@ func (*categoryR) NewStruct() *categoryR {
 	return &categoryR{}
 }
 
+func (r *categoryR) GetCategoryNameItems() ItemSlice {
+	if r == nil {
+		return nil
+	}
+	return r.CategoryNameItems
+}
+
 // categoryL is where Load methods for each relationship are stored.
 type categoryL struct{}
 
 var (
-	categoryAllColumns            = []string{"category_id", "classification"}
+	categoryAllColumns            = []string{"classification"}
 	categoryColumnsWithoutDefault = []string{"classification"}
-	categoryColumnsWithDefault    = []string{"category_id"}
-	categoryPrimaryKeyColumns     = []string{"category_id"}
+	categoryColumnsWithDefault    = []string{}
+	categoryPrimaryKeyColumns     = []string{"classification"}
 	categoryGeneratedColumns      = []string{}
 )
 
@@ -358,6 +362,187 @@ func (q categoryQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (b
 	return count > 0, nil
 }
 
+// CategoryNameItems retrieves all the item's Items with an executor via category_name column.
+func (o *Category) CategoryNameItems(mods ...qm.QueryMod) itemQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"items\".\"category_name\"=?", o.Classification),
+	)
+
+	return Items(queryMods...)
+}
+
+// LoadCategoryNameItems allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (categoryL) LoadCategoryNameItems(ctx context.Context, e boil.ContextExecutor, singular bool, maybeCategory interface{}, mods queries.Applicator) error {
+	var slice []*Category
+	var object *Category
+
+	if singular {
+		var ok bool
+		object, ok = maybeCategory.(*Category)
+		if !ok {
+			object = new(Category)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeCategory)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeCategory))
+			}
+		}
+	} else {
+		s, ok := maybeCategory.(*[]*Category)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeCategory)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeCategory))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &categoryR{}
+		}
+		args = append(args, object.Classification)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &categoryR{}
+			}
+
+			for _, a := range args {
+				if a == obj.Classification {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.Classification)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`items`),
+		qm.WhereIn(`items.category_name in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load items")
+	}
+
+	var resultSlice []*Item
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice items")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on items")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for items")
+	}
+
+	if len(itemAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.CategoryNameItems = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &itemR{}
+			}
+			foreign.R.CategoryNameCategory = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.Classification == foreign.CategoryName {
+				local.R.CategoryNameItems = append(local.R.CategoryNameItems, foreign)
+				if foreign.R == nil {
+					foreign.R = &itemR{}
+				}
+				foreign.R.CategoryNameCategory = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// AddCategoryNameItems adds the given related objects to the existing relationships
+// of the category, optionally inserting them as new records.
+// Appends related to o.R.CategoryNameItems.
+// Sets related.R.CategoryNameCategory appropriately.
+func (o *Category) AddCategoryNameItems(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Item) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.CategoryName = o.Classification
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"items\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"category_name"}),
+				strmangle.WhereClause("\"", "\"", 2, itemPrimaryKeyColumns),
+			)
+			values := []interface{}{o.Classification, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.CategoryName = o.Classification
+		}
+	}
+
+	if o.R == nil {
+		o.R = &categoryR{
+			CategoryNameItems: related,
+		}
+	} else {
+		o.R.CategoryNameItems = append(o.R.CategoryNameItems, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &itemR{
+				CategoryNameCategory: o,
+			}
+		} else {
+			rel.R.CategoryNameCategory = o
+		}
+	}
+	return nil
+}
+
 // Categories retrieves all the records using an executor.
 func Categories(mods ...qm.QueryMod) categoryQuery {
 	mods = append(mods, qm.From("\"categories\""))
@@ -371,7 +556,7 @@ func Categories(mods ...qm.QueryMod) categoryQuery {
 
 // FindCategory retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindCategory(ctx context.Context, exec boil.ContextExecutor, categoryID int, selectCols ...string) (*Category, error) {
+func FindCategory(ctx context.Context, exec boil.ContextExecutor, classification string, selectCols ...string) (*Category, error) {
 	categoryObj := &Category{}
 
 	sel := "*"
@@ -379,10 +564,10 @@ func FindCategory(ctx context.Context, exec boil.ContextExecutor, categoryID int
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from \"categories\" where \"category_id\"=$1", sel,
+		"select %s from \"categories\" where \"classification\"=$1", sel,
 	)
 
-	q := queries.Raw(query, categoryID)
+	q := queries.Raw(query, classification)
 
 	err := q.Bind(ctx, exec, categoryObj)
 	if err != nil {
@@ -734,7 +919,7 @@ func (o *Category) Delete(ctx context.Context, exec boil.ContextExecutor) (int64
 	}
 
 	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), categoryPrimaryKeyMapping)
-	sql := "DELETE FROM \"categories\" WHERE \"category_id\"=$1"
+	sql := "DELETE FROM \"categories\" WHERE \"classification\"=$1"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -831,7 +1016,7 @@ func (o CategorySlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor)
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Category) Reload(ctx context.Context, exec boil.ContextExecutor) error {
-	ret, err := FindCategory(ctx, exec, o.CategoryID)
+	ret, err := FindCategory(ctx, exec, o.Classification)
 	if err != nil {
 		return err
 	}
@@ -870,16 +1055,16 @@ func (o *CategorySlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor
 }
 
 // CategoryExists checks if the Category row exists.
-func CategoryExists(ctx context.Context, exec boil.ContextExecutor, categoryID int) (bool, error) {
+func CategoryExists(ctx context.Context, exec boil.ContextExecutor, classification string) (bool, error) {
 	var exists bool
-	sql := "select exists(select 1 from \"categories\" where \"category_id\"=$1 limit 1)"
+	sql := "select exists(select 1 from \"categories\" where \"classification\"=$1 limit 1)"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
 		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, categoryID)
+		fmt.Fprintln(writer, classification)
 	}
-	row := exec.QueryRowContext(ctx, sql, categoryID)
+	row := exec.QueryRowContext(ctx, sql, classification)
 
 	err := row.Scan(&exists)
 	if err != nil {
@@ -891,5 +1076,5 @@ func CategoryExists(ctx context.Context, exec boil.ContextExecutor, categoryID i
 
 // Exists checks if the Category row exists.
 func (o *Category) Exists(ctx context.Context, exec boil.ContextExecutor) (bool, error) {
-	return CategoryExists(ctx, exec, o.CategoryID)
+	return CategoryExists(ctx, exec, o.Classification)
 }

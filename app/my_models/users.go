@@ -23,7 +23,7 @@ import (
 
 // User is an object representing the database table.
 type User struct {
-	UserID   int    `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+	ID       int    `boil:"id" json:"id" toml:"id" yaml:"id"`
 	Username string `boil:"username" json:"username" toml:"username" yaml:"username"`
 	Password string `boil:"password" json:"password" toml:"password" yaml:"password"`
 	Email    string `boil:"email" json:"email" toml:"email" yaml:"email"`
@@ -33,24 +33,24 @@ type User struct {
 }
 
 var UserColumns = struct {
-	UserID   string
+	ID       string
 	Username string
 	Password string
 	Email    string
 }{
-	UserID:   "user_id",
+	ID:       "id",
 	Username: "username",
 	Password: "password",
 	Email:    "email",
 }
 
 var UserTableColumns = struct {
-	UserID   string
+	ID       string
 	Username string
 	Password string
 	Email    string
 }{
-	UserID:   "users.user_id",
+	ID:       "users.id",
 	Username: "users.username",
 	Password: "users.password",
 	Email:    "users.email",
@@ -59,12 +59,12 @@ var UserTableColumns = struct {
 // Generated where
 
 var UserWhere = struct {
-	UserID   whereHelperint
+	ID       whereHelperint
 	Username whereHelperstring
 	Password whereHelperstring
 	Email    whereHelperstring
 }{
-	UserID:   whereHelperint{field: "\"users\".\"user_id\""},
+	ID:       whereHelperint{field: "\"users\".\"id\""},
 	Username: whereHelperstring{field: "\"users\".\"username\""},
 	Password: whereHelperstring{field: "\"users\".\"password\""},
 	Email:    whereHelperstring{field: "\"users\".\"email\""},
@@ -72,19 +72,29 @@ var UserWhere = struct {
 
 // UserRels is where relationship names are stored.
 var UserRels = struct {
+	Items string
 	Todos string
 }{
+	Items: "Items",
 	Todos: "Todos",
 }
 
 // userR is where relationships are stored.
 type userR struct {
+	Items ItemSlice `boil:"Items" json:"Items" toml:"Items" yaml:"Items"`
 	Todos TodoSlice `boil:"Todos" json:"Todos" toml:"Todos" yaml:"Todos"`
 }
 
 // NewStruct creates a new relationship struct
 func (*userR) NewStruct() *userR {
 	return &userR{}
+}
+
+func (r *userR) GetItems() ItemSlice {
+	if r == nil {
+		return nil
+	}
+	return r.Items
 }
 
 func (r *userR) GetTodos() TodoSlice {
@@ -98,10 +108,10 @@ func (r *userR) GetTodos() TodoSlice {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"user_id", "username", "password", "email"}
+	userAllColumns            = []string{"id", "username", "password", "email"}
 	userColumnsWithoutDefault = []string{"username", "password", "email"}
-	userColumnsWithDefault    = []string{"user_id"}
-	userPrimaryKeyColumns     = []string{"user_id"}
+	userColumnsWithDefault    = []string{"id"}
+	userPrimaryKeyColumns     = []string{"id"}
 	userGeneratedColumns      = []string{}
 )
 
@@ -383,6 +393,20 @@ func (q userQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool,
 	return count > 0, nil
 }
 
+// Items retrieves all the item's Items with an executor.
+func (o *User) Items(mods ...qm.QueryMod) itemQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"items\".\"user_id\"=?", o.ID),
+	)
+
+	return Items(queryMods...)
+}
+
 // Todos retrieves all the todo's Todos with an executor.
 func (o *User) Todos(mods ...qm.QueryMod) todoQuery {
 	var queryMods []qm.QueryMod
@@ -391,10 +415,124 @@ func (o *User) Todos(mods ...qm.QueryMod) todoQuery {
 	}
 
 	queryMods = append(queryMods,
-		qm.Where("\"todos\".\"user_id\"=?", o.UserID),
+		qm.Where("\"todos\".\"user_id\"=?", o.ID),
 	)
 
 	return Todos(queryMods...)
+}
+
+// LoadItems allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadItems(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		var ok bool
+		object, ok = maybeUser.(*User)
+		if !ok {
+			object = new(User)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeUser))
+			}
+		}
+	} else {
+		s, ok := maybeUser.(*[]*User)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeUser))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`items`),
+		qm.WhereIn(`items.user_id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load items")
+	}
+
+	var resultSlice []*Item
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice items")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on items")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for items")
+	}
+
+	if len(itemAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.Items = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &itemR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.Items = append(local.R.Items, foreign)
+				if foreign.R == nil {
+					foreign.R = &itemR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
 }
 
 // LoadTodos allows an eager lookup of values, cached into the
@@ -430,7 +568,7 @@ func (userL) LoadTodos(ctx context.Context, e boil.ContextExecutor, singular boo
 		if object.R == nil {
 			object.R = &userR{}
 		}
-		args = append(args, object.UserID)
+		args = append(args, object.ID)
 	} else {
 	Outer:
 		for _, obj := range slice {
@@ -439,12 +577,12 @@ func (userL) LoadTodos(ctx context.Context, e boil.ContextExecutor, singular boo
 			}
 
 			for _, a := range args {
-				if a == obj.UserID {
+				if a == obj.ID {
 					continue Outer
 				}
 			}
 
-			args = append(args, obj.UserID)
+			args = append(args, obj.ID)
 		}
 	}
 
@@ -497,7 +635,7 @@ func (userL) LoadTodos(ctx context.Context, e boil.ContextExecutor, singular boo
 
 	for _, foreign := range resultSlice {
 		for _, local := range slice {
-			if local.UserID == foreign.UserID {
+			if local.ID == foreign.UserID {
 				local.R.Todos = append(local.R.Todos, foreign)
 				if foreign.R == nil {
 					foreign.R = &todoR{}
@@ -511,25 +649,25 @@ func (userL) LoadTodos(ctx context.Context, e boil.ContextExecutor, singular boo
 	return nil
 }
 
-// AddTodos adds the given related objects to the existing relationships
+// AddItems adds the given related objects to the existing relationships
 // of the user, optionally inserting them as new records.
-// Appends related to o.R.Todos.
+// Appends related to o.R.Items.
 // Sets related.R.User appropriately.
-func (o *User) AddTodos(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Todo) error {
+func (o *User) AddItems(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Item) error {
 	var err error
 	for _, rel := range related {
 		if insert {
-			rel.UserID = o.UserID
+			rel.UserID = o.ID
 			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
 				return errors.Wrap(err, "failed to insert into foreign table")
 			}
 		} else {
 			updateQuery := fmt.Sprintf(
-				"UPDATE \"todos\" SET %s WHERE %s",
+				"UPDATE \"items\" SET %s WHERE %s",
 				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
-				strmangle.WhereClause("\"", "\"", 2, todoPrimaryKeyColumns),
+				strmangle.WhereClause("\"", "\"", 2, itemPrimaryKeyColumns),
 			)
-			values := []interface{}{o.UserID, rel.TodoID}
+			values := []interface{}{o.ID, rel.ID}
 
 			if boil.IsDebug(ctx) {
 				writer := boil.DebugWriterFrom(ctx)
@@ -540,7 +678,60 @@ func (o *User) AddTodos(ctx context.Context, exec boil.ContextExecutor, insert b
 				return errors.Wrap(err, "failed to update foreign table")
 			}
 
-			rel.UserID = o.UserID
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			Items: related,
+		}
+	} else {
+		o.R.Items = append(o.R.Items, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &itemR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
+	return nil
+}
+
+// AddTodos adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.Todos.
+// Sets related.R.User appropriately.
+func (o *User) AddTodos(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Todo) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"todos\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, todoPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
 		}
 	}
 
@@ -577,7 +768,7 @@ func Users(mods ...qm.QueryMod) userQuery {
 
 // FindUser retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindUser(ctx context.Context, exec boil.ContextExecutor, userID int, selectCols ...string) (*User, error) {
+func FindUser(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*User, error) {
 	userObj := &User{}
 
 	sel := "*"
@@ -585,10 +776,10 @@ func FindUser(ctx context.Context, exec boil.ContextExecutor, userID int, select
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from \"users\" where \"user_id\"=$1", sel,
+		"select %s from \"users\" where \"id\"=$1", sel,
 	)
 
-	q := queries.Raw(query, userID)
+	q := queries.Raw(query, iD)
 
 	err := q.Bind(ctx, exec, userObj)
 	if err != nil {
@@ -940,7 +1131,7 @@ func (o *User) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, er
 	}
 
 	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), userPrimaryKeyMapping)
-	sql := "DELETE FROM \"users\" WHERE \"user_id\"=$1"
+	sql := "DELETE FROM \"users\" WHERE \"id\"=$1"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -1037,7 +1228,7 @@ func (o UserSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (in
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *User) Reload(ctx context.Context, exec boil.ContextExecutor) error {
-	ret, err := FindUser(ctx, exec, o.UserID)
+	ret, err := FindUser(ctx, exec, o.ID)
 	if err != nil {
 		return err
 	}
@@ -1076,16 +1267,16 @@ func (o *UserSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) er
 }
 
 // UserExists checks if the User row exists.
-func UserExists(ctx context.Context, exec boil.ContextExecutor, userID int) (bool, error) {
+func UserExists(ctx context.Context, exec boil.ContextExecutor, iD int) (bool, error) {
 	var exists bool
-	sql := "select exists(select 1 from \"users\" where \"user_id\"=$1 limit 1)"
+	sql := "select exists(select 1 from \"users\" where \"id\"=$1 limit 1)"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
 		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, userID)
+		fmt.Fprintln(writer, iD)
 	}
-	row := exec.QueryRowContext(ctx, sql, userID)
+	row := exec.QueryRowContext(ctx, sql, iD)
 
 	err := row.Scan(&exists)
 	if err != nil {
@@ -1097,5 +1288,5 @@ func UserExists(ctx context.Context, exec boil.ContextExecutor, userID int) (boo
 
 // Exists checks if the User row exists.
 func (o *User) Exists(ctx context.Context, exec boil.ContextExecutor) (bool, error) {
-	return UserExists(ctx, exec, o.UserID)
+	return UserExists(ctx, exec, o.ID)
 }

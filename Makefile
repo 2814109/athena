@@ -8,17 +8,20 @@ setup:
 build:
 	docker-compose up -d --build
 
-migrate-up:
+mg-up:
 	migrate --path db/migrations --database 'postgres://${PSQL_USER}:${PSQL_PASS}@localhost:5432/${PSQL_DBNAME}?sslmode=disable' -verbose up
 
-migrate-down:
+mg-down:
 	migrate --path db/migrations --database 'postgres://${PSQL_USER}:${PSQL_PASS}@localhost:5432/${PSQL_DBNAME}?sslmode=disable' -verbose down
 
-migrate-force:
+mg-force:
 	migrate --path db/migrations --database 'postgres://${PSQL_USER}:${PSQL_PASS}@localhost:5432/${PSQL_DBNAME}?sslmode=disable' -verbose force 1
+mg-drop:
+	migrate --path db/migrations --database 'postgres://${PSQL_USER}:${PSQL_PASS}@localhost:5432/${PSQL_DBNAME}?sslmode=disable' -verbose drop
+
 
 create-migration-%:
 	migrate create -ext sql -dir db/migrations -seq ${@:create-migration-%=%}
 
 gen-models:
-	cd app & sqlboiler postgres
+	docker compose exec app sh sqlboiler postgres

@@ -23,58 +23,44 @@ import (
 
 // Todo is an object representing the database table.
 type Todo struct {
-	TodoID   int    `boil:"todo_id" json:"todo_id" toml:"todo_id" yaml:"todo_id"`
-	Username string `boil:"username" json:"username" toml:"username" yaml:"username"`
-	Password string `boil:"password" json:"password" toml:"password" yaml:"password"`
-	Email    string `boil:"email" json:"email" toml:"email" yaml:"email"`
-	UserID   int    `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+	ID      int    `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Content string `boil:"content" json:"content" toml:"content" yaml:"content"`
+	UserID  int    `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 
 	R *todoR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L todoL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var TodoColumns = struct {
-	TodoID   string
-	Username string
-	Password string
-	Email    string
-	UserID   string
+	ID      string
+	Content string
+	UserID  string
 }{
-	TodoID:   "todo_id",
-	Username: "username",
-	Password: "password",
-	Email:    "email",
-	UserID:   "user_id",
+	ID:      "id",
+	Content: "content",
+	UserID:  "user_id",
 }
 
 var TodoTableColumns = struct {
-	TodoID   string
-	Username string
-	Password string
-	Email    string
-	UserID   string
+	ID      string
+	Content string
+	UserID  string
 }{
-	TodoID:   "todos.todo_id",
-	Username: "todos.username",
-	Password: "todos.password",
-	Email:    "todos.email",
-	UserID:   "todos.user_id",
+	ID:      "todos.id",
+	Content: "todos.content",
+	UserID:  "todos.user_id",
 }
 
 // Generated where
 
 var TodoWhere = struct {
-	TodoID   whereHelperint
-	Username whereHelperstring
-	Password whereHelperstring
-	Email    whereHelperstring
-	UserID   whereHelperint
+	ID      whereHelperint
+	Content whereHelperstring
+	UserID  whereHelperint
 }{
-	TodoID:   whereHelperint{field: "\"todos\".\"todo_id\""},
-	Username: whereHelperstring{field: "\"todos\".\"username\""},
-	Password: whereHelperstring{field: "\"todos\".\"password\""},
-	Email:    whereHelperstring{field: "\"todos\".\"email\""},
-	UserID:   whereHelperint{field: "\"todos\".\"user_id\""},
+	ID:      whereHelperint{field: "\"todos\".\"id\""},
+	Content: whereHelperstring{field: "\"todos\".\"content\""},
+	UserID:  whereHelperint{field: "\"todos\".\"user_id\""},
 }
 
 // TodoRels is where relationship names are stored.
@@ -105,10 +91,10 @@ func (r *todoR) GetUser() *User {
 type todoL struct{}
 
 var (
-	todoAllColumns            = []string{"todo_id", "username", "password", "email", "user_id"}
-	todoColumnsWithoutDefault = []string{"username", "password", "email"}
-	todoColumnsWithDefault    = []string{"todo_id", "user_id"}
-	todoPrimaryKeyColumns     = []string{"todo_id"}
+	todoAllColumns            = []string{"id", "content", "user_id"}
+	todoColumnsWithoutDefault = []string{"content"}
+	todoColumnsWithDefault    = []string{"id", "user_id"}
+	todoPrimaryKeyColumns     = []string{"id"}
 	todoGeneratedColumns      = []string{}
 )
 
@@ -393,7 +379,7 @@ func (q todoQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool,
 // User pointed to by the foreign key.
 func (o *Todo) User(mods ...qm.QueryMod) userQuery {
 	queryMods := []qm.QueryMod{
-		qm.Where("\"user_id\" = ?", o.UserID),
+		qm.Where("\"id\" = ?", o.UserID),
 	}
 
 	queryMods = append(queryMods, mods...)
@@ -460,7 +446,7 @@ func (todoL) LoadUser(ctx context.Context, e boil.ContextExecutor, singular bool
 
 	query := NewQuery(
 		qm.From(`users`),
-		qm.WhereIn(`users.user_id in ?`, args...),
+		qm.WhereIn(`users.id in ?`, args...),
 	)
 	if mods != nil {
 		mods.Apply(query)
@@ -507,7 +493,7 @@ func (todoL) LoadUser(ctx context.Context, e boil.ContextExecutor, singular bool
 
 	for _, local := range slice {
 		for _, foreign := range resultSlice {
-			if local.UserID == foreign.UserID {
+			if local.UserID == foreign.ID {
 				local.R.User = foreign
 				if foreign.R == nil {
 					foreign.R = &userR{}
@@ -537,7 +523,7 @@ func (o *Todo) SetUser(ctx context.Context, exec boil.ContextExecutor, insert bo
 		strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
 		strmangle.WhereClause("\"", "\"", 2, todoPrimaryKeyColumns),
 	)
-	values := []interface{}{related.UserID, o.TodoID}
+	values := []interface{}{related.ID, o.ID}
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -548,7 +534,7 @@ func (o *Todo) SetUser(ctx context.Context, exec boil.ContextExecutor, insert bo
 		return errors.Wrap(err, "failed to update local table")
 	}
 
-	o.UserID = related.UserID
+	o.UserID = related.ID
 	if o.R == nil {
 		o.R = &todoR{
 			User: related,
@@ -581,7 +567,7 @@ func Todos(mods ...qm.QueryMod) todoQuery {
 
 // FindTodo retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindTodo(ctx context.Context, exec boil.ContextExecutor, todoID int, selectCols ...string) (*Todo, error) {
+func FindTodo(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*Todo, error) {
 	todoObj := &Todo{}
 
 	sel := "*"
@@ -589,10 +575,10 @@ func FindTodo(ctx context.Context, exec boil.ContextExecutor, todoID int, select
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from \"todos\" where \"todo_id\"=$1", sel,
+		"select %s from \"todos\" where \"id\"=$1", sel,
 	)
 
-	q := queries.Raw(query, todoID)
+	q := queries.Raw(query, iD)
 
 	err := q.Bind(ctx, exec, todoObj)
 	if err != nil {
@@ -944,7 +930,7 @@ func (o *Todo) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, er
 	}
 
 	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), todoPrimaryKeyMapping)
-	sql := "DELETE FROM \"todos\" WHERE \"todo_id\"=$1"
+	sql := "DELETE FROM \"todos\" WHERE \"id\"=$1"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -1041,7 +1027,7 @@ func (o TodoSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (in
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Todo) Reload(ctx context.Context, exec boil.ContextExecutor) error {
-	ret, err := FindTodo(ctx, exec, o.TodoID)
+	ret, err := FindTodo(ctx, exec, o.ID)
 	if err != nil {
 		return err
 	}
@@ -1080,16 +1066,16 @@ func (o *TodoSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) er
 }
 
 // TodoExists checks if the Todo row exists.
-func TodoExists(ctx context.Context, exec boil.ContextExecutor, todoID int) (bool, error) {
+func TodoExists(ctx context.Context, exec boil.ContextExecutor, iD int) (bool, error) {
 	var exists bool
-	sql := "select exists(select 1 from \"todos\" where \"todo_id\"=$1 limit 1)"
+	sql := "select exists(select 1 from \"todos\" where \"id\"=$1 limit 1)"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
 		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, todoID)
+		fmt.Fprintln(writer, iD)
 	}
-	row := exec.QueryRowContext(ctx, sql, todoID)
+	row := exec.QueryRowContext(ctx, sql, iD)
 
 	err := row.Scan(&exists)
 	if err != nil {
@@ -1101,5 +1087,5 @@ func TodoExists(ctx context.Context, exec boil.ContextExecutor, todoID int) (boo
 
 // Exists checks if the Todo row exists.
 func (o *Todo) Exists(ctx context.Context, exec boil.ContextExecutor) (bool, error) {
-	return TodoExists(ctx, exec, o.TodoID)
+	return TodoExists(ctx, exec, o.ID)
 }

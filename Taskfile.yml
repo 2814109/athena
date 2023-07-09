@@ -18,7 +18,10 @@ tasks:
       - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose down
   migrate-force:
     comds:
-      - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose force 1
+      - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose force 5
+  m-drop:
+    comds:
+      - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose drop
   create-db-schema:
     cmds:
       - docker run -v "$PWD/db/schema:/output" --net="host" schemaspy/schemaspy:latest -t pgsql \\ -host localhost:5432 -db $PSQL_DBNAME -u $PSQL_USER -p $PSQL_PASS -connprops useSSL\\\\=false -all
@@ -28,4 +31,3 @@ tasks:
   dummydata-insert:
     cmds:
       - cd ./app && go run ./cmd/dummy_data_generate/main.go
-      
