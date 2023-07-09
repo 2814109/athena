@@ -41,18 +41,20 @@ func CreateDummyItems(ctx context.Context, connectDB *sql.DB) {
 		return user.ID
 	})
 
-	items := lo.Times(count, func(_ int) models.Item {
-		return models.Item{
-			Label:        gofakeit.Word(),
-			UserID:       userIdList[gofakeit.Number(0, len(userIdList)-1)],
-			CategoryName: categoryClassificationList[gofakeit.Number(0, len(categoryClassificationList)-1)],
-		}
-	})
+	lo.ForEach(userIdList, func(userId int, _ int) {
+		items := lo.Times(gofakeit.Number(0, count), func(_ int) models.Item {
+			return models.Item{
+				Label:        gofakeit.Word(),
+				UserID:       userId,
+				CategoryName: categoryClassificationList[gofakeit.Number(0, len(categoryClassificationList)-1)],
+			}
+		})
 
-	lo.ForEach(items, func(item models.Item, index int) {
-		if err := item.Insert(ctx, connectDB, boil.Infer()); err != nil {
-			log.Printf("multi insert item for each error : %s , index is %v", err, index)
-		}
+		lo.ForEach(items, func(item models.Item, index int) {
+			if err := item.Insert(ctx, connectDB, boil.Infer()); err != nil {
+				log.Printf("multi insert item for each error : %s , index is %v", err, index)
+			}
+		})
 	})
 
 }
