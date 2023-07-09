@@ -6,6 +6,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"my_gql_server/graph/model"
 )
@@ -34,6 +35,11 @@ func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
 			Done: false,
 		},
 	}, nil
+}
+
+// Articles is the resolver for the articles field.
+func (r *queryResolver) Articles(ctx context.Context) ([]*model.Article, error) {
+	panic(fmt.Errorf("not implemented: Articles - articles"))
 }
 
 // Query returns QueryResolver implementation.

@@ -9,3 +9,10 @@ type User {
   id: ID!
   name: String!
 }
+
+type Article {
+    id: ID!
+    title: String!
+    description: String!
+    status: String!
+}
