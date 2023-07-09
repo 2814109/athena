@@ -10,22 +10,23 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 
 	_ "github.com/lib/pq"
+
+	"github.com/samber/lo"
+
+	lop "github.com/samber/lo/parallel"
 )
 
 func UpsertDummyStatuses(ctx context.Context, connectDB *sql.DB) {
+	statusPattern := []string{"Draft", "UnderReview", "Published", "Deleted", "OnHold"}
 
-	statuses := []*models.Status{
-		{
-			Label: "test",
-		},
-		{
-			Label: "sample",
-		}}
-
-	for index, status := range statuses {
-		if err := status.Upsert(ctx, connectDB, true, []string{"label"}, boil.Whitelist("label"), boil.Infer()); err != nil {
-			log.Printf("insert status error : %s , index is %v", err, index)
+	statusesModel := lop.Map(statusPattern, func(statusLabel string, _ int) models.Status {
+		return models.Status{
+			Label: statusLabel,
 		}
-	}
-
+	})
+	lo.ForEach(statusesModel, func(status models.Status, index int) {
+		if err := status.Upsert(ctx, connectDB, true, []string{"label"}, boil.Whitelist("label"), boil.Infer()); err != nil {
+			log.Printf("multi insert article for each error : %s , index is %v", err, index)
+		}
+	})
 }
