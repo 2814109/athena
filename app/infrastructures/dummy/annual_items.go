@@ -54,6 +54,7 @@ func AnnualItems(ctx context.Context, connectDB *sql.DB) {
 				return models.Item{
 					Label:        gofakeit.Word(),
 					UserID:       userId,
+					Cost:         gofakeit.Number(1, 99999),
 					CategoryName: categoryClassificationList[gofakeit.Number(0, len(categoryClassificationList)-1)],
 					CreatedAt:    gofakeit.DateRange(startOfMonth, endOfMonth),
 					UpdatedAt:    gofakeit.DateRange(startOfMonth, endOfMonth),

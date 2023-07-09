@@ -29,6 +29,7 @@ type Item struct {
 	CreatedAt    time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt    time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	UserID       int       `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+	Cost         int       `boil:"cost" json:"cost" toml:"cost" yaml:"cost"`
 
 	R *itemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L itemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -41,6 +42,7 @@ var ItemColumns = struct {
 	CreatedAt    string
 	UpdatedAt    string
 	UserID       string
+	Cost         string
 }{
 	ID:           "id",
 	Label:        "label",
@@ -48,6 +50,7 @@ var ItemColumns = struct {
 	CreatedAt:    "created_at",
 	UpdatedAt:    "updated_at",
 	UserID:       "user_id",
+	Cost:         "cost",
 }
 
 var ItemTableColumns = struct {
@@ -57,6 +60,7 @@ var ItemTableColumns = struct {
 	CreatedAt    string
 	UpdatedAt    string
 	UserID       string
+	Cost         string
 }{
 	ID:           "items.id",
 	Label:        "items.label",
@@ -64,6 +68,7 @@ var ItemTableColumns = struct {
 	CreatedAt:    "items.created_at",
 	UpdatedAt:    "items.updated_at",
 	UserID:       "items.user_id",
+	Cost:         "items.cost",
 }
 
 // Generated where
@@ -96,6 +101,7 @@ var ItemWhere = struct {
 	CreatedAt    whereHelpertime_Time
 	UpdatedAt    whereHelpertime_Time
 	UserID       whereHelperint
+	Cost         whereHelperint
 }{
 	ID:           whereHelperint{field: "\"items\".\"id\""},
 	Label:        whereHelperstring{field: "\"items\".\"label\""},
@@ -103,6 +109,7 @@ var ItemWhere = struct {
 	CreatedAt:    whereHelpertime_Time{field: "\"items\".\"created_at\""},
 	UpdatedAt:    whereHelpertime_Time{field: "\"items\".\"updated_at\""},
 	UserID:       whereHelperint{field: "\"items\".\"user_id\""},
+	Cost:         whereHelperint{field: "\"items\".\"cost\""},
 }
 
 // ItemRels is where relationship names are stored.
@@ -143,8 +150,8 @@ func (r *itemR) GetCategoryNameCategory() *Category {
 type itemL struct{}
 
 var (
-	itemAllColumns            = []string{"id", "label", "category_name", "created_at", "updated_at", "user_id"}
-	itemColumnsWithoutDefault = []string{"label", "category_name", "created_at", "updated_at"}
+	itemAllColumns            = []string{"id", "label", "category_name", "created_at", "updated_at", "user_id", "cost"}
+	itemColumnsWithoutDefault = []string{"label", "category_name", "created_at", "updated_at", "cost"}
 	itemColumnsWithDefault    = []string{"id", "user_id"}
 	itemPrimaryKeyColumns     = []string{"id"}
 	itemGeneratedColumns      = []string{}

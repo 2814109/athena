@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS items(
     created_at Date NOT NULL,
     updated_at Date NOT NULL,
     user_id serial,
+    cost INT NOT NULL,
     CONSTRAINT fk_user FOREIGN KEY (user_id) references users(id)
 );
 
