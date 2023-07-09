@@ -18,7 +18,7 @@ func CreateDummyStatus(ctx context.Context, connectDB *sql.DB) {
 		Label: "test",
 	}
 
-	if err := insertStatus.Insert(ctx, connectDB, boil.Infer()); err != nil {
+	if err := insertStatus.Upsert(ctx, connectDB, true, []string{"label"}, boil.Whitelist("label"), boil.Infer()); err != nil {
 		log.Printf("insert status error : %s", err)
 
 	}
