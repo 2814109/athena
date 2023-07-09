@@ -14,12 +14,18 @@ import (
 
 func CreateDummyStatus(ctx context.Context, connectDB *sql.DB) {
 
-	insertStatus := models.Status{
-		Label: "test",
+	statuses := []*models.Status{
+		{
+			Label: "test",
+		},
+		{
+			Label: "sample",
+		}}
+
+	for index, status := range statuses {
+		if err := status.Upsert(ctx, connectDB, true, []string{"label"}, boil.Whitelist("label"), boil.Infer()); err != nil {
+			log.Printf("insert status error : %s , index is %v", err, index)
+		}
 	}
 
-	if err := insertStatus.Upsert(ctx, connectDB, true, []string{"label"}, boil.Whitelist("label"), boil.Infer()); err != nil {
-		log.Printf("insert status error : %s", err)
-
-	}
 }
