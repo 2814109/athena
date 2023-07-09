@@ -8,3 +8,4 @@ CREATE TABLE IF NOT EXISTS items(
     CONSTRAINT fk_user FOREIGN KEY (user_id) references users(id)
 );
 
+CREATE INDEX ON items(user_id)
