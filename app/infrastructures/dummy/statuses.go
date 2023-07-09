@@ -12,7 +12,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func CreateDummyStatus(ctx context.Context, connectDB *sql.DB) {
+func UpsertDummyStatuses(ctx context.Context, connectDB *sql.DB) {
 
 	statuses := []*models.Status{
 		{
