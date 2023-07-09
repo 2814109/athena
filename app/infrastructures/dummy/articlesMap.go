@@ -20,11 +20,22 @@ import (
 
 func CreateDummyArticlesMap(ctx context.Context, connectDB *sql.DB) {
 
-	articles := lop.Map([]string{"sample", "sample", "sample"}, func(status string, _ int) models.Article {
+	count := 100
+	statuses, err := models.Statuses().All(ctx, connectDB)
+
+	if err != nil {
+		log.Printf("error : %s", err)
+	}
+
+	statusList := lop.Map(statuses, func(status *models.Status, _ int) string {
+		return status.Label
+	})
+
+	articles := lo.Times(count, func(_ int) models.Article {
 		return models.Article{
-			Title:       "map insert",
+			Title:       gofakeit.BookTitle(),
 			Description: gofakeit.HipsterSentence(3),
-			Status:      status,
+			Status:      statusList[gofakeit.Number(0, len(statusList)-1)],
 		}
 	})
 

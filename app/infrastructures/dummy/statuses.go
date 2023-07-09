@@ -17,6 +17,7 @@ import (
 )
 
 func UpsertDummyStatuses(ctx context.Context, connectDB *sql.DB) {
+	// string as status pattern
 	statusPattern := []string{"Draft", "UnderReview", "Published", "Deleted", "OnHold"}
 
 	statusesModel := lop.Map(statusPattern, func(statusLabel string, _ int) models.Status {
