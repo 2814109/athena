@@ -86,6 +86,10 @@ models:
     fields:
       user:
         resolver: true
+  Item:
+    fields:
+      user:
+        resolver: true
 
 directives:
   constraint:

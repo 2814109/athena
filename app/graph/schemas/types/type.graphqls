@@ -16,3 +16,12 @@ type Article {
     description: String!
     status: String!
 }
+
+
+type Item{
+  id: ID!
+  label: String!
+  categoryName: String!
+  const:  Int!
+  user: User
+}

@@ -15,6 +15,14 @@ type Article struct {
 	Status      string `json:"status"`
 }
 
+type Item struct {
+	ID           string `json:"id"`
+	Label        string `json:"label"`
+	CategoryName string `json:"categoryName"`
+	Const        int    `json:"const"`
+	User         *User  `json:"user,omitempty"`
+}
+
 type NewTodo struct {
 	Status *StatusPattern `json:"status,omitempty"`
 	Text   string         `json:"text" validate:"required_if=Status ACTIVE,newline,omitempty"`

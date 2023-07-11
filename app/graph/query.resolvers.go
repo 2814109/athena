@@ -42,6 +42,11 @@ func (r *queryResolver) Articles(ctx context.Context) ([]*model.Article, error) 
 	panic(fmt.Errorf("not implemented: Articles - articles"))
 }
 
+// Items is the resolver for the items field.
+func (r *queryResolver) Items(ctx context.Context, userID string) ([]*model.Item, error) {
+	panic(fmt.Errorf("not implemented: Items - items"))
+}
+
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 

@@ -11,11 +11,20 @@ import (
 )
 
 // User is the resolver for the user field.
+func (r *itemResolver) User(ctx context.Context, obj *model.Item) (*model.User, error) {
+	panic(fmt.Errorf("not implemented: User - user"))
+}
+
+// User is the resolver for the user field.
 func (r *todoResolver) User(ctx context.Context, obj *model.Todo) (*model.User, error) {
 	panic(fmt.Errorf("not implemented: User - user"))
 }
 
+// Item returns ItemResolver implementation.
+func (r *Resolver) Item() ItemResolver { return &itemResolver{r} }
+
 // Todo returns TodoResolver implementation.
 func (r *Resolver) Todo() TodoResolver { return &todoResolver{r} }
 
+type itemResolver struct{ *Resolver }
 type todoResolver struct{ *Resolver }
