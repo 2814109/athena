@@ -9,15 +9,14 @@ import (
 	"fmt"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
-	models "my_gql_server/my_models"
+	"my_gql_server/my_models"
 
 	lop "github.com/samber/lo/parallel"
 )
 
 // Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context, userID *int) ([]*models.Todo, error) {
-
-	todos, err := repositories.FindAllTodoByUserId(ctx, *userID)
+func (r *queryResolver) Todos(ctx context.Context, userID int) ([]*models.Todo, error) {
+	todos, err := repositories.FindAllTodoByUserId(ctx, userID)
 
 	if err != nil {
 		return nil, err
