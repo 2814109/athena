@@ -8,13 +8,22 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"my_gql_server/graph/model"
-	"my_gql_server/my_models"
+	models "my_gql_server/my_models"
 )
 
+// CreatedAt is the resolver for the createdAt field.
+func (r *itemResolver) CreatedAt(ctx context.Context, obj *models.Item) (string, error) {
+	panic(fmt.Errorf("not implemented: CreatedAt - createdAt"))
+}
+
+// UpdatedAt is the resolver for the updatedAt field.
+func (r *itemResolver) UpdatedAt(ctx context.Context, obj *models.Item) (string, error) {
+	panic(fmt.Errorf("not implemented: UpdatedAt - updatedAt"))
+}
+
 // User is the resolver for the user field.
-func (r *itemResolver) User(ctx context.Context, obj *model.Item) (*models.User, error) {
-	panic(fmt.Errorf("not implemented: User - user"))
+func (r *itemResolver) User(ctx context.Context, obj *models.Item) (*models.User, error) {
+	return obj.R.User, nil
 }
 
 // User is the resolver for the user field.

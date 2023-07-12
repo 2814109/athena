@@ -89,9 +89,7 @@ models:
   Article:
     model: ./my_models.Article
   Item:
-    fields:
-      user:
-        resolver: true
+    model: ./my_models.Item
 
 directives:
   constraint:

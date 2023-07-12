@@ -5,17 +5,8 @@ package model
 import (
 	"fmt"
 	"io"
-	"my_gql_server/my_models"
 	"strconv"
 )
-
-type Item struct {
-	ID           string       `json:"id"`
-	Label        string       `json:"label"`
-	CategoryName string       `json:"categoryName"`
-	Const        int          `json:"const"`
-	User         *models.User `json:"user,omitempty"`
-}
 
 type NewTodo struct {
 	Status *StatusPattern `json:"status,omitempty"`

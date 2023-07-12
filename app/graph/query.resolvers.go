@@ -6,10 +6,9 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
-	models "my_gql_server/my_models"
+	"my_gql_server/my_models"
 
 	lop "github.com/samber/lo/parallel"
 )
@@ -47,8 +46,19 @@ func (r *queryResolver) Articles(ctx context.Context, status model.ArticleStatus
 }
 
 // Items is the resolver for the items field.
-func (r *queryResolver) Items(ctx context.Context, userID string) ([]*model.Item, error) {
-	panic(fmt.Errorf("not implemented: Items - items"))
+func (r *queryResolver) Items(ctx context.Context, userID int) ([]*models.Item, error) {
+	items, err := repositories.FindAllItemByUserId(ctx, userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	result := lop.Map(items, func(item *models.Item, _ int) *models.Item {
+		return item
+
+	})
+
+	return result, nil
 }
 
 // Query returns QueryResolver implementation.
