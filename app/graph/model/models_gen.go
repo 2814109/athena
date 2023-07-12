@@ -27,6 +27,53 @@ type NewUser struct {
 	Name string `json:"name"`
 }
 
+type ArticleStatuses string
+
+const (
+	ArticleStatusesDraft       ArticleStatuses = "Draft"
+	ArticleStatusesUnderReview ArticleStatuses = "UnderReview"
+	ArticleStatusesPublished   ArticleStatuses = "Published"
+	ArticleStatusesDeleted     ArticleStatuses = "Deleted"
+	ArticleStatusesOnHold      ArticleStatuses = "OnHold"
+)
+
+var AllArticleStatuses = []ArticleStatuses{
+	ArticleStatusesDraft,
+	ArticleStatusesUnderReview,
+	ArticleStatusesPublished,
+	ArticleStatusesDeleted,
+	ArticleStatusesOnHold,
+}
+
+func (e ArticleStatuses) IsValid() bool {
+	switch e {
+	case ArticleStatusesDraft, ArticleStatusesUnderReview, ArticleStatusesPublished, ArticleStatusesDeleted, ArticleStatusesOnHold:
+		return true
+	}
+	return false
+}
+
+func (e ArticleStatuses) String() string {
+	return string(e)
+}
+
+func (e *ArticleStatuses) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ArticleStatuses(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ArticleStatuses", str)
+	}
+	return nil
+}
+
+func (e ArticleStatuses) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type StatusPattern string
 
 const (

@@ -1,0 +1,7 @@
+enum ArticleStatuses{
+    Draft 
+    UnderReview
+    Published
+    Deleted
+    OnHold
+}

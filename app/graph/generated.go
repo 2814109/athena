@@ -69,7 +69,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Articles func(childComplexity int) int
+		Articles func(childComplexity int, status model.ArticleStatuses) int
 		Items    func(childComplexity int, userID string) int
 		Todos    func(childComplexity int, userID int) int
 	}
@@ -96,7 +96,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	Todos(ctx context.Context, userID int) ([]*models.Todo, error)
-	Articles(ctx context.Context) ([]*models.Article, error)
+	Articles(ctx context.Context, status model.ArticleStatuses) ([]*models.Article, error)
 	Items(ctx context.Context, userID string) ([]*model.Item, error)
 }
 type TodoResolver interface {
@@ -210,7 +210,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.Articles(childComplexity), true
+		args, err := ec.field_Query_articles_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Articles(childComplexity, args["status"].(model.ArticleStatuses)), true
 
 	case "Query.items":
 		if e.complexity.Query.Items == nil {
@@ -347,7 +352,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(parsedSchema, parsedSchema.Types[name]), nil
 }
 
-//go:embed "schemas/inputs/input.graphqls" "schemas/mutations/mutation.graphqls" "schemas/queries/query.graphqls" "schemas/schema.graphqls" "schemas/types/type.graphqls"
+//go:embed "schemas/enums/enum.graphqls" "schemas/inputs/input.graphqls" "schemas/mutations/mutation.graphqls" "schemas/queries/query.graphqls" "schemas/schema.graphqls" "schemas/types/type.graphqls"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -359,6 +364,7 @@ func sourceData(filename string) string {
 }
 
 var sources = []*ast.Source{
+	{Name: "schemas/enums/enum.graphqls", Input: sourceData("schemas/enums/enum.graphqls"), BuiltIn: false},
 	{Name: "schemas/inputs/input.graphqls", Input: sourceData("schemas/inputs/input.graphqls"), BuiltIn: false},
 	{Name: "schemas/mutations/mutation.graphqls", Input: sourceData("schemas/mutations/mutation.graphqls"), BuiltIn: false},
 	{Name: "schemas/queries/query.graphqls", Input: sourceData("schemas/queries/query.graphqls"), BuiltIn: false},
@@ -413,6 +419,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_articles_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.ArticleStatuses
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg0, err = ec.unmarshalNArticleStatuses2my_gql_serverᚋgraphᚋmodelᚐArticleStatuses(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg0
 	return args, nil
 }
 
@@ -1088,7 +1109,7 @@ func (ec *executionContext) _Query_articles(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Articles(rctx)
+		return ec.resolvers.Query().Articles(rctx, fc.Args["status"].(model.ArticleStatuses))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1124,6 +1145,17 @@ func (ec *executionContext) fieldContext_Query_articles(ctx context.Context, fie
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Article", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_articles_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
 	}
 	return fc, nil
 }
@@ -4194,6 +4226,16 @@ func (ec *executionContext) marshalNArticle2ᚖmy_gql_serverᚋmy_modelsᚐArtic
 		return graphql.Null
 	}
 	return ec._Article(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNArticleStatuses2my_gql_serverᚋgraphᚋmodelᚐArticleStatuses(ctx context.Context, v interface{}) (model.ArticleStatuses, error) {
+	var res model.ArticleStatuses
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNArticleStatuses2my_gql_serverᚋgraphᚋmodelᚐArticleStatuses(ctx context.Context, sel ast.SelectionSet, v model.ArticleStatuses) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

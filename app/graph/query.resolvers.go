@@ -31,8 +31,8 @@ func (r *queryResolver) Todos(ctx context.Context, userID int) ([]*models.Todo, 
 }
 
 // Articles is the resolver for the articles field.
-func (r *queryResolver) Articles(ctx context.Context) ([]*models.Article, error) {
-	articles, err := repositories.FindAllArticle(ctx)
+func (r *queryResolver) Articles(ctx context.Context, status model.ArticleStatuses) ([]*models.Article, error) {
+	articles, err := repositories.FindAllArticle(ctx, status)
 
 	if err != nil {
 		return nil, err
