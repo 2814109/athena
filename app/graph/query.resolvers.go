@@ -9,32 +9,28 @@ import (
 	"fmt"
 	"log"
 	"my_gql_server/graph/model"
+	"my_gql_server/infrastructures/repositories"
+	"my_gql_server/my_models"
+
+	lop "github.com/samber/lo/parallel"
 )
 
 // Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+func (r *queryResolver) Todos(ctx context.Context) ([]*models.Todo, error) {
 	log.Print("exec todos query")
 
-	return []*model.Todo{
-		{
-			ID:   "TODO-1 first test",
-			Text: "My Todo 1",
-			User: &model.User{
-				ID:   "User-1",
-				Name: "hsaki",
-			},
-			Done: true,
-		},
-		{
-			ID:   "TODO-2",
-			Text: "My Todo 2",
-			User: &model.User{
-				ID:   "User-1",
-				Name: "hsaki",
-			},
-			Done: false,
-		},
-	}, nil
+	todos, err := repositories.FindAllTodo(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	result := lop.Map(todos, func(todo *models.Todo, _ int) *models.Todo {
+		return todo
+
+	})
+
+	return result, nil
 }
 
 // Articles is the resolver for the articles field.

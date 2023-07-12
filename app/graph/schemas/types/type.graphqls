@@ -1,13 +1,14 @@
 type Todo {
   id: ID!
-  text: String!
-  done: Boolean!
+  content: String!
+
   user: User!
 }
 
 type User {
   id: ID!
-  name: String!
+  username: String!
+  email: String!
 }
 
 type Article {

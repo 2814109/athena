@@ -83,9 +83,10 @@ models:
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
   Todo:
-    fields:
-      user:
-        resolver: true
+    model: ./my_models.Todo
+  
+  User:
+    model: ./my_models.User
   Item:
     fields:
       user:

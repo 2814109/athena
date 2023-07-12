@@ -7,17 +7,20 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 	"my_gql_server/graph/model"
+	"my_gql_server/my_models"
 )
 
 // User is the resolver for the user field.
-func (r *itemResolver) User(ctx context.Context, obj *model.Item) (*model.User, error) {
+func (r *itemResolver) User(ctx context.Context, obj *model.Item) (*models.User, error) {
 	panic(fmt.Errorf("not implemented: User - user"))
 }
 
 // User is the resolver for the user field.
-func (r *todoResolver) User(ctx context.Context, obj *model.Todo) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: User - user"))
+func (r *todoResolver) User(ctx context.Context, obj *models.Todo) (*models.User, error) {
+	log.Printf("user %s", obj.R.User.Email)
+	return obj.R.User, nil
 }
 
 // Item returns ItemResolver implementation.

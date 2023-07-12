@@ -5,6 +5,7 @@ package model
 import (
 	"fmt"
 	"io"
+	"my_gql_server/my_models"
 	"strconv"
 )
 
@@ -16,11 +17,11 @@ type Article struct {
 }
 
 type Item struct {
-	ID           string `json:"id"`
-	Label        string `json:"label"`
-	CategoryName string `json:"categoryName"`
-	Const        int    `json:"const"`
-	User         *User  `json:"user,omitempty"`
+	ID           string       `json:"id"`
+	Label        string       `json:"label"`
+	CategoryName string       `json:"categoryName"`
+	Const        int          `json:"const"`
+	User         *models.User `json:"user,omitempty"`
 }
 
 type NewTodo struct {
@@ -30,18 +31,6 @@ type NewTodo struct {
 }
 
 type NewUser struct {
-	Name string `json:"name"`
-}
-
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
-}
-
-type User struct {
-	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 

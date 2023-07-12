@@ -6,36 +6,39 @@ package graph
 
 import (
 	"context"
-	"log"
 	"my_gql_server/graph/model"
-	"my_gql_server/graph/validation"
+	"my_gql_server/my_models"
 )
 
 // CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	log.Print("before validation handler")
+func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*models.Todo, error) {
+	// log.Print("before validation handler")
 
-	if err := validation.Handler(input); err != nil {
-		return nil, err
-	}
-	log.Print("throw validation handler")
+	// if err := validation.Handler(input); err != nil {
+	// 	return nil, err
+	// }
+	// log.Print("throw validation handler")
 
-	return &model.Todo{
-		ID:   "TODO-3",
-		Text: input.Text,
-		User: &model.User{
-			ID:   input.UserID,
-			Name: "name",
-		},
-	}, nil
+	// return &model.Todo{
+	// 	ID:   "TODO-3",
+	// 	Text: input.Text,
+	// 	User: &model.User{
+	// 		ID:   input.UserID,
+	// 		Name: "name",
+	// 	},
+	// }, nil
+
+	return nil, nil
 }
 
 // CreateUser is the resolver for the createUser field.
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	return &model.User{
-		ID:   "XXXX",
-		Name: input.Name,
-	}, nil
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*models.User, error) {
+	// return &model.User{
+	// 	ID:   "XXXX",
+	// 	Name: input.Name,
+	// }, nil
+
+	return nil, nil
 }
 
 // Mutation returns MutationResolver implementation.
