@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
-	"my_gql_server/my_models"
+	models "my_gql_server/my_models"
 
 	lop "github.com/samber/lo/parallel"
 )
@@ -31,8 +31,19 @@ func (r *queryResolver) Todos(ctx context.Context, userID int) ([]*models.Todo, 
 }
 
 // Articles is the resolver for the articles field.
-func (r *queryResolver) Articles(ctx context.Context) ([]*model.Article, error) {
-	panic(fmt.Errorf("not implemented: Articles - articles"))
+func (r *queryResolver) Articles(ctx context.Context) ([]*models.Article, error) {
+	articles, err := repositories.FindAllArticle(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	result := lop.Map(articles, func(article *models.Article, _ int) *models.Article {
+		return article
+
+	})
+
+	return result, nil
 }
 
 // Items is the resolver for the items field.

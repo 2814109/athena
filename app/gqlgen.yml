@@ -84,9 +84,10 @@ models:
       - github.com/99designs/gqlgen/graphql.Int32
   Todo:
     model: ./my_models.Todo
-  
   User:
     model: ./my_models.User
+  Article:
+    model: ./my_models.Article
   Item:
     fields:
       user:
