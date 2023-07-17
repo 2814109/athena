@@ -6,27 +6,15 @@ package graph
 
 import (
 	"context"
+	"log"
 	"my_gql_server/graph/model"
-	"my_gql_server/my_models"
+	models "my_gql_server/my_models"
 )
 
 // CreateTodo is the resolver for the createTodo field.
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*models.Todo, error) {
 	// log.Print("before validation handler")
-
-	// if err := validation.Handler(input); err != nil {
-	// 	return nil, err
-	// }
-	// log.Print("throw validation handler")
-
-	// return &model.Todo{
-	// 	ID:   "TODO-3",
-	// 	Text: input.Text,
-	// 	User: &model.User{
-	// 		ID:   input.UserID,
-	// 		Name: "name",
-	// 	},
-	// }, nil
+	log.Print("run exec create todo")
 
 	return nil, nil
 }
