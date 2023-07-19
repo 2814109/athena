@@ -12,7 +12,7 @@ enum StatusPattern {
 input NewTodo {
   status: StatusPattern
   text: String! @constraint(format: "required_if=Status ACTIVE,newline,omitempty")
-  userId: String!
+  userId: Int!
 }
 
 input NewUser {

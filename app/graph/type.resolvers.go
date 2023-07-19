@@ -8,7 +8,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	models "my_gql_server/my_models"
+	"my_gql_server/my_models"
 )
 
 // CreatedAt is the resolver for the createdAt field.

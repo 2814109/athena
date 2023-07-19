@@ -10,6 +10,8 @@ import (
 	"my_gql_server/graph/model"
 	"my_gql_server/graph/validation"
 	models "my_gql_server/my_models"
+
+	"my_gql_server/infrastructures/repositories"
 )
 
 // CreateTodo is the resolver for the createTodo field.
@@ -19,7 +21,13 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	}
 	log.Print("run exec create todo")
 
-	return nil, nil
+	todo, err := repositories.InsertTodo(ctx, input)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return todo, nil
 }
 
 // CreateUser is the resolver for the createUser field.
