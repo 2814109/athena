@@ -8,14 +8,15 @@ import (
 	"context"
 	"log"
 	"my_gql_server/graph/model"
+	"my_gql_server/graph/validation"
 	models "my_gql_server/my_models"
 )
 
 // CreateTodo is the resolver for the createTodo field.
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*models.Todo, error) {
-	// if err := validation.Handler(input); err != nil {
-	// 	return nil, err
-	// }
+	if err := validation.Handler(input); err != nil {
+		return nil, err
+	}
 	log.Print("run exec create todo")
 
 	return nil, nil
@@ -23,9 +24,9 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*models.User, error) {
-	// if err := validation.Handler(input); err != nil {
-	// 	return nil, err
-	// }
+	if err := validation.Handler(input); err != nil {
+		return nil, err
+	}
 	return nil, nil
 }
 
