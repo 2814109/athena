@@ -30,26 +30,50 @@ func FindAllTodoByUserId(ctx context.Context, userId int) (models.TodoSlice, err
 	return todos, nil
 }
 
-func InsertTodo(ctx context.Context, input model.NewTodo) (*models.Todo, error) {
+func CreateTodo(ctx context.Context, input model.CreateTodo) (*models.Todo, error) {
 	connectDB, err := sql.Open("postgres", fmt.Sprintf("host=postgres dbname=%s user=%s password=%s sslmode=disable", "postgres", "postgres", "postgres"))
 
 	if err != nil {
 		return nil, err
 	}
 
-	insertTodoResource := &models.Todo{
+	todoResource := &models.Todo{
 		Content: input.Text,
 		UserID:  input.UserID,
 	}
 
-	if err := insertTodoResource.Insert(ctx, connectDB, boil.Infer()); err != nil {
+	if err := todoResource.Insert(ctx, connectDB, boil.Infer()); err != nil {
 		return nil, err
 	}
 
-	if err := insertTodoResource.Reload(ctx, connectDB); err != nil {
+	if err := todoResource.Reload(ctx, connectDB); err != nil {
 		return nil, err
 	}
 
-	return insertTodoResource, nil
+	return todoResource, nil
 
+}
+
+func UpdateTodo(ctx context.Context, input model.UpdateTodo) (*models.Todo, error) {
+	connectDB, err := sql.Open("postgres", fmt.Sprintf("host=postgres dbname=%s user=%s password=%s sslmode=disable", "postgres", "postgres", "postgres"))
+
+	if err != nil {
+		return nil, err
+	}
+
+	todoResource := &models.Todo{
+		ID:      input.ID,
+		Content: input.Text,
+		UserID:  input.UserID,
+	}
+
+	id, err := todoResource.Update(ctx, connectDB, boil.Infer())
+	log.Printf("id value is %v", id)
+	if err != nil {
+		return nil, err
+	}
+	if err := todoResource.Reload(ctx, connectDB); err != nil {
+		return nil, err
+	}
+	return todoResource, nil
 }

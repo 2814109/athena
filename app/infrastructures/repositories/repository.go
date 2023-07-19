@@ -3,5 +3,6 @@ package repositories
 type Repository interface {
 	FindAllTodoByUserId()
 	FindAllArticle()
-	InsertTodo()
+	CreateTodo()
+	UpdateTodo()
 }

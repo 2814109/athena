@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-type NewTodo struct {
+type CreateTodo struct {
 	Status *StatusPattern `json:"status,omitempty"`
 	Text   string         `json:"text" validate:"required_if=Status ACTIVE,newline,omitempty"`
 	UserID int            `json:"userId"`
@@ -16,6 +16,13 @@ type NewTodo struct {
 
 type NewUser struct {
 	Name string `json:"name"`
+}
+
+type UpdateTodo struct {
+	ID     int            `json:"ID"`
+	Status *StatusPattern `json:"status,omitempty"`
+	Text   string         `json:"text" validate:"required_if=Status ACTIVE,newline,omitempty"`
+	UserID int            `json:"userId"`
 }
 
 type ArticleStatuses string

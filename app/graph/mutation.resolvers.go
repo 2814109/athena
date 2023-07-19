@@ -14,13 +14,29 @@ import (
 )
 
 // CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*models.Todo, error) {
+func (r *mutationResolver) CreateTodo(ctx context.Context, input model.CreateTodo) (*models.Todo, error) {
 	if err := validation.Handler(input); err != nil {
 		return nil, err
 	}
 	log.Print("run exec create todo")
 
-	todo, err := repositories.InsertTodo(ctx, input)
+	todo, err := repositories.CreateTodo(ctx, input)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return todo, nil
+}
+
+// UpdateTodo is the resolver for the updateTodo field.
+func (r *mutationResolver) UpdateTodo(ctx context.Context, input model.UpdateTodo) (*models.Todo, error) {
+	if err := validation.Handler(input); err != nil {
+		return nil, err
+	}
+	log.Print("run exec update todo")
+
+	todo, err := repositories.UpdateTodo(ctx, input)
 
 	if err != nil {
 		return nil, err
