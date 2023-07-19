@@ -77,3 +77,19 @@ func UpdateTodo(ctx context.Context, input model.UpdateTodo) (*models.Todo, erro
 	}
 	return todoResource, nil
 }
+
+func FindTodoByID(ctx context.Context, ID int) (*models.Todo, error) {
+	connectDB, err := sql.Open("postgres", fmt.Sprintf("host=postgres dbname=%s user=%s password=%s sslmode=disable", "postgres", "postgres", "postgres"))
+
+	if err != nil {
+		return nil, err
+	}
+
+	todo, modelErr := models.Todos(qm.Load(models.TodoRels.User), models.TodoWhere.ID.EQ(ID)).One(ctx, connectDB)
+
+	if modelErr != nil {
+		log.Print("error of modelErr")
+		return nil, modelErr
+	}
+	return todo, nil
+}

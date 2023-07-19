@@ -5,4 +5,5 @@ type Repository interface {
 	FindAllArticle()
 	CreateTodo()
 	UpdateTodo()
+	FindTodoByID()
 }

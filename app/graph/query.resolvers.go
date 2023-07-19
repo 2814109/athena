@@ -8,7 +8,7 @@ import (
 	"context"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
-	"my_gql_server/my_models"
+	models "my_gql_server/my_models"
 
 	lop "github.com/samber/lo/parallel"
 )
@@ -27,6 +27,17 @@ func (r *queryResolver) Todos(ctx context.Context, userID int) ([]*models.Todo, 
 	})
 
 	return result, nil
+}
+
+// Todo is the resolver for the todo field.
+func (r *queryResolver) Todo(ctx context.Context, id int) (*models.Todo, error) {
+	todo, err := repositories.FindTodoByID(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return todo, nil
 }
 
 // Articles is the resolver for the articles field.

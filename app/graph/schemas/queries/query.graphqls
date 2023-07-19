@@ -1,5 +1,6 @@
 type Query {
   todos(userId: Int!): [Todo!]!
+  todo(ID: Int!):Todo!
   articles(status: ArticleStatuses!): [Article!]!
   items(userId: Int!): [Item!]!
 }
