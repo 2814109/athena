@@ -9,9 +9,8 @@ import (
 	"log"
 	"my_gql_server/graph/model"
 	"my_gql_server/graph/validation"
-	models "my_gql_server/my_models"
-
 	"my_gql_server/infrastructures/repositories"
+	"my_gql_server/my_models"
 )
 
 // CreateTodo is the resolver for the createTodo field.
