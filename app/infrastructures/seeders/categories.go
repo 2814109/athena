@@ -26,7 +26,7 @@ func UpsertSeederOfCategories(ctx context.Context, connectDB *sql.DB) {
 	})
 	lo.ForEach(categoriesModel, func(category models.Category, index int) {
 		if err := category.Upsert(ctx, connectDB, true, []string{"classification"}, boil.Whitelist("classification"), boil.Infer()); err != nil {
-			log.Printf("multi insert category for each error : %s , index is %v", err, index)
+			log.Printf("error : %s , index is %v", err, index)
 		}
 	})
 }

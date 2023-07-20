@@ -23,7 +23,7 @@ import (
 
 // Account is an object representing the database table.
 type Account struct {
-	AccountID   int    `boil:"account_id" json:"account_id" toml:"account_id" yaml:"account_id"`
+	ID          int    `boil:"id" json:"id" toml:"id" yaml:"id"`
 	Name        string `boil:"name" json:"name" toml:"name" yaml:"name"`
 	AccountType string `boil:"account_type" json:"account_type" toml:"account_type" yaml:"account_type"`
 
@@ -32,21 +32,21 @@ type Account struct {
 }
 
 var AccountColumns = struct {
-	AccountID   string
+	ID          string
 	Name        string
 	AccountType string
 }{
-	AccountID:   "account_id",
+	ID:          "id",
 	Name:        "name",
 	AccountType: "account_type",
 }
 
 var AccountTableColumns = struct {
-	AccountID   string
+	ID          string
 	Name        string
 	AccountType string
 }{
-	AccountID:   "accounts.account_id",
+	ID:          "accounts.id",
 	Name:        "accounts.name",
 	AccountType: "accounts.account_type",
 }
@@ -77,11 +77,11 @@ func (w whereHelperint) NIN(slice []int) qm.QueryMod {
 }
 
 var AccountWhere = struct {
-	AccountID   whereHelperint
+	ID          whereHelperint
 	Name        whereHelperstring
 	AccountType whereHelperstring
 }{
-	AccountID:   whereHelperint{field: "\"accounts\".\"account_id\""},
+	ID:          whereHelperint{field: "\"accounts\".\"id\""},
 	Name:        whereHelperstring{field: "\"accounts\".\"name\""},
 	AccountType: whereHelperstring{field: "\"accounts\".\"account_type\""},
 }
@@ -124,10 +124,10 @@ func (r *accountR) GetTransactions() TransactionSlice {
 type accountL struct{}
 
 var (
-	accountAllColumns            = []string{"account_id", "name", "account_type"}
+	accountAllColumns            = []string{"id", "name", "account_type"}
 	accountColumnsWithoutDefault = []string{"name", "account_type"}
-	accountColumnsWithDefault    = []string{"account_id"}
-	accountPrimaryKeyColumns     = []string{"account_id"}
+	accountColumnsWithDefault    = []string{"id"}
+	accountPrimaryKeyColumns     = []string{"id"}
 	accountGeneratedColumns      = []string{}
 )
 
@@ -428,7 +428,7 @@ func (o *Account) Transactions(mods ...qm.QueryMod) transactionQuery {
 	}
 
 	queryMods = append(queryMods,
-		qm.Where("\"transactions\".\"account_id\"=?", o.AccountID),
+		qm.Where("\"transactions\".\"account_id\"=?", o.ID),
 	)
 
 	return Transactions(queryMods...)
@@ -587,7 +587,7 @@ func (accountL) LoadTransactions(ctx context.Context, e boil.ContextExecutor, si
 		if object.R == nil {
 			object.R = &accountR{}
 		}
-		args = append(args, object.AccountID)
+		args = append(args, object.ID)
 	} else {
 	Outer:
 		for _, obj := range slice {
@@ -596,12 +596,12 @@ func (accountL) LoadTransactions(ctx context.Context, e boil.ContextExecutor, si
 			}
 
 			for _, a := range args {
-				if queries.Equal(a, obj.AccountID) {
+				if queries.Equal(a, obj.ID) {
 					continue Outer
 				}
 			}
 
-			args = append(args, obj.AccountID)
+			args = append(args, obj.ID)
 		}
 	}
 
@@ -654,7 +654,7 @@ func (accountL) LoadTransactions(ctx context.Context, e boil.ContextExecutor, si
 
 	for _, foreign := range resultSlice {
 		for _, local := range slice {
-			if queries.Equal(local.AccountID, foreign.AccountID) {
+			if queries.Equal(local.ID, foreign.AccountID) {
 				local.R.Transactions = append(local.R.Transactions, foreign)
 				if foreign.R == nil {
 					foreign.R = &transactionR{}
@@ -684,7 +684,7 @@ func (o *Account) SetAccountAccountType(ctx context.Context, exec boil.ContextEx
 		strmangle.SetParamNames("\"", "\"", 1, []string{"account_type"}),
 		strmangle.WhereClause("\"", "\"", 2, accountPrimaryKeyColumns),
 	)
-	values := []interface{}{related.Label, o.AccountID}
+	values := []interface{}{related.Label, o.ID}
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -723,7 +723,7 @@ func (o *Account) AddTransactions(ctx context.Context, exec boil.ContextExecutor
 	var err error
 	for _, rel := range related {
 		if insert {
-			queries.Assign(&rel.AccountID, o.AccountID)
+			queries.Assign(&rel.AccountID, o.ID)
 			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
 				return errors.Wrap(err, "failed to insert into foreign table")
 			}
@@ -733,7 +733,7 @@ func (o *Account) AddTransactions(ctx context.Context, exec boil.ContextExecutor
 				strmangle.SetParamNames("\"", "\"", 1, []string{"account_id"}),
 				strmangle.WhereClause("\"", "\"", 2, transactionPrimaryKeyColumns),
 			)
-			values := []interface{}{o.AccountID, rel.ID}
+			values := []interface{}{o.ID, rel.ID}
 
 			if boil.IsDebug(ctx) {
 				writer := boil.DebugWriterFrom(ctx)
@@ -744,7 +744,7 @@ func (o *Account) AddTransactions(ctx context.Context, exec boil.ContextExecutor
 				return errors.Wrap(err, "failed to update foreign table")
 			}
 
-			queries.Assign(&rel.AccountID, o.AccountID)
+			queries.Assign(&rel.AccountID, o.ID)
 		}
 	}
 
@@ -776,7 +776,7 @@ func (o *Account) AddTransactions(ctx context.Context, exec boil.ContextExecutor
 // Sets related.R.Account's Transactions accordingly.
 func (o *Account) SetTransactions(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Transaction) error {
 	query := "update \"transactions\" set \"account_id\" = null where \"account_id\" = $1"
-	values := []interface{}{o.AccountID}
+	values := []interface{}{o.ID}
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
 		fmt.Fprintln(writer, query)
@@ -855,7 +855,7 @@ func Accounts(mods ...qm.QueryMod) accountQuery {
 
 // FindAccount retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindAccount(ctx context.Context, exec boil.ContextExecutor, accountID int, selectCols ...string) (*Account, error) {
+func FindAccount(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*Account, error) {
 	accountObj := &Account{}
 
 	sel := "*"
@@ -863,10 +863,10 @@ func FindAccount(ctx context.Context, exec boil.ContextExecutor, accountID int, 
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from \"accounts\" where \"account_id\"=$1", sel,
+		"select %s from \"accounts\" where \"id\"=$1", sel,
 	)
 
-	q := queries.Raw(query, accountID)
+	q := queries.Raw(query, iD)
 
 	err := q.Bind(ctx, exec, accountObj)
 	if err != nil {
@@ -1218,7 +1218,7 @@ func (o *Account) Delete(ctx context.Context, exec boil.ContextExecutor) (int64,
 	}
 
 	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), accountPrimaryKeyMapping)
-	sql := "DELETE FROM \"accounts\" WHERE \"account_id\"=$1"
+	sql := "DELETE FROM \"accounts\" WHERE \"id\"=$1"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -1315,7 +1315,7 @@ func (o AccountSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) 
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Account) Reload(ctx context.Context, exec boil.ContextExecutor) error {
-	ret, err := FindAccount(ctx, exec, o.AccountID)
+	ret, err := FindAccount(ctx, exec, o.ID)
 	if err != nil {
 		return err
 	}
@@ -1354,16 +1354,16 @@ func (o *AccountSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor)
 }
 
 // AccountExists checks if the Account row exists.
-func AccountExists(ctx context.Context, exec boil.ContextExecutor, accountID int) (bool, error) {
+func AccountExists(ctx context.Context, exec boil.ContextExecutor, iD int) (bool, error) {
 	var exists bool
-	sql := "select exists(select 1 from \"accounts\" where \"account_id\"=$1 limit 1)"
+	sql := "select exists(select 1 from \"accounts\" where \"id\"=$1 limit 1)"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
 		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, accountID)
+		fmt.Fprintln(writer, iD)
 	}
-	row := exec.QueryRowContext(ctx, sql, accountID)
+	row := exec.QueryRowContext(ctx, sql, iD)
 
 	err := row.Scan(&exists)
 	if err != nil {
@@ -1375,5 +1375,5 @@ func AccountExists(ctx context.Context, exec boil.ContextExecutor, accountID int
 
 // Exists checks if the Account row exists.
 func (o *Account) Exists(ctx context.Context, exec boil.ContextExecutor) (bool, error) {
-	return AccountExists(ctx, exec, o.AccountID)
+	return AccountExists(ctx, exec, o.ID)
 }

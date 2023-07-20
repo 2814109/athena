@@ -504,7 +504,7 @@ func (q transactionQuery) Exists(ctx context.Context, exec boil.ContextExecutor)
 // Account pointed to by the foreign key.
 func (o *Transaction) Account(mods ...qm.QueryMod) accountQuery {
 	queryMods := []qm.QueryMod{
-		qm.Where("\"account_id\" = ?", o.AccountID),
+		qm.Where("\"id\" = ?", o.AccountID),
 	}
 
 	queryMods = append(queryMods, mods...)
@@ -575,7 +575,7 @@ func (transactionL) LoadAccount(ctx context.Context, e boil.ContextExecutor, sin
 
 	query := NewQuery(
 		qm.From(`accounts`),
-		qm.WhereIn(`accounts.account_id in ?`, args...),
+		qm.WhereIn(`accounts.id in ?`, args...),
 	)
 	if mods != nil {
 		mods.Apply(query)
@@ -622,7 +622,7 @@ func (transactionL) LoadAccount(ctx context.Context, e boil.ContextExecutor, sin
 
 	for _, local := range slice {
 		for _, foreign := range resultSlice {
-			if queries.Equal(local.AccountID, foreign.AccountID) {
+			if queries.Equal(local.AccountID, foreign.ID) {
 				local.R.Account = foreign
 				if foreign.R == nil {
 					foreign.R = &accountR{}
@@ -652,7 +652,7 @@ func (o *Transaction) SetAccount(ctx context.Context, exec boil.ContextExecutor,
 		strmangle.SetParamNames("\"", "\"", 1, []string{"account_id"}),
 		strmangle.WhereClause("\"", "\"", 2, transactionPrimaryKeyColumns),
 	)
-	values := []interface{}{related.AccountID, o.ID}
+	values := []interface{}{related.ID, o.ID}
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -663,7 +663,7 @@ func (o *Transaction) SetAccount(ctx context.Context, exec boil.ContextExecutor,
 		return errors.Wrap(err, "failed to update local table")
 	}
 
-	queries.Assign(&o.AccountID, related.AccountID)
+	queries.Assign(&o.AccountID, related.ID)
 	if o.R == nil {
 		o.R = &transactionR{
 			Account: related,

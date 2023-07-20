@@ -531,7 +531,7 @@ func (o *AccountType) AddAccounts(ctx context.Context, exec boil.ContextExecutor
 				strmangle.SetParamNames("\"", "\"", 1, []string{"account_type"}),
 				strmangle.WhereClause("\"", "\"", 2, accountPrimaryKeyColumns),
 			)
-			values := []interface{}{o.Label, rel.AccountID}
+			values := []interface{}{o.Label, rel.ID}
 
 			if boil.IsDebug(ctx) {
 				writer := boil.DebugWriterFrom(ctx)

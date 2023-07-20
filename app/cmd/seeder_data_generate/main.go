@@ -12,8 +12,6 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"my_gql_server/infrastructures/dummies"
-
 	"my_gql_server/infrastructures/seeders"
 )
 
@@ -49,10 +47,5 @@ func main() {
 	seeders.UpsertSeederOfPaymentTypes(ctx, connectDB)
 	seeders.UpsertSeederOfAccountTypes(ctx, connectDB)
 	seeders.UpsertSeederOfAccounts(ctx, connectDB)
-
-	dummies.CreateDummyUsers(ctx, connectDB)
-	dummies.CreateDummyArticles(ctx, connectDB)
-	dummies.CreateAnnualItems(ctx, connectDB)
-	dummies.CreateTodos(ctx, connectDB)
 
 }

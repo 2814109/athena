@@ -31,3 +31,7 @@ tasks:
   dummydata-insert:
     cmds:
       - cd ./app && go run ./cmd/dummy_data_generate/main.go
+
+  seeding:
+    cmds:
+      - cd ./app && go run ./cmd/seeder_data_generate/main.go
