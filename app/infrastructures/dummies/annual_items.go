@@ -18,7 +18,7 @@ import (
 	"my_gql_server/infrastructures/dummies/libs"
 )
 
-func AnnualItems(ctx context.Context, connectDB *sql.DB) {
+func CreateAnnualItems(ctx context.Context, connectDB *sql.DB) {
 	categoryClassificationList := libs.GetCategoryClassificationList(ctx, connectDB)
 	userIdList := libs.GetUserIdList(ctx, connectDB)
 

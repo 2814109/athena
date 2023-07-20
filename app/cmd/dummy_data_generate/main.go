@@ -49,7 +49,7 @@ func main() {
 
 	dummies.CreateDummyUsers(ctx, connectDB)
 	dummies.CreateDummyArticles(ctx, connectDB)
-	dummies.AnnualItems(ctx, connectDB)
+	dummies.CreateAnnualItems(ctx, connectDB)
 	dummies.CreateTodos(ctx, connectDB)
 
 }
