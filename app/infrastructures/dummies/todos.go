@@ -1,4 +1,4 @@
-package dummy
+package dummies
 
 import (
 	"context"
@@ -15,7 +15,7 @@ import (
 
 	"github.com/samber/lo"
 
-	"my_gql_server/infrastructures/dummy/libs"
+	"my_gql_server/infrastructures/dummies/libs"
 )
 
 func CreateTodos(ctx context.Context, connectDB *sql.DB) {

@@ -12,7 +12,9 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"my_gql_server/infrastructures/dummy"
+	"my_gql_server/infrastructures/dummies"
+
+	"my_gql_server/infrastructures/seeders"
 )
 
 func main() {
@@ -42,15 +44,12 @@ func main() {
 
 	ctx := context.Background()
 
-	dummy.CreateDummyUsers(ctx, connectDB)
-	dummy.UpsertDummyStatuses(ctx, connectDB)
+	seeders.UpsertDummyCategories(ctx, connectDB)
+	seeders.UpsertDummyStatuses(ctx, connectDB)
 
-	dummy.CreateDummyArticles(ctx, connectDB)
-
-	dummy.UpsertDummyCategories(ctx, connectDB)
-
-	dummy.AnnualItems(ctx, connectDB)
-
-	dummy.CreateTodos(ctx, connectDB)
+	dummies.CreateDummyUsers(ctx, connectDB)
+	dummies.CreateDummyArticles(ctx, connectDB)
+	dummies.AnnualItems(ctx, connectDB)
+	dummies.CreateTodos(ctx, connectDB)
 
 }
