@@ -1,6 +1,11 @@
 version: '3.8'
 
 services:
+  apollo-router:
+    container_name: apollo-router
+    image: ghcr.io/apollographql/router:v1.25.0
+    ports:
+      - "4000:4000"
   app:
     container_name: ${APP_CONTAINER_NAME}
     build: 
