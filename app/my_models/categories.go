@@ -51,14 +51,17 @@ var CategoryWhere = struct {
 
 // CategoryRels is where relationship names are stored.
 var CategoryRels = struct {
-	CategoryNameItems string
+	CategoryNameItems    string
+	CategoryNamePayments string
 }{
-	CategoryNameItems: "CategoryNameItems",
+	CategoryNameItems:    "CategoryNameItems",
+	CategoryNamePayments: "CategoryNamePayments",
 }
 
 // categoryR is where relationships are stored.
 type categoryR struct {
-	CategoryNameItems ItemSlice `boil:"CategoryNameItems" json:"CategoryNameItems" toml:"CategoryNameItems" yaml:"CategoryNameItems"`
+	CategoryNameItems    ItemSlice    `boil:"CategoryNameItems" json:"CategoryNameItems" toml:"CategoryNameItems" yaml:"CategoryNameItems"`
+	CategoryNamePayments PaymentSlice `boil:"CategoryNamePayments" json:"CategoryNamePayments" toml:"CategoryNamePayments" yaml:"CategoryNamePayments"`
 }
 
 // NewStruct creates a new relationship struct
@@ -71,6 +74,13 @@ func (r *categoryR) GetCategoryNameItems() ItemSlice {
 		return nil
 	}
 	return r.CategoryNameItems
+}
+
+func (r *categoryR) GetCategoryNamePayments() PaymentSlice {
+	if r == nil {
+		return nil
+	}
+	return r.CategoryNamePayments
 }
 
 // categoryL is where Load methods for each relationship are stored.
@@ -376,6 +386,20 @@ func (o *Category) CategoryNameItems(mods ...qm.QueryMod) itemQuery {
 	return Items(queryMods...)
 }
 
+// CategoryNamePayments retrieves all the payment's Payments with an executor via category_name column.
+func (o *Category) CategoryNamePayments(mods ...qm.QueryMod) paymentQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"payments\".\"category_name\"=?", o.Classification),
+	)
+
+	return Payments(queryMods...)
+}
+
 // LoadCategoryNameItems allows an eager lookup of values, cached into the
 // loaded structs of the objects. This is for a 1-M or N-M relationship.
 func (categoryL) LoadCategoryNameItems(ctx context.Context, e boil.ContextExecutor, singular bool, maybeCategory interface{}, mods queries.Applicator) error {
@@ -490,6 +514,120 @@ func (categoryL) LoadCategoryNameItems(ctx context.Context, e boil.ContextExecut
 	return nil
 }
 
+// LoadCategoryNamePayments allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (categoryL) LoadCategoryNamePayments(ctx context.Context, e boil.ContextExecutor, singular bool, maybeCategory interface{}, mods queries.Applicator) error {
+	var slice []*Category
+	var object *Category
+
+	if singular {
+		var ok bool
+		object, ok = maybeCategory.(*Category)
+		if !ok {
+			object = new(Category)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeCategory)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeCategory))
+			}
+		}
+	} else {
+		s, ok := maybeCategory.(*[]*Category)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeCategory)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeCategory))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &categoryR{}
+		}
+		args = append(args, object.Classification)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &categoryR{}
+			}
+
+			for _, a := range args {
+				if a == obj.Classification {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.Classification)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`payments`),
+		qm.WhereIn(`payments.category_name in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load payments")
+	}
+
+	var resultSlice []*Payment
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice payments")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on payments")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for payments")
+	}
+
+	if len(paymentAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.CategoryNamePayments = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &paymentR{}
+			}
+			foreign.R.CategoryNameCategory = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.Classification == foreign.CategoryName {
+				local.R.CategoryNamePayments = append(local.R.CategoryNamePayments, foreign)
+				if foreign.R == nil {
+					foreign.R = &paymentR{}
+				}
+				foreign.R.CategoryNameCategory = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
 // AddCategoryNameItems adds the given related objects to the existing relationships
 // of the category, optionally inserting them as new records.
 // Appends related to o.R.CategoryNameItems.
@@ -534,6 +672,59 @@ func (o *Category) AddCategoryNameItems(ctx context.Context, exec boil.ContextEx
 	for _, rel := range related {
 		if rel.R == nil {
 			rel.R = &itemR{
+				CategoryNameCategory: o,
+			}
+		} else {
+			rel.R.CategoryNameCategory = o
+		}
+	}
+	return nil
+}
+
+// AddCategoryNamePayments adds the given related objects to the existing relationships
+// of the category, optionally inserting them as new records.
+// Appends related to o.R.CategoryNamePayments.
+// Sets related.R.CategoryNameCategory appropriately.
+func (o *Category) AddCategoryNamePayments(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Payment) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.CategoryName = o.Classification
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"payments\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"category_name"}),
+				strmangle.WhereClause("\"", "\"", 2, paymentPrimaryKeyColumns),
+			)
+			values := []interface{}{o.Classification, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.CategoryName = o.Classification
+		}
+	}
+
+	if o.R == nil {
+		o.R = &categoryR{
+			CategoryNamePayments: related,
+		}
+	} else {
+		o.R.CategoryNamePayments = append(o.R.CategoryNamePayments, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &paymentR{
 				CategoryNameCategory: o,
 			}
 		} else {
