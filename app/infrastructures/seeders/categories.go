@@ -16,7 +16,7 @@ import (
 	lop "github.com/samber/lo/parallel"
 )
 
-func UpsertDummyCategories(ctx context.Context, connectDB *sql.DB) {
+func UpsertSeederOfCategories(ctx context.Context, connectDB *sql.DB) {
 	itemsPattarn := []string{"食料品", "住居費", "交通費", "通信費", "教育費", "医療費", "娯楽費", "衣料品", "被服費", "その他の費用"}
 
 	categoriesModel := lop.Map(itemsPattarn, func(item string, _ int) models.Category {

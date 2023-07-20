@@ -16,7 +16,7 @@ import (
 	lop "github.com/samber/lo/parallel"
 )
 
-func UpsertDummyStatuses(ctx context.Context, connectDB *sql.DB) {
+func UpsertSeederOfStatuses(ctx context.Context, connectDB *sql.DB) {
 	// string as status pattern
 	statusPattern := []string{"Draft", "UnderReview", "Published", "Deleted", "OnHold"}
 
@@ -27,7 +27,7 @@ func UpsertDummyStatuses(ctx context.Context, connectDB *sql.DB) {
 	})
 	lo.ForEach(statusesModel, func(status models.Status, index int) {
 		if err := status.Upsert(ctx, connectDB, true, []string{"label"}, boil.Whitelist("label"), boil.Infer()); err != nil {
-			log.Printf("multi insert article for each error : %s , index is %v", err, index)
+			log.Printf("error : %s , index is %v", err, index)
 		}
 	})
 }

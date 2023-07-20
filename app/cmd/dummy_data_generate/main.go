@@ -44,8 +44,9 @@ func main() {
 
 	ctx := context.Background()
 
-	seeders.UpsertDummyCategories(ctx, connectDB)
-	seeders.UpsertDummyStatuses(ctx, connectDB)
+	seeders.UpsertSeederOfCategories(ctx, connectDB)
+	seeders.UpsertSeederOfStatuses(ctx, connectDB)
+	seeders.UpsertSeederOfPaymentTypes(ctx, connectDB)
 
 	dummies.CreateDummyUsers(ctx, connectDB)
 	dummies.CreateDummyArticles(ctx, connectDB)
