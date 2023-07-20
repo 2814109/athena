@@ -22,6 +22,3 @@ mg-drop:
 
 create-migration-%:
 	migrate create -ext sql -dir db/migrations -seq ${@:create-migration-%=%}
-
-gen-models:
-	docker compose exec app sh sqlboiler postgres
