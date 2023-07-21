@@ -10,15 +10,15 @@ tasks:
   schema-gen:
     cmds:
       - cd ./app && go run ./cmd/gqlgen_generate/main.go
-  migration-up:
+  m-up:
     cmds:
       - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose up
-  migration-down:
+  m-down:
     cmds:
       - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose down
-  migrate-force:
+  m-force:
     comds:
-      - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose force 5
+      - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable force 1
   m-drop:
     comds:
       - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose drop
@@ -39,9 +39,9 @@ tasks:
   generate-orm:
     cmds:
       - docker compose exec app sh -c "sqlboiler psql"
-  re-m-g-o:
+  init-db:
     cmds:
-      - task: migrate-force
-      - task: migration-up
+      - task: m-force
+      - task: m-up
       - task: generate-orm
       
