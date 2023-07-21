@@ -5,4 +5,6 @@ CREATE TABLE IF NOT EXISTS transactions (
     debit_amount NUMERIC(10, 2),
     credit_amount NUMERIC(10, 2),
     account_id INTEGER REFERENCES accounts(id)
+    CONSTRAINT fk_user FOREIGN KEY (user_id) references users(id)
+
 );

@@ -35,3 +35,13 @@ tasks:
   seeding:
     cmds:
       - cd ./app && go run ./cmd/seeder_data_generate/main.go
+
+  generate-orm:
+    cmds:
+      - docker compose exec app sh -c "sqlboiler psql"
+  re-m-g-o:
+    cmds:
+      - task: migrate-force
+      - task: migration-up
+      - task: generate-orm
+      
