@@ -4,31 +4,33 @@
 package models
 
 var TableNames = struct {
-	AccountTypes                 string
-	Accounts                     string
-	Articles                     string
-	Categories                   string
-	Items                        string
-	MaximumMonthlyTargetPayments string
-	PaymentTypes                 string
-	Payments                     string
-	SchemaMigrations             string
-	Statuses                     string
-	Todos                        string
-	Transactions                 string
-	Users                        string
+	AccountTypes                  string
+	Accounts                      string
+	Articles                      string
+	Categories                    string
+	Items                         string
+	MaximumMonthlyTargetPayments  string
+	MonthlyTargetPaymentSnapshots string
+	PaymentTypes                  string
+	Payments                      string
+	SchemaMigrations              string
+	Statuses                      string
+	Todos                         string
+	Transactions                  string
+	Users                         string
 }{
-	AccountTypes:                 "account_types",
-	Accounts:                     "accounts",
-	Articles:                     "articles",
-	Categories:                   "categories",
-	Items:                        "items",
-	MaximumMonthlyTargetPayments: "maximum_monthly_target_payments",
-	PaymentTypes:                 "payment_types",
-	Payments:                     "payments",
-	SchemaMigrations:             "schema_migrations",
-	Statuses:                     "statuses",
-	Todos:                        "todos",
-	Transactions:                 "transactions",
-	Users:                        "users",
+	AccountTypes:                  "account_types",
+	Accounts:                      "accounts",
+	Articles:                      "articles",
+	Categories:                    "categories",
+	Items:                         "items",
+	MaximumMonthlyTargetPayments:  "maximum_monthly_target_payments",
+	MonthlyTargetPaymentSnapshots: "monthly_target_payment_snapshots",
+	PaymentTypes:                  "payment_types",
+	Payments:                      "payments",
+	SchemaMigrations:              "schema_migrations",
+	Statuses:                      "statuses",
+	Todos:                         "todos",
+	Transactions:                  "transactions",
+	Users:                         "users",
 }
