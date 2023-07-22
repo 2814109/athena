@@ -2,9 +2,7 @@ package usecases
 
 import (
 	"context"
-	"database/sql"
 	"errors"
-	"fmt"
 	"my_gql_server/graph/model"
 	models "my_gql_server/my_models"
 )
@@ -15,18 +13,12 @@ type BookkeepingUseCase interface {
 }
 
 type bookkeepingService struct {
-	dbConnect *sql.DB
+	// r *repositories
 }
 
 func NewBookkeepingService() BookkeepingUseCase {
-	connectDB, err := sql.Open("postgres", fmt.Sprintf("host=postgres dbname=%s user=%s password=%s sslmode=disable", "postgres", "postgres", "postgres"))
-
-	if err != nil {
-		panic(fmt.Errorf("connect db error"))
-	}
-	return &bookkeepingService{
-		dbConnect: connectDB,
-	}
+	// TODO instance for repository
+	return &bookkeepingService{}
 }
 
 func (b *bookkeepingService) CreateEntry(ctx context.Context, input model.CreateEntryRequest) error {
