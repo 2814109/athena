@@ -8,10 +8,44 @@ import (
 	"strconv"
 )
 
+type CreateEntryRequest struct {
+	Description *string        `json:"description,omitempty"`
+	Date        *string        `json:"date,omitempty"`
+	Debits      []*DebitInput  `json:"debits,omitempty"`
+	Credits     []*CreditInput `json:"credits,omitempty"`
+}
+
 type CreateTodo struct {
 	Status *StatusPattern `json:"status,omitempty"`
 	Text   string         `json:"text" validate:"required_if=Status ACTIVE,newline,omitempty"`
 	UserID int            `json:"userId"`
+}
+
+type Credit struct {
+	AccountName *string  `json:"account_name,omitempty"`
+	Amount      *float64 `json:"amount,omitempty"`
+}
+
+type CreditInput struct {
+	AccountName *string  `json:"account_name,omitempty"`
+	Amount      *float64 `json:"amount,omitempty"`
+}
+
+type Debit struct {
+	AccountName *string  `json:"account_name,omitempty"`
+	Amount      *float64 `json:"amount,omitempty"`
+}
+
+type DebitInput struct {
+	AccountName *string  `json:"account_name,omitempty"`
+	Amount      *float64 `json:"amount,omitempty"`
+}
+
+type Entry struct {
+	Description string    `json:"description"`
+	Date        string    `json:"date"`
+	Debits      []*Debit  `json:"debits,omitempty"`
+	Credits     []*Credit `json:"credits,omitempty"`
 }
 
 type NewUser struct {

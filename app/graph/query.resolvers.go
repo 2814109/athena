@@ -6,9 +6,10 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
-	models "my_gql_server/my_models"
+	"my_gql_server/my_models"
 
 	lop "github.com/samber/lo/parallel"
 )
@@ -70,6 +71,11 @@ func (r *queryResolver) Items(ctx context.Context, userID int) ([]*models.Item, 
 	})
 
 	return result, nil
+}
+
+// Entries is the resolver for the entries field.
+func (r *queryResolver) Entries(ctx context.Context) ([]*model.Entry, error) {
+	panic(fmt.Errorf("not implemented: Entries - entries"))
 }
 
 // Query returns QueryResolver implementation.

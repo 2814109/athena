@@ -3,4 +3,5 @@ type Query {
   todo(ID: Int!):Todo!
   articles(status: ArticleStatuses!): [Article!]!
   items(userId: Int!): [Item!]!
+  entries: [Entry]!
 }

@@ -30,3 +30,25 @@ type Item{
   cost:  Int!
   user: User!
 }
+
+type Entry {
+  description: String!
+  date: Date!
+  debits: [Debit]
+  credits: [Credit]
+}
+
+type Debit {
+  account_name: String
+  amount: Float
+}
+
+type Credit {
+  account_name: String
+  amount: Float
+}
+
+
+
+
+

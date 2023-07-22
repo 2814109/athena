@@ -22,6 +22,23 @@ input UpdateTodo {
   userId: Int!
 }
 
+input CreateEntryRequest {
+  description: String
+  date: String
+  debits: [DebitInput]
+  credits: [CreditInput]
+}
+
 input NewUser {
   name: String!
+}
+
+input DebitInput {
+  account_name: String
+  amount: Float
+}
+
+input CreditInput {
+  account_name: String
+  amount: Float
 }

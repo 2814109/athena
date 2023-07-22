@@ -6,6 +6,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"my_gql_server/graph/model"
 	"my_gql_server/graph/validation"
@@ -51,6 +52,11 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 		return nil, err
 	}
 	return nil, nil
+}
+
+// CreateEnty is the resolver for the createEnty field.
+func (r *mutationResolver) CreateEnty(ctx context.Context, input model.CreateEntryRequest) (*model.Entry, error) {
+	panic(fmt.Errorf("not implemented: CreateEnty - createEnty"))
 }
 
 // Mutation returns MutationResolver implementation.
