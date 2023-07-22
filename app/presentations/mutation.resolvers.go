@@ -11,7 +11,8 @@ import (
 	"my_gql_server/graph/model"
 	"my_gql_server/graph/validation"
 	"my_gql_server/infrastructures/repositories"
-	"my_gql_server/my_models"
+	models "my_gql_server/my_models"
+
 	"my_gql_server/usecases"
 )
 
@@ -22,7 +23,8 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.CreateTod
 	}
 	log.Print("run exec create todo")
 
-	todo, err := repositories.CreateTodo(ctx, input)
+	repository := repositories.NewRepository()
+	todo, err := repository.CreateTodo(ctx, input)
 
 	if err != nil {
 		return nil, err
@@ -37,8 +39,8 @@ func (r *mutationResolver) UpdateTodo(ctx context.Context, input model.UpdateTod
 		return nil, err
 	}
 	log.Print("run exec update todo")
-
-	todo, err := repositories.UpdateTodo(ctx, input)
+	repository := repositories.NewRepository()
+	todo, err := repository.UpdateTodo(ctx, input)
 
 	if err != nil {
 		return nil, err

@@ -14,7 +14,7 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
-func FindAllTodoByUserId(ctx context.Context, userId int) (models.TodoSlice, error) {
+func (repository *repository) FindAllTodoByUserId(ctx context.Context, userId int) (models.TodoSlice, error) {
 	connectDB, err := sql.Open("postgres", fmt.Sprintf("host=postgres dbname=%s user=%s password=%s sslmode=disable", "postgres", "postgres", "postgres"))
 
 	if err != nil {
@@ -30,7 +30,7 @@ func FindAllTodoByUserId(ctx context.Context, userId int) (models.TodoSlice, err
 	return todos, nil
 }
 
-func CreateTodo(ctx context.Context, input model.CreateTodo) (*models.Todo, error) {
+func (repository *repository) CreateTodo(ctx context.Context, input model.CreateTodo) (*models.Todo, error) {
 	connectDB, err := sql.Open("postgres", fmt.Sprintf("host=postgres dbname=%s user=%s password=%s sslmode=disable", "postgres", "postgres", "postgres"))
 
 	if err != nil {
@@ -54,7 +54,7 @@ func CreateTodo(ctx context.Context, input model.CreateTodo) (*models.Todo, erro
 
 }
 
-func UpdateTodo(ctx context.Context, input model.UpdateTodo) (*models.Todo, error) {
+func (repository *repository) UpdateTodo(ctx context.Context, input model.UpdateTodo) (*models.Todo, error) {
 	connectDB, err := sql.Open("postgres", fmt.Sprintf("host=postgres dbname=%s user=%s password=%s sslmode=disable", "postgres", "postgres", "postgres"))
 
 	if err != nil {
@@ -78,7 +78,7 @@ func UpdateTodo(ctx context.Context, input model.UpdateTodo) (*models.Todo, erro
 	return todoResource, nil
 }
 
-func FindTodoByID(ctx context.Context, ID int) (*models.Todo, error) {
+func (repository *repository) FindTodoByID(ctx context.Context, ID int) (*models.Todo, error) {
 	connectDB, err := sql.Open("postgres", fmt.Sprintf("host=postgres dbname=%s user=%s password=%s sslmode=disable", "postgres", "postgres", "postgres"))
 
 	if err != nil {

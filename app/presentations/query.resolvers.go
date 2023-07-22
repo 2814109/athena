@@ -9,7 +9,7 @@ import (
 	"my_gql_server/graph"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
-	"my_gql_server/my_models"
+	models "my_gql_server/my_models"
 	"my_gql_server/usecases"
 
 	lop "github.com/samber/lo/parallel"
@@ -17,7 +17,9 @@ import (
 
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context, userID int) ([]*models.Todo, error) {
-	todos, err := repositories.FindAllTodoByUserId(ctx, userID)
+	repository := repositories.NewRepository()
+
+	todos, err := repository.FindAllTodoByUserId(ctx, userID)
 
 	if err != nil {
 		return nil, err
@@ -33,7 +35,9 @@ func (r *queryResolver) Todos(ctx context.Context, userID int) ([]*models.Todo, 
 
 // Todo is the resolver for the todo field.
 func (r *queryResolver) Todo(ctx context.Context, id int) (*models.Todo, error) {
-	todo, err := repositories.FindTodoByID(ctx, id)
+	repository := repositories.NewRepository()
+
+	todo, err := repository.FindTodoByID(ctx, id)
 
 	if err != nil {
 		return nil, err
@@ -44,7 +48,9 @@ func (r *queryResolver) Todo(ctx context.Context, id int) (*models.Todo, error) 
 
 // Articles is the resolver for the articles field.
 func (r *queryResolver) Articles(ctx context.Context, status model.ArticleStatuses) ([]*models.Article, error) {
-	articles, err := repositories.FindAllArticle(ctx, status)
+	repository := repositories.NewRepository()
+
+	articles, err := repository.FindAllArticle(ctx, status)
 
 	if err != nil {
 		return nil, err
@@ -60,7 +66,9 @@ func (r *queryResolver) Articles(ctx context.Context, status model.ArticleStatus
 
 // Items is the resolver for the items field.
 func (r *queryResolver) Items(ctx context.Context, userID int) ([]*models.Item, error) {
-	items, err := repositories.FindAllItemByUserId(ctx, userID)
+	repository := repositories.NewRepository()
+
+	items, err := repository.FindAllItemByUserId(ctx, userID)
 
 	if err != nil {
 		return nil, err

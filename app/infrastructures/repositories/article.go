@@ -10,7 +10,7 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
-func FindAllArticle(ctx context.Context, status model.ArticleStatuses) (models.ArticleSlice, error) {
+func (repository *repository) FindAllArticle(ctx context.Context, status model.ArticleStatuses) (models.ArticleSlice, error) {
 	connectDB, err := sql.Open("postgres", fmt.Sprintf("host=postgres dbname=%s user=%s password=%s sslmode=disable", "postgres", "postgres", "postgres"))
 
 	if err != nil {
