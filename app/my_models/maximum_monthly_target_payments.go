@@ -331,6 +331,11 @@ func AddMaximumMonthlyTargetPaymentHook(hookPoint boil.HookPoint, maximumMonthly
 	}
 }
 
+// OneG returns a single maximumMonthlyTargetPayment record from the query using the global executor.
+func (q maximumMonthlyTargetPaymentQuery) OneG(ctx context.Context) (*MaximumMonthlyTargetPayment, error) {
+	return q.One(ctx, boil.GetContextDB())
+}
+
 // One returns a single maximumMonthlyTargetPayment record from the query.
 func (q maximumMonthlyTargetPaymentQuery) One(ctx context.Context, exec boil.ContextExecutor) (*MaximumMonthlyTargetPayment, error) {
 	o := &MaximumMonthlyTargetPayment{}
@@ -350,6 +355,11 @@ func (q maximumMonthlyTargetPaymentQuery) One(ctx context.Context, exec boil.Con
 	}
 
 	return o, nil
+}
+
+// AllG returns all MaximumMonthlyTargetPayment records from the query using the global executor.
+func (q maximumMonthlyTargetPaymentQuery) AllG(ctx context.Context) (MaximumMonthlyTargetPaymentSlice, error) {
+	return q.All(ctx, boil.GetContextDB())
 }
 
 // All returns all MaximumMonthlyTargetPayment records from the query.
@@ -372,6 +382,11 @@ func (q maximumMonthlyTargetPaymentQuery) All(ctx context.Context, exec boil.Con
 	return o, nil
 }
 
+// CountG returns the count of all MaximumMonthlyTargetPayment records in the query using the global executor
+func (q maximumMonthlyTargetPaymentQuery) CountG(ctx context.Context) (int64, error) {
+	return q.Count(ctx, boil.GetContextDB())
+}
+
 // Count returns the count of all MaximumMonthlyTargetPayment records in the query.
 func (q maximumMonthlyTargetPaymentQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	var count int64
@@ -385,6 +400,11 @@ func (q maximumMonthlyTargetPaymentQuery) Count(ctx context.Context, exec boil.C
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table using the global executor.
+func (q maximumMonthlyTargetPaymentQuery) ExistsG(ctx context.Context) (bool, error) {
+	return q.Exists(ctx, boil.GetContextDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -534,6 +554,14 @@ func (maximumMonthlyTargetPaymentL) LoadUser(ctx context.Context, e boil.Context
 	return nil
 }
 
+// SetUserG of the maximumMonthlyTargetPayment to the related item.
+// Sets o.R.User to related.
+// Adds o to related.R.MaximumMonthlyTargetPayments.
+// Uses the global database handle.
+func (o *MaximumMonthlyTargetPayment) SetUserG(ctx context.Context, insert bool, related *User) error {
+	return o.SetUser(ctx, boil.GetContextDB(), insert, related)
+}
+
 // SetUser of the maximumMonthlyTargetPayment to the related item.
 // Sets o.R.User to related.
 // Adds o to related.R.MaximumMonthlyTargetPayments.
@@ -592,6 +620,11 @@ func MaximumMonthlyTargetPayments(mods ...qm.QueryMod) maximumMonthlyTargetPayme
 	return maximumMonthlyTargetPaymentQuery{q}
 }
 
+// FindMaximumMonthlyTargetPaymentG retrieves a single record by ID.
+func FindMaximumMonthlyTargetPaymentG(ctx context.Context, iD int, selectCols ...string) (*MaximumMonthlyTargetPayment, error) {
+	return FindMaximumMonthlyTargetPayment(ctx, boil.GetContextDB(), iD, selectCols...)
+}
+
 // FindMaximumMonthlyTargetPayment retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindMaximumMonthlyTargetPayment(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*MaximumMonthlyTargetPayment, error) {
@@ -620,6 +653,11 @@ func FindMaximumMonthlyTargetPayment(ctx context.Context, exec boil.ContextExecu
 	}
 
 	return maximumMonthlyTargetPaymentObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *MaximumMonthlyTargetPayment) InsertG(ctx context.Context, columns boil.Columns) error {
+	return o.Insert(ctx, boil.GetContextDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -701,6 +739,12 @@ func (o *MaximumMonthlyTargetPayment) Insert(ctx context.Context, exec boil.Cont
 	return o.doAfterInsertHooks(ctx, exec)
 }
 
+// UpdateG a single MaximumMonthlyTargetPayment record using the global executor.
+// See Update for more documentation.
+func (o *MaximumMonthlyTargetPayment) UpdateG(ctx context.Context, columns boil.Columns) (int64, error) {
+	return o.Update(ctx, boil.GetContextDB(), columns)
+}
+
 // Update uses an executor to update the MaximumMonthlyTargetPayment.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -764,6 +808,11 @@ func (o *MaximumMonthlyTargetPayment) Update(ctx context.Context, exec boil.Cont
 	return rowsAff, o.doAfterUpdateHooks(ctx, exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q maximumMonthlyTargetPaymentQuery) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return q.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q maximumMonthlyTargetPaymentQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -779,6 +828,11 @@ func (q maximumMonthlyTargetPaymentQuery) UpdateAll(ctx context.Context, exec bo
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o MaximumMonthlyTargetPaymentSlice) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return o.UpdateAll(ctx, boil.GetContextDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -827,6 +881,11 @@ func (o MaximumMonthlyTargetPaymentSlice) UpdateAll(ctx context.Context, exec bo
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all maximumMonthlyTargetPayment")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *MaximumMonthlyTargetPayment) UpsertG(ctx context.Context, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(ctx, boil.GetContextDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -945,6 +1004,12 @@ func (o *MaximumMonthlyTargetPayment) Upsert(ctx context.Context, exec boil.Cont
 	return o.doAfterUpsertHooks(ctx, exec)
 }
 
+// DeleteG deletes a single MaximumMonthlyTargetPayment record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *MaximumMonthlyTargetPayment) DeleteG(ctx context.Context) (int64, error) {
+	return o.Delete(ctx, boil.GetContextDB())
+}
+
 // Delete deletes a single MaximumMonthlyTargetPayment record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *MaximumMonthlyTargetPayment) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -981,6 +1046,10 @@ func (o *MaximumMonthlyTargetPayment) Delete(ctx context.Context, exec boil.Cont
 	return rowsAff, nil
 }
 
+func (q maximumMonthlyTargetPaymentQuery) DeleteAllG(ctx context.Context) (int64, error) {
+	return q.DeleteAll(ctx, boil.GetContextDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q maximumMonthlyTargetPaymentQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	if q.Query == nil {
@@ -1000,6 +1069,11 @@ func (q maximumMonthlyTargetPaymentQuery) DeleteAll(ctx context.Context, exec bo
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o MaximumMonthlyTargetPaymentSlice) DeleteAllG(ctx context.Context) (int64, error) {
+	return o.DeleteAll(ctx, boil.GetContextDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1051,6 +1125,15 @@ func (o MaximumMonthlyTargetPaymentSlice) DeleteAll(ctx context.Context, exec bo
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *MaximumMonthlyTargetPayment) ReloadG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: no MaximumMonthlyTargetPayment provided for reload")
+	}
+
+	return o.Reload(ctx, boil.GetContextDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *MaximumMonthlyTargetPayment) Reload(ctx context.Context, exec boil.ContextExecutor) error {
@@ -1061,6 +1144,16 @@ func (o *MaximumMonthlyTargetPayment) Reload(ctx context.Context, exec boil.Cont
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *MaximumMonthlyTargetPaymentSlice) ReloadAllG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: empty MaximumMonthlyTargetPaymentSlice provided for reload all")
+	}
+
+	return o.ReloadAll(ctx, boil.GetContextDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1090,6 +1183,11 @@ func (o *MaximumMonthlyTargetPaymentSlice) ReloadAll(ctx context.Context, exec b
 	*o = slice
 
 	return nil
+}
+
+// MaximumMonthlyTargetPaymentExistsG checks if the MaximumMonthlyTargetPayment row exists.
+func MaximumMonthlyTargetPaymentExistsG(ctx context.Context, iD int) (bool, error) {
+	return MaximumMonthlyTargetPaymentExists(ctx, boil.GetContextDB(), iD)
 }
 
 // MaximumMonthlyTargetPaymentExists checks if the MaximumMonthlyTargetPayment row exists.

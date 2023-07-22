@@ -372,6 +372,11 @@ func AddCreditHook(hookPoint boil.HookPoint, creditHook CreditHook) {
 	}
 }
 
+// OneG returns a single credit record from the query using the global executor.
+func (q creditQuery) OneG(ctx context.Context) (*Credit, error) {
+	return q.One(ctx, boil.GetContextDB())
+}
+
 // One returns a single credit record from the query.
 func (q creditQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Credit, error) {
 	o := &Credit{}
@@ -391,6 +396,11 @@ func (q creditQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Credi
 	}
 
 	return o, nil
+}
+
+// AllG returns all Credit records from the query using the global executor.
+func (q creditQuery) AllG(ctx context.Context) (CreditSlice, error) {
+	return q.All(ctx, boil.GetContextDB())
 }
 
 // All returns all Credit records from the query.
@@ -413,6 +423,11 @@ func (q creditQuery) All(ctx context.Context, exec boil.ContextExecutor) (Credit
 	return o, nil
 }
 
+// CountG returns the count of all Credit records in the query using the global executor
+func (q creditQuery) CountG(ctx context.Context) (int64, error) {
+	return q.Count(ctx, boil.GetContextDB())
+}
+
 // Count returns the count of all Credit records in the query.
 func (q creditQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	var count int64
@@ -426,6 +441,11 @@ func (q creditQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int6
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table using the global executor.
+func (q creditQuery) ExistsG(ctx context.Context) (bool, error) {
+	return q.Exists(ctx, boil.GetContextDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -579,6 +599,14 @@ func (creditL) LoadEntry(ctx context.Context, e boil.ContextExecutor, singular b
 	return nil
 }
 
+// SetEntryG of the credit to the related item.
+// Sets o.R.Entry to related.
+// Adds o to related.R.Credits.
+// Uses the global database handle.
+func (o *Credit) SetEntryG(ctx context.Context, insert bool, related *Entry) error {
+	return o.SetEntry(ctx, boil.GetContextDB(), insert, related)
+}
+
 // SetEntry of the credit to the related item.
 // Sets o.R.Entry to related.
 // Adds o to related.R.Credits.
@@ -626,6 +654,14 @@ func (o *Credit) SetEntry(ctx context.Context, exec boil.ContextExecutor, insert
 	return nil
 }
 
+// RemoveEntryG relationship.
+// Sets o.R.Entry to nil.
+// Removes o from all passed in related items' relationships struct.
+// Uses the global database handle.
+func (o *Credit) RemoveEntryG(ctx context.Context, related *Entry) error {
+	return o.RemoveEntry(ctx, boil.GetContextDB(), related)
+}
+
 // RemoveEntry relationship.
 // Sets o.R.Entry to nil.
 // Removes o from all passed in related items' relationships struct.
@@ -670,6 +706,11 @@ func Credits(mods ...qm.QueryMod) creditQuery {
 	return creditQuery{q}
 }
 
+// FindCreditG retrieves a single record by ID.
+func FindCreditG(ctx context.Context, iD int, selectCols ...string) (*Credit, error) {
+	return FindCredit(ctx, boil.GetContextDB(), iD, selectCols...)
+}
+
 // FindCredit retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindCredit(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*Credit, error) {
@@ -698,6 +739,11 @@ func FindCredit(ctx context.Context, exec boil.ContextExecutor, iD int, selectCo
 	}
 
 	return creditObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *Credit) InsertG(ctx context.Context, columns boil.Columns) error {
+	return o.Insert(ctx, boil.GetContextDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -779,6 +825,12 @@ func (o *Credit) Insert(ctx context.Context, exec boil.ContextExecutor, columns 
 	return o.doAfterInsertHooks(ctx, exec)
 }
 
+// UpdateG a single Credit record using the global executor.
+// See Update for more documentation.
+func (o *Credit) UpdateG(ctx context.Context, columns boil.Columns) (int64, error) {
+	return o.Update(ctx, boil.GetContextDB(), columns)
+}
+
 // Update uses an executor to update the Credit.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -842,6 +894,11 @@ func (o *Credit) Update(ctx context.Context, exec boil.ContextExecutor, columns 
 	return rowsAff, o.doAfterUpdateHooks(ctx, exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q creditQuery) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return q.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q creditQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -857,6 +914,11 @@ func (q creditQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, c
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o CreditSlice) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return o.UpdateAll(ctx, boil.GetContextDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -905,6 +967,11 @@ func (o CreditSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, c
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all credit")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *Credit) UpsertG(ctx context.Context, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(ctx, boil.GetContextDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -1023,6 +1090,12 @@ func (o *Credit) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOn
 	return o.doAfterUpsertHooks(ctx, exec)
 }
 
+// DeleteG deletes a single Credit record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *Credit) DeleteG(ctx context.Context) (int64, error) {
+	return o.Delete(ctx, boil.GetContextDB())
+}
+
 // Delete deletes a single Credit record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Credit) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -1059,6 +1132,10 @@ func (o *Credit) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, 
 	return rowsAff, nil
 }
 
+func (q creditQuery) DeleteAllG(ctx context.Context) (int64, error) {
+	return q.DeleteAll(ctx, boil.GetContextDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q creditQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	if q.Query == nil {
@@ -1078,6 +1155,11 @@ func (q creditQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o CreditSlice) DeleteAllG(ctx context.Context) (int64, error) {
+	return o.DeleteAll(ctx, boil.GetContextDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1129,6 +1211,15 @@ func (o CreditSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *Credit) ReloadG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: no Credit provided for reload")
+	}
+
+	return o.Reload(ctx, boil.GetContextDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Credit) Reload(ctx context.Context, exec boil.ContextExecutor) error {
@@ -1139,6 +1230,16 @@ func (o *Credit) Reload(ctx context.Context, exec boil.ContextExecutor) error {
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *CreditSlice) ReloadAllG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: empty CreditSlice provided for reload all")
+	}
+
+	return o.ReloadAll(ctx, boil.GetContextDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1168,6 +1269,11 @@ func (o *CreditSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) 
 	*o = slice
 
 	return nil
+}
+
+// CreditExistsG checks if the Credit row exists.
+func CreditExistsG(ctx context.Context, iD int) (bool, error) {
+	return CreditExists(ctx, boil.GetContextDB(), iD)
 }
 
 // CreditExists checks if the Credit row exists.

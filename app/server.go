@@ -1,6 +1,8 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 
 	"my_gql_server/graph"
@@ -11,6 +13,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
 const defaultPort = "8080"
@@ -20,6 +23,14 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
+
+	connectDB, err := sql.Open("postgres", fmt.Sprintf("host=postgres dbname=%s user=%s password=%s sslmode=disable", "postgres", "postgres", "postgres"))
+
+	if err != nil {
+		panic(fmt.Errorf("connect db error"))
+	}
+
+	boil.SetDB(connectDB)
 
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &presentations.Resolver{}}))
 

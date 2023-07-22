@@ -313,6 +313,11 @@ func AddDebitHook(hookPoint boil.HookPoint, debitHook DebitHook) {
 	}
 }
 
+// OneG returns a single debit record from the query using the global executor.
+func (q debitQuery) OneG(ctx context.Context) (*Debit, error) {
+	return q.One(ctx, boil.GetContextDB())
+}
+
 // One returns a single debit record from the query.
 func (q debitQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Debit, error) {
 	o := &Debit{}
@@ -332,6 +337,11 @@ func (q debitQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Debit,
 	}
 
 	return o, nil
+}
+
+// AllG returns all Debit records from the query using the global executor.
+func (q debitQuery) AllG(ctx context.Context) (DebitSlice, error) {
+	return q.All(ctx, boil.GetContextDB())
 }
 
 // All returns all Debit records from the query.
@@ -354,6 +364,11 @@ func (q debitQuery) All(ctx context.Context, exec boil.ContextExecutor) (DebitSl
 	return o, nil
 }
 
+// CountG returns the count of all Debit records in the query using the global executor
+func (q debitQuery) CountG(ctx context.Context) (int64, error) {
+	return q.Count(ctx, boil.GetContextDB())
+}
+
 // Count returns the count of all Debit records in the query.
 func (q debitQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	var count int64
@@ -367,6 +382,11 @@ func (q debitQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table using the global executor.
+func (q debitQuery) ExistsG(ctx context.Context) (bool, error) {
+	return q.Exists(ctx, boil.GetContextDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -520,6 +540,14 @@ func (debitL) LoadEntry(ctx context.Context, e boil.ContextExecutor, singular bo
 	return nil
 }
 
+// SetEntryG of the debit to the related item.
+// Sets o.R.Entry to related.
+// Adds o to related.R.Debits.
+// Uses the global database handle.
+func (o *Debit) SetEntryG(ctx context.Context, insert bool, related *Entry) error {
+	return o.SetEntry(ctx, boil.GetContextDB(), insert, related)
+}
+
 // SetEntry of the debit to the related item.
 // Sets o.R.Entry to related.
 // Adds o to related.R.Debits.
@@ -567,6 +595,14 @@ func (o *Debit) SetEntry(ctx context.Context, exec boil.ContextExecutor, insert 
 	return nil
 }
 
+// RemoveEntryG relationship.
+// Sets o.R.Entry to nil.
+// Removes o from all passed in related items' relationships struct.
+// Uses the global database handle.
+func (o *Debit) RemoveEntryG(ctx context.Context, related *Entry) error {
+	return o.RemoveEntry(ctx, boil.GetContextDB(), related)
+}
+
 // RemoveEntry relationship.
 // Sets o.R.Entry to nil.
 // Removes o from all passed in related items' relationships struct.
@@ -611,6 +647,11 @@ func Debits(mods ...qm.QueryMod) debitQuery {
 	return debitQuery{q}
 }
 
+// FindDebitG retrieves a single record by ID.
+func FindDebitG(ctx context.Context, iD int, selectCols ...string) (*Debit, error) {
+	return FindDebit(ctx, boil.GetContextDB(), iD, selectCols...)
+}
+
 // FindDebit retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindDebit(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*Debit, error) {
@@ -639,6 +680,11 @@ func FindDebit(ctx context.Context, exec boil.ContextExecutor, iD int, selectCol
 	}
 
 	return debitObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *Debit) InsertG(ctx context.Context, columns boil.Columns) error {
+	return o.Insert(ctx, boil.GetContextDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -720,6 +766,12 @@ func (o *Debit) Insert(ctx context.Context, exec boil.ContextExecutor, columns b
 	return o.doAfterInsertHooks(ctx, exec)
 }
 
+// UpdateG a single Debit record using the global executor.
+// See Update for more documentation.
+func (o *Debit) UpdateG(ctx context.Context, columns boil.Columns) (int64, error) {
+	return o.Update(ctx, boil.GetContextDB(), columns)
+}
+
 // Update uses an executor to update the Debit.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -783,6 +835,11 @@ func (o *Debit) Update(ctx context.Context, exec boil.ContextExecutor, columns b
 	return rowsAff, o.doAfterUpdateHooks(ctx, exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q debitQuery) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return q.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q debitQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -798,6 +855,11 @@ func (q debitQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o DebitSlice) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return o.UpdateAll(ctx, boil.GetContextDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -846,6 +908,11 @@ func (o DebitSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all debit")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *Debit) UpsertG(ctx context.Context, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(ctx, boil.GetContextDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -964,6 +1031,12 @@ func (o *Debit) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnC
 	return o.doAfterUpsertHooks(ctx, exec)
 }
 
+// DeleteG deletes a single Debit record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *Debit) DeleteG(ctx context.Context) (int64, error) {
+	return o.Delete(ctx, boil.GetContextDB())
+}
+
 // Delete deletes a single Debit record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Debit) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -1000,6 +1073,10 @@ func (o *Debit) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, e
 	return rowsAff, nil
 }
 
+func (q debitQuery) DeleteAllG(ctx context.Context) (int64, error) {
+	return q.DeleteAll(ctx, boil.GetContextDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q debitQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	if q.Query == nil {
@@ -1019,6 +1096,11 @@ func (q debitQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (i
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o DebitSlice) DeleteAllG(ctx context.Context) (int64, error) {
+	return o.DeleteAll(ctx, boil.GetContextDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1070,6 +1152,15 @@ func (o DebitSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (i
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *Debit) ReloadG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: no Debit provided for reload")
+	}
+
+	return o.Reload(ctx, boil.GetContextDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Debit) Reload(ctx context.Context, exec boil.ContextExecutor) error {
@@ -1080,6 +1171,16 @@ func (o *Debit) Reload(ctx context.Context, exec boil.ContextExecutor) error {
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *DebitSlice) ReloadAllG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: empty DebitSlice provided for reload all")
+	}
+
+	return o.ReloadAll(ctx, boil.GetContextDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1109,6 +1210,11 @@ func (o *DebitSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) e
 	*o = slice
 
 	return nil
+}
+
+// DebitExistsG checks if the Debit row exists.
+func DebitExistsG(ctx context.Context, iD int) (bool, error) {
+	return DebitExists(ctx, boil.GetContextDB(), iD)
 }
 
 // DebitExists checks if the Debit row exists.

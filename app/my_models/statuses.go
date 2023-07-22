@@ -290,6 +290,11 @@ func AddStatusHook(hookPoint boil.HookPoint, statusHook StatusHook) {
 	}
 }
 
+// OneG returns a single status record from the query using the global executor.
+func (q statusQuery) OneG(ctx context.Context) (*Status, error) {
+	return q.One(ctx, boil.GetContextDB())
+}
+
 // One returns a single status record from the query.
 func (q statusQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Status, error) {
 	o := &Status{}
@@ -309,6 +314,11 @@ func (q statusQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Statu
 	}
 
 	return o, nil
+}
+
+// AllG returns all Status records from the query using the global executor.
+func (q statusQuery) AllG(ctx context.Context) (StatusSlice, error) {
+	return q.All(ctx, boil.GetContextDB())
 }
 
 // All returns all Status records from the query.
@@ -331,6 +341,11 @@ func (q statusQuery) All(ctx context.Context, exec boil.ContextExecutor) (Status
 	return o, nil
 }
 
+// CountG returns the count of all Status records in the query using the global executor
+func (q statusQuery) CountG(ctx context.Context) (int64, error) {
+	return q.Count(ctx, boil.GetContextDB())
+}
+
 // Count returns the count of all Status records in the query.
 func (q statusQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	var count int64
@@ -344,6 +359,11 @@ func (q statusQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int6
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table using the global executor.
+func (q statusQuery) ExistsG(ctx context.Context) (bool, error) {
+	return q.Exists(ctx, boil.GetContextDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -490,6 +510,15 @@ func (statusL) LoadArticles(ctx context.Context, e boil.ContextExecutor, singula
 	return nil
 }
 
+// AddArticlesG adds the given related objects to the existing relationships
+// of the status, optionally inserting them as new records.
+// Appends related to o.R.Articles.
+// Sets related.R.ArticleStatus appropriately.
+// Uses the global database handle.
+func (o *Status) AddArticlesG(ctx context.Context, insert bool, related ...*Article) error {
+	return o.AddArticles(ctx, boil.GetContextDB(), insert, related...)
+}
+
 // AddArticles adds the given related objects to the existing relationships
 // of the status, optionally inserting them as new records.
 // Appends related to o.R.Articles.
@@ -554,6 +583,11 @@ func Statuses(mods ...qm.QueryMod) statusQuery {
 	return statusQuery{q}
 }
 
+// FindStatusG retrieves a single record by ID.
+func FindStatusG(ctx context.Context, label string, selectCols ...string) (*Status, error) {
+	return FindStatus(ctx, boil.GetContextDB(), label, selectCols...)
+}
+
 // FindStatus retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindStatus(ctx context.Context, exec boil.ContextExecutor, label string, selectCols ...string) (*Status, error) {
@@ -582,6 +616,11 @@ func FindStatus(ctx context.Context, exec boil.ContextExecutor, label string, se
 	}
 
 	return statusObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *Status) InsertG(ctx context.Context, columns boil.Columns) error {
+	return o.Insert(ctx, boil.GetContextDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -663,6 +702,12 @@ func (o *Status) Insert(ctx context.Context, exec boil.ContextExecutor, columns 
 	return o.doAfterInsertHooks(ctx, exec)
 }
 
+// UpdateG a single Status record using the global executor.
+// See Update for more documentation.
+func (o *Status) UpdateG(ctx context.Context, columns boil.Columns) (int64, error) {
+	return o.Update(ctx, boil.GetContextDB(), columns)
+}
+
 // Update uses an executor to update the Status.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -726,6 +771,11 @@ func (o *Status) Update(ctx context.Context, exec boil.ContextExecutor, columns 
 	return rowsAff, o.doAfterUpdateHooks(ctx, exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q statusQuery) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return q.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q statusQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -741,6 +791,11 @@ func (q statusQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, c
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o StatusSlice) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return o.UpdateAll(ctx, boil.GetContextDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -789,6 +844,11 @@ func (o StatusSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, c
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all status")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *Status) UpsertG(ctx context.Context, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(ctx, boil.GetContextDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -907,6 +967,12 @@ func (o *Status) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOn
 	return o.doAfterUpsertHooks(ctx, exec)
 }
 
+// DeleteG deletes a single Status record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *Status) DeleteG(ctx context.Context) (int64, error) {
+	return o.Delete(ctx, boil.GetContextDB())
+}
+
 // Delete deletes a single Status record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Status) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -943,6 +1009,10 @@ func (o *Status) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, 
 	return rowsAff, nil
 }
 
+func (q statusQuery) DeleteAllG(ctx context.Context) (int64, error) {
+	return q.DeleteAll(ctx, boil.GetContextDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q statusQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	if q.Query == nil {
@@ -962,6 +1032,11 @@ func (q statusQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o StatusSlice) DeleteAllG(ctx context.Context) (int64, error) {
+	return o.DeleteAll(ctx, boil.GetContextDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1013,6 +1088,15 @@ func (o StatusSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *Status) ReloadG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: no Status provided for reload")
+	}
+
+	return o.Reload(ctx, boil.GetContextDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Status) Reload(ctx context.Context, exec boil.ContextExecutor) error {
@@ -1023,6 +1107,16 @@ func (o *Status) Reload(ctx context.Context, exec boil.ContextExecutor) error {
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *StatusSlice) ReloadAllG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: empty StatusSlice provided for reload all")
+	}
+
+	return o.ReloadAll(ctx, boil.GetContextDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1052,6 +1146,11 @@ func (o *StatusSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) 
 	*o = slice
 
 	return nil
+}
+
+// StatusExistsG checks if the Status row exists.
+func StatusExistsG(ctx context.Context, label string) (bool, error) {
+	return StatusExists(ctx, boil.GetContextDB(), label)
 }
 
 // StatusExists checks if the Status row exists.

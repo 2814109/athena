@@ -37,7 +37,7 @@ tasks:
 
   generate-orm:
     cmds:
-      - docker compose exec app sh -c "sqlboiler psql"
+      - docker compose exec app sh -c "sqlboiler psql --add-global-variants"
   init-db:
     cmds:
       - task: m-force

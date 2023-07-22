@@ -300,6 +300,11 @@ func AddCategoryHook(hookPoint boil.HookPoint, categoryHook CategoryHook) {
 	}
 }
 
+// OneG returns a single category record from the query using the global executor.
+func (q categoryQuery) OneG(ctx context.Context) (*Category, error) {
+	return q.One(ctx, boil.GetContextDB())
+}
+
 // One returns a single category record from the query.
 func (q categoryQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Category, error) {
 	o := &Category{}
@@ -319,6 +324,11 @@ func (q categoryQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Cat
 	}
 
 	return o, nil
+}
+
+// AllG returns all Category records from the query using the global executor.
+func (q categoryQuery) AllG(ctx context.Context) (CategorySlice, error) {
+	return q.All(ctx, boil.GetContextDB())
 }
 
 // All returns all Category records from the query.
@@ -341,6 +351,11 @@ func (q categoryQuery) All(ctx context.Context, exec boil.ContextExecutor) (Cate
 	return o, nil
 }
 
+// CountG returns the count of all Category records in the query using the global executor
+func (q categoryQuery) CountG(ctx context.Context) (int64, error) {
+	return q.Count(ctx, boil.GetContextDB())
+}
+
 // Count returns the count of all Category records in the query.
 func (q categoryQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	var count int64
@@ -354,6 +369,11 @@ func (q categoryQuery) Count(ctx context.Context, exec boil.ContextExecutor) (in
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table using the global executor.
+func (q categoryQuery) ExistsG(ctx context.Context) (bool, error) {
+	return q.Exists(ctx, boil.GetContextDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -628,6 +648,15 @@ func (categoryL) LoadCategoryNamePayments(ctx context.Context, e boil.ContextExe
 	return nil
 }
 
+// AddCategoryNameItemsG adds the given related objects to the existing relationships
+// of the category, optionally inserting them as new records.
+// Appends related to o.R.CategoryNameItems.
+// Sets related.R.CategoryNameCategory appropriately.
+// Uses the global database handle.
+func (o *Category) AddCategoryNameItemsG(ctx context.Context, insert bool, related ...*Item) error {
+	return o.AddCategoryNameItems(ctx, boil.GetContextDB(), insert, related...)
+}
+
 // AddCategoryNameItems adds the given related objects to the existing relationships
 // of the category, optionally inserting them as new records.
 // Appends related to o.R.CategoryNameItems.
@@ -679,6 +708,15 @@ func (o *Category) AddCategoryNameItems(ctx context.Context, exec boil.ContextEx
 		}
 	}
 	return nil
+}
+
+// AddCategoryNamePaymentsG adds the given related objects to the existing relationships
+// of the category, optionally inserting them as new records.
+// Appends related to o.R.CategoryNamePayments.
+// Sets related.R.CategoryNameCategory appropriately.
+// Uses the global database handle.
+func (o *Category) AddCategoryNamePaymentsG(ctx context.Context, insert bool, related ...*Payment) error {
+	return o.AddCategoryNamePayments(ctx, boil.GetContextDB(), insert, related...)
 }
 
 // AddCategoryNamePayments adds the given related objects to the existing relationships
@@ -745,6 +783,11 @@ func Categories(mods ...qm.QueryMod) categoryQuery {
 	return categoryQuery{q}
 }
 
+// FindCategoryG retrieves a single record by ID.
+func FindCategoryG(ctx context.Context, classification string, selectCols ...string) (*Category, error) {
+	return FindCategory(ctx, boil.GetContextDB(), classification, selectCols...)
+}
+
 // FindCategory retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindCategory(ctx context.Context, exec boil.ContextExecutor, classification string, selectCols ...string) (*Category, error) {
@@ -773,6 +816,11 @@ func FindCategory(ctx context.Context, exec boil.ContextExecutor, classification
 	}
 
 	return categoryObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *Category) InsertG(ctx context.Context, columns boil.Columns) error {
+	return o.Insert(ctx, boil.GetContextDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -854,6 +902,12 @@ func (o *Category) Insert(ctx context.Context, exec boil.ContextExecutor, column
 	return o.doAfterInsertHooks(ctx, exec)
 }
 
+// UpdateG a single Category record using the global executor.
+// See Update for more documentation.
+func (o *Category) UpdateG(ctx context.Context, columns boil.Columns) (int64, error) {
+	return o.Update(ctx, boil.GetContextDB(), columns)
+}
+
 // Update uses an executor to update the Category.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -917,6 +971,11 @@ func (o *Category) Update(ctx context.Context, exec boil.ContextExecutor, column
 	return rowsAff, o.doAfterUpdateHooks(ctx, exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q categoryQuery) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return q.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q categoryQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -932,6 +991,11 @@ func (q categoryQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor,
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o CategorySlice) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return o.UpdateAll(ctx, boil.GetContextDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -980,6 +1044,11 @@ func (o CategorySlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor,
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all category")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *Category) UpsertG(ctx context.Context, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(ctx, boil.GetContextDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -1098,6 +1167,12 @@ func (o *Category) Upsert(ctx context.Context, exec boil.ContextExecutor, update
 	return o.doAfterUpsertHooks(ctx, exec)
 }
 
+// DeleteG deletes a single Category record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *Category) DeleteG(ctx context.Context) (int64, error) {
+	return o.Delete(ctx, boil.GetContextDB())
+}
+
 // Delete deletes a single Category record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Category) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -1134,6 +1209,10 @@ func (o *Category) Delete(ctx context.Context, exec boil.ContextExecutor) (int64
 	return rowsAff, nil
 }
 
+func (q categoryQuery) DeleteAllG(ctx context.Context) (int64, error) {
+	return q.DeleteAll(ctx, boil.GetContextDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q categoryQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	if q.Query == nil {
@@ -1153,6 +1232,11 @@ func (q categoryQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor)
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o CategorySlice) DeleteAllG(ctx context.Context) (int64, error) {
+	return o.DeleteAll(ctx, boil.GetContextDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1204,6 +1288,15 @@ func (o CategorySlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor)
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *Category) ReloadG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: no Category provided for reload")
+	}
+
+	return o.Reload(ctx, boil.GetContextDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Category) Reload(ctx context.Context, exec boil.ContextExecutor) error {
@@ -1214,6 +1307,16 @@ func (o *Category) Reload(ctx context.Context, exec boil.ContextExecutor) error 
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *CategorySlice) ReloadAllG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: empty CategorySlice provided for reload all")
+	}
+
+	return o.ReloadAll(ctx, boil.GetContextDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1243,6 +1346,11 @@ func (o *CategorySlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor
 	*o = slice
 
 	return nil
+}
+
+// CategoryExistsG checks if the Category row exists.
+func CategoryExistsG(ctx context.Context, classification string) (bool, error) {
+	return CategoryExists(ctx, boil.GetContextDB(), classification)
 }
 
 // CategoryExists checks if the Category row exists.

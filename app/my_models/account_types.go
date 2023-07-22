@@ -313,6 +313,11 @@ func AddAccountTypeHook(hookPoint boil.HookPoint, accountTypeHook AccountTypeHoo
 	}
 }
 
+// OneG returns a single accountType record from the query using the global executor.
+func (q accountTypeQuery) OneG(ctx context.Context) (*AccountType, error) {
+	return q.One(ctx, boil.GetContextDB())
+}
+
 // One returns a single accountType record from the query.
 func (q accountTypeQuery) One(ctx context.Context, exec boil.ContextExecutor) (*AccountType, error) {
 	o := &AccountType{}
@@ -332,6 +337,11 @@ func (q accountTypeQuery) One(ctx context.Context, exec boil.ContextExecutor) (*
 	}
 
 	return o, nil
+}
+
+// AllG returns all AccountType records from the query using the global executor.
+func (q accountTypeQuery) AllG(ctx context.Context) (AccountTypeSlice, error) {
+	return q.All(ctx, boil.GetContextDB())
 }
 
 // All returns all AccountType records from the query.
@@ -354,6 +364,11 @@ func (q accountTypeQuery) All(ctx context.Context, exec boil.ContextExecutor) (A
 	return o, nil
 }
 
+// CountG returns the count of all AccountType records in the query using the global executor
+func (q accountTypeQuery) CountG(ctx context.Context) (int64, error) {
+	return q.Count(ctx, boil.GetContextDB())
+}
+
 // Count returns the count of all AccountType records in the query.
 func (q accountTypeQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	var count int64
@@ -367,6 +382,11 @@ func (q accountTypeQuery) Count(ctx context.Context, exec boil.ContextExecutor) 
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table using the global executor.
+func (q accountTypeQuery) ExistsG(ctx context.Context) (bool, error) {
+	return q.Exists(ctx, boil.GetContextDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -513,6 +533,15 @@ func (accountTypeL) LoadAccounts(ctx context.Context, e boil.ContextExecutor, si
 	return nil
 }
 
+// AddAccountsG adds the given related objects to the existing relationships
+// of the account_type, optionally inserting them as new records.
+// Appends related to o.R.Accounts.
+// Sets related.R.AccountAccountType appropriately.
+// Uses the global database handle.
+func (o *AccountType) AddAccountsG(ctx context.Context, insert bool, related ...*Account) error {
+	return o.AddAccounts(ctx, boil.GetContextDB(), insert, related...)
+}
+
 // AddAccounts adds the given related objects to the existing relationships
 // of the account_type, optionally inserting them as new records.
 // Appends related to o.R.Accounts.
@@ -577,6 +606,11 @@ func AccountTypes(mods ...qm.QueryMod) accountTypeQuery {
 	return accountTypeQuery{q}
 }
 
+// FindAccountTypeG retrieves a single record by ID.
+func FindAccountTypeG(ctx context.Context, label string, selectCols ...string) (*AccountType, error) {
+	return FindAccountType(ctx, boil.GetContextDB(), label, selectCols...)
+}
+
 // FindAccountType retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindAccountType(ctx context.Context, exec boil.ContextExecutor, label string, selectCols ...string) (*AccountType, error) {
@@ -605,6 +639,11 @@ func FindAccountType(ctx context.Context, exec boil.ContextExecutor, label strin
 	}
 
 	return accountTypeObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *AccountType) InsertG(ctx context.Context, columns boil.Columns) error {
+	return o.Insert(ctx, boil.GetContextDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -686,6 +725,12 @@ func (o *AccountType) Insert(ctx context.Context, exec boil.ContextExecutor, col
 	return o.doAfterInsertHooks(ctx, exec)
 }
 
+// UpdateG a single AccountType record using the global executor.
+// See Update for more documentation.
+func (o *AccountType) UpdateG(ctx context.Context, columns boil.Columns) (int64, error) {
+	return o.Update(ctx, boil.GetContextDB(), columns)
+}
+
 // Update uses an executor to update the AccountType.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -749,6 +794,11 @@ func (o *AccountType) Update(ctx context.Context, exec boil.ContextExecutor, col
 	return rowsAff, o.doAfterUpdateHooks(ctx, exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q accountTypeQuery) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return q.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q accountTypeQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -764,6 +814,11 @@ func (q accountTypeQuery) UpdateAll(ctx context.Context, exec boil.ContextExecut
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o AccountTypeSlice) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return o.UpdateAll(ctx, boil.GetContextDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -812,6 +867,11 @@ func (o AccountTypeSlice) UpdateAll(ctx context.Context, exec boil.ContextExecut
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all accountType")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *AccountType) UpsertG(ctx context.Context, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(ctx, boil.GetContextDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -930,6 +990,12 @@ func (o *AccountType) Upsert(ctx context.Context, exec boil.ContextExecutor, upd
 	return o.doAfterUpsertHooks(ctx, exec)
 }
 
+// DeleteG deletes a single AccountType record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *AccountType) DeleteG(ctx context.Context) (int64, error) {
+	return o.Delete(ctx, boil.GetContextDB())
+}
+
 // Delete deletes a single AccountType record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *AccountType) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -966,6 +1032,10 @@ func (o *AccountType) Delete(ctx context.Context, exec boil.ContextExecutor) (in
 	return rowsAff, nil
 }
 
+func (q accountTypeQuery) DeleteAllG(ctx context.Context) (int64, error) {
+	return q.DeleteAll(ctx, boil.GetContextDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q accountTypeQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	if q.Query == nil {
@@ -985,6 +1055,11 @@ func (q accountTypeQuery) DeleteAll(ctx context.Context, exec boil.ContextExecut
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o AccountTypeSlice) DeleteAllG(ctx context.Context) (int64, error) {
+	return o.DeleteAll(ctx, boil.GetContextDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1036,6 +1111,15 @@ func (o AccountTypeSlice) DeleteAll(ctx context.Context, exec boil.ContextExecut
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *AccountType) ReloadG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: no AccountType provided for reload")
+	}
+
+	return o.Reload(ctx, boil.GetContextDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *AccountType) Reload(ctx context.Context, exec boil.ContextExecutor) error {
@@ -1046,6 +1130,16 @@ func (o *AccountType) Reload(ctx context.Context, exec boil.ContextExecutor) err
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *AccountTypeSlice) ReloadAllG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: empty AccountTypeSlice provided for reload all")
+	}
+
+	return o.ReloadAll(ctx, boil.GetContextDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1075,6 +1169,11 @@ func (o *AccountTypeSlice) ReloadAll(ctx context.Context, exec boil.ContextExecu
 	*o = slice
 
 	return nil
+}
+
+// AccountTypeExistsG checks if the AccountType row exists.
+func AccountTypeExistsG(ctx context.Context, label string) (bool, error) {
+	return AccountTypeExists(ctx, boil.GetContextDB(), label)
 }
 
 // AccountTypeExists checks if the AccountType row exists.

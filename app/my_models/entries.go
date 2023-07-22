@@ -367,6 +367,11 @@ func AddEntryHook(hookPoint boil.HookPoint, entryHook EntryHook) {
 	}
 }
 
+// OneG returns a single entry record from the query using the global executor.
+func (q entryQuery) OneG(ctx context.Context) (*Entry, error) {
+	return q.One(ctx, boil.GetContextDB())
+}
+
 // One returns a single entry record from the query.
 func (q entryQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Entry, error) {
 	o := &Entry{}
@@ -386,6 +391,11 @@ func (q entryQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Entry,
 	}
 
 	return o, nil
+}
+
+// AllG returns all Entry records from the query using the global executor.
+func (q entryQuery) AllG(ctx context.Context) (EntrySlice, error) {
+	return q.All(ctx, boil.GetContextDB())
 }
 
 // All returns all Entry records from the query.
@@ -408,6 +418,11 @@ func (q entryQuery) All(ctx context.Context, exec boil.ContextExecutor) (EntrySl
 	return o, nil
 }
 
+// CountG returns the count of all Entry records in the query using the global executor
+func (q entryQuery) CountG(ctx context.Context) (int64, error) {
+	return q.Count(ctx, boil.GetContextDB())
+}
+
 // Count returns the count of all Entry records in the query.
 func (q entryQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	var count int64
@@ -421,6 +436,11 @@ func (q entryQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table using the global executor.
+func (q entryQuery) ExistsG(ctx context.Context) (bool, error) {
+	return q.Exists(ctx, boil.GetContextDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -695,6 +715,15 @@ func (entryL) LoadDebits(ctx context.Context, e boil.ContextExecutor, singular b
 	return nil
 }
 
+// AddCreditsG adds the given related objects to the existing relationships
+// of the entry, optionally inserting them as new records.
+// Appends related to o.R.Credits.
+// Sets related.R.Entry appropriately.
+// Uses the global database handle.
+func (o *Entry) AddCreditsG(ctx context.Context, insert bool, related ...*Credit) error {
+	return o.AddCredits(ctx, boil.GetContextDB(), insert, related...)
+}
+
 // AddCredits adds the given related objects to the existing relationships
 // of the entry, optionally inserting them as new records.
 // Appends related to o.R.Credits.
@@ -748,6 +777,17 @@ func (o *Entry) AddCredits(ctx context.Context, exec boil.ContextExecutor, inser
 	return nil
 }
 
+// SetCreditsG removes all previously related items of the
+// entry replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.Entry's Credits accordingly.
+// Replaces o.R.Credits with related.
+// Sets related.R.Entry's Credits accordingly.
+// Uses the global database handle.
+func (o *Entry) SetCreditsG(ctx context.Context, insert bool, related ...*Credit) error {
+	return o.SetCredits(ctx, boil.GetContextDB(), insert, related...)
+}
+
 // SetCredits removes all previously related items of the
 // entry replacing them completely with the passed
 // in related items, optionally inserting them as new records.
@@ -780,6 +820,14 @@ func (o *Entry) SetCredits(ctx context.Context, exec boil.ContextExecutor, inser
 	}
 
 	return o.AddCredits(ctx, exec, insert, related...)
+}
+
+// RemoveCreditsG relationships from objects passed in.
+// Removes related items from R.Credits (uses pointer comparison, removal does not keep order)
+// Sets related.R.Entry.
+// Uses the global database handle.
+func (o *Entry) RemoveCreditsG(ctx context.Context, related ...*Credit) error {
+	return o.RemoveCredits(ctx, boil.GetContextDB(), related...)
 }
 
 // RemoveCredits relationships from objects passed in.
@@ -820,6 +868,15 @@ func (o *Entry) RemoveCredits(ctx context.Context, exec boil.ContextExecutor, re
 	}
 
 	return nil
+}
+
+// AddDebitsG adds the given related objects to the existing relationships
+// of the entry, optionally inserting them as new records.
+// Appends related to o.R.Debits.
+// Sets related.R.Entry appropriately.
+// Uses the global database handle.
+func (o *Entry) AddDebitsG(ctx context.Context, insert bool, related ...*Debit) error {
+	return o.AddDebits(ctx, boil.GetContextDB(), insert, related...)
 }
 
 // AddDebits adds the given related objects to the existing relationships
@@ -875,6 +932,17 @@ func (o *Entry) AddDebits(ctx context.Context, exec boil.ContextExecutor, insert
 	return nil
 }
 
+// SetDebitsG removes all previously related items of the
+// entry replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.Entry's Debits accordingly.
+// Replaces o.R.Debits with related.
+// Sets related.R.Entry's Debits accordingly.
+// Uses the global database handle.
+func (o *Entry) SetDebitsG(ctx context.Context, insert bool, related ...*Debit) error {
+	return o.SetDebits(ctx, boil.GetContextDB(), insert, related...)
+}
+
 // SetDebits removes all previously related items of the
 // entry replacing them completely with the passed
 // in related items, optionally inserting them as new records.
@@ -907,6 +975,14 @@ func (o *Entry) SetDebits(ctx context.Context, exec boil.ContextExecutor, insert
 	}
 
 	return o.AddDebits(ctx, exec, insert, related...)
+}
+
+// RemoveDebitsG relationships from objects passed in.
+// Removes related items from R.Debits (uses pointer comparison, removal does not keep order)
+// Sets related.R.Entry.
+// Uses the global database handle.
+func (o *Entry) RemoveDebitsG(ctx context.Context, related ...*Debit) error {
+	return o.RemoveDebits(ctx, boil.GetContextDB(), related...)
 }
 
 // RemoveDebits relationships from objects passed in.
@@ -960,6 +1036,11 @@ func Entries(mods ...qm.QueryMod) entryQuery {
 	return entryQuery{q}
 }
 
+// FindEntryG retrieves a single record by ID.
+func FindEntryG(ctx context.Context, iD int, selectCols ...string) (*Entry, error) {
+	return FindEntry(ctx, boil.GetContextDB(), iD, selectCols...)
+}
+
 // FindEntry retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindEntry(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*Entry, error) {
@@ -988,6 +1069,11 @@ func FindEntry(ctx context.Context, exec boil.ContextExecutor, iD int, selectCol
 	}
 
 	return entryObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *Entry) InsertG(ctx context.Context, columns boil.Columns) error {
+	return o.Insert(ctx, boil.GetContextDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -1076,6 +1162,12 @@ func (o *Entry) Insert(ctx context.Context, exec boil.ContextExecutor, columns b
 	return o.doAfterInsertHooks(ctx, exec)
 }
 
+// UpdateG a single Entry record using the global executor.
+// See Update for more documentation.
+func (o *Entry) UpdateG(ctx context.Context, columns boil.Columns) (int64, error) {
+	return o.Update(ctx, boil.GetContextDB(), columns)
+}
+
 // Update uses an executor to update the Entry.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -1139,6 +1231,11 @@ func (o *Entry) Update(ctx context.Context, exec boil.ContextExecutor, columns b
 	return rowsAff, o.doAfterUpdateHooks(ctx, exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q entryQuery) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return q.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q entryQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -1154,6 +1251,11 @@ func (q entryQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o EntrySlice) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return o.UpdateAll(ctx, boil.GetContextDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -1202,6 +1304,11 @@ func (o EntrySlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all entry")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *Entry) UpsertG(ctx context.Context, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(ctx, boil.GetContextDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -1327,6 +1434,12 @@ func (o *Entry) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnC
 	return o.doAfterUpsertHooks(ctx, exec)
 }
 
+// DeleteG deletes a single Entry record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *Entry) DeleteG(ctx context.Context) (int64, error) {
+	return o.Delete(ctx, boil.GetContextDB())
+}
+
 // Delete deletes a single Entry record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Entry) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -1363,6 +1476,10 @@ func (o *Entry) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, e
 	return rowsAff, nil
 }
 
+func (q entryQuery) DeleteAllG(ctx context.Context) (int64, error) {
+	return q.DeleteAll(ctx, boil.GetContextDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q entryQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	if q.Query == nil {
@@ -1382,6 +1499,11 @@ func (q entryQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (i
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o EntrySlice) DeleteAllG(ctx context.Context) (int64, error) {
+	return o.DeleteAll(ctx, boil.GetContextDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1433,6 +1555,15 @@ func (o EntrySlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (i
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *Entry) ReloadG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: no Entry provided for reload")
+	}
+
+	return o.Reload(ctx, boil.GetContextDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Entry) Reload(ctx context.Context, exec boil.ContextExecutor) error {
@@ -1443,6 +1574,16 @@ func (o *Entry) Reload(ctx context.Context, exec boil.ContextExecutor) error {
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *EntrySlice) ReloadAllG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: empty EntrySlice provided for reload all")
+	}
+
+	return o.ReloadAll(ctx, boil.GetContextDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1472,6 +1613,11 @@ func (o *EntrySlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) e
 	*o = slice
 
 	return nil
+}
+
+// EntryExistsG checks if the Entry row exists.
+func EntryExistsG(ctx context.Context, iD int) (bool, error) {
+	return EntryExists(ctx, boil.GetContextDB(), iD)
 }
 
 // EntryExists checks if the Entry row exists.

@@ -382,6 +382,11 @@ func AddTransactionHook(hookPoint boil.HookPoint, transactionHook TransactionHoo
 	}
 }
 
+// OneG returns a single transaction record from the query using the global executor.
+func (q transactionQuery) OneG(ctx context.Context) (*Transaction, error) {
+	return q.One(ctx, boil.GetContextDB())
+}
+
 // One returns a single transaction record from the query.
 func (q transactionQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Transaction, error) {
 	o := &Transaction{}
@@ -401,6 +406,11 @@ func (q transactionQuery) One(ctx context.Context, exec boil.ContextExecutor) (*
 	}
 
 	return o, nil
+}
+
+// AllG returns all Transaction records from the query using the global executor.
+func (q transactionQuery) AllG(ctx context.Context) (TransactionSlice, error) {
+	return q.All(ctx, boil.GetContextDB())
 }
 
 // All returns all Transaction records from the query.
@@ -423,6 +433,11 @@ func (q transactionQuery) All(ctx context.Context, exec boil.ContextExecutor) (T
 	return o, nil
 }
 
+// CountG returns the count of all Transaction records in the query using the global executor
+func (q transactionQuery) CountG(ctx context.Context) (int64, error) {
+	return q.Count(ctx, boil.GetContextDB())
+}
+
 // Count returns the count of all Transaction records in the query.
 func (q transactionQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	var count int64
@@ -436,6 +451,11 @@ func (q transactionQuery) Count(ctx context.Context, exec boil.ContextExecutor) 
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table using the global executor.
+func (q transactionQuery) ExistsG(ctx context.Context) (bool, error) {
+	return q.Exists(ctx, boil.GetContextDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -720,6 +740,14 @@ func (transactionL) LoadAccount(ctx context.Context, e boil.ContextExecutor, sin
 	return nil
 }
 
+// SetUserG of the transaction to the related item.
+// Sets o.R.User to related.
+// Adds o to related.R.Transactions.
+// Uses the global database handle.
+func (o *Transaction) SetUserG(ctx context.Context, insert bool, related *User) error {
+	return o.SetUser(ctx, boil.GetContextDB(), insert, related)
+}
+
 // SetUser of the transaction to the related item.
 // Sets o.R.User to related.
 // Adds o to related.R.Transactions.
@@ -765,6 +793,14 @@ func (o *Transaction) SetUser(ctx context.Context, exec boil.ContextExecutor, in
 	}
 
 	return nil
+}
+
+// SetAccountG of the transaction to the related item.
+// Sets o.R.Account to related.
+// Adds o to related.R.Transactions.
+// Uses the global database handle.
+func (o *Transaction) SetAccountG(ctx context.Context, insert bool, related *Account) error {
+	return o.SetAccount(ctx, boil.GetContextDB(), insert, related)
 }
 
 // SetAccount of the transaction to the related item.
@@ -814,6 +850,14 @@ func (o *Transaction) SetAccount(ctx context.Context, exec boil.ContextExecutor,
 	return nil
 }
 
+// RemoveAccountG relationship.
+// Sets o.R.Account to nil.
+// Removes o from all passed in related items' relationships struct.
+// Uses the global database handle.
+func (o *Transaction) RemoveAccountG(ctx context.Context, related *Account) error {
+	return o.RemoveAccount(ctx, boil.GetContextDB(), related)
+}
+
 // RemoveAccount relationship.
 // Sets o.R.Account to nil.
 // Removes o from all passed in related items' relationships struct.
@@ -858,6 +902,11 @@ func Transactions(mods ...qm.QueryMod) transactionQuery {
 	return transactionQuery{q}
 }
 
+// FindTransactionG retrieves a single record by ID.
+func FindTransactionG(ctx context.Context, iD int, selectCols ...string) (*Transaction, error) {
+	return FindTransaction(ctx, boil.GetContextDB(), iD, selectCols...)
+}
+
 // FindTransaction retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindTransaction(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*Transaction, error) {
@@ -886,6 +935,11 @@ func FindTransaction(ctx context.Context, exec boil.ContextExecutor, iD int, sel
 	}
 
 	return transactionObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *Transaction) InsertG(ctx context.Context, columns boil.Columns) error {
+	return o.Insert(ctx, boil.GetContextDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -967,6 +1021,12 @@ func (o *Transaction) Insert(ctx context.Context, exec boil.ContextExecutor, col
 	return o.doAfterInsertHooks(ctx, exec)
 }
 
+// UpdateG a single Transaction record using the global executor.
+// See Update for more documentation.
+func (o *Transaction) UpdateG(ctx context.Context, columns boil.Columns) (int64, error) {
+	return o.Update(ctx, boil.GetContextDB(), columns)
+}
+
 // Update uses an executor to update the Transaction.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -1030,6 +1090,11 @@ func (o *Transaction) Update(ctx context.Context, exec boil.ContextExecutor, col
 	return rowsAff, o.doAfterUpdateHooks(ctx, exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q transactionQuery) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return q.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q transactionQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -1045,6 +1110,11 @@ func (q transactionQuery) UpdateAll(ctx context.Context, exec boil.ContextExecut
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o TransactionSlice) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return o.UpdateAll(ctx, boil.GetContextDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -1093,6 +1163,11 @@ func (o TransactionSlice) UpdateAll(ctx context.Context, exec boil.ContextExecut
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all transaction")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *Transaction) UpsertG(ctx context.Context, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(ctx, boil.GetContextDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -1211,6 +1286,12 @@ func (o *Transaction) Upsert(ctx context.Context, exec boil.ContextExecutor, upd
 	return o.doAfterUpsertHooks(ctx, exec)
 }
 
+// DeleteG deletes a single Transaction record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *Transaction) DeleteG(ctx context.Context) (int64, error) {
+	return o.Delete(ctx, boil.GetContextDB())
+}
+
 // Delete deletes a single Transaction record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Transaction) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -1247,6 +1328,10 @@ func (o *Transaction) Delete(ctx context.Context, exec boil.ContextExecutor) (in
 	return rowsAff, nil
 }
 
+func (q transactionQuery) DeleteAllG(ctx context.Context) (int64, error) {
+	return q.DeleteAll(ctx, boil.GetContextDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q transactionQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	if q.Query == nil {
@@ -1266,6 +1351,11 @@ func (q transactionQuery) DeleteAll(ctx context.Context, exec boil.ContextExecut
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o TransactionSlice) DeleteAllG(ctx context.Context) (int64, error) {
+	return o.DeleteAll(ctx, boil.GetContextDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1317,6 +1407,15 @@ func (o TransactionSlice) DeleteAll(ctx context.Context, exec boil.ContextExecut
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *Transaction) ReloadG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: no Transaction provided for reload")
+	}
+
+	return o.Reload(ctx, boil.GetContextDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Transaction) Reload(ctx context.Context, exec boil.ContextExecutor) error {
@@ -1327,6 +1426,16 @@ func (o *Transaction) Reload(ctx context.Context, exec boil.ContextExecutor) err
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *TransactionSlice) ReloadAllG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: empty TransactionSlice provided for reload all")
+	}
+
+	return o.ReloadAll(ctx, boil.GetContextDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1356,6 +1465,11 @@ func (o *TransactionSlice) ReloadAll(ctx context.Context, exec boil.ContextExecu
 	*o = slice
 
 	return nil
+}
+
+// TransactionExistsG checks if the Transaction row exists.
+func TransactionExistsG(ctx context.Context, iD int) (bool, error) {
+	return TransactionExists(ctx, boil.GetContextDB(), iD)
 }
 
 // TransactionExists checks if the Transaction row exists.
