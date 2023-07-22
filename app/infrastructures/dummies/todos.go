@@ -19,7 +19,7 @@ import (
 )
 
 func CreateTodos(ctx context.Context, connectDB *sql.DB) {
-	itemCount := 30
+	itemCount := 15
 	userIdList := libs.GetUserIdList(ctx, connectDB)
 
 	lo.ForEach(userIdList, func(userId int, _ int) {

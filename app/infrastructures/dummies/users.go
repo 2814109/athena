@@ -17,7 +17,7 @@ import (
 )
 
 func CreateDummyUsers(ctx context.Context, connectDB *sql.DB) {
-	count := 100
+	count := 20
 
 	users := lo.Times(count, func(i int) models.User {
 		return models.User{

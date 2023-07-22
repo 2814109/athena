@@ -20,7 +20,7 @@ import (
 
 func CreateDummyArticles(ctx context.Context, connectDB *sql.DB) {
 
-	count := 100
+	count := 20
 	statuses, err := models.Statuses().All(ctx, connectDB)
 
 	if err != nil {

@@ -28,7 +28,7 @@ func CreateAnnualItems(ctx context.Context, connectDB *sql.DB) {
 	monthDiff := int(endDate.Month()) - int(startDate.Month()) + 1
 	monthly := make([]int, monthDiff)
 
-	itemCount := 45
+	itemCount := 25
 
 	lo.ForEach(monthly, func(_ int, monthKey int) {
 		month := startDate.AddDate(0, monthKey, 0)
