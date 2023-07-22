@@ -1,4 +1,4 @@
-package graph
+package presentations
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"fmt"
+	"my_gql_server/graph"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
 	"my_gql_server/my_models"
@@ -78,7 +79,7 @@ func (r *queryResolver) Entries(ctx context.Context) ([]*models.Entry, error) {
 	panic(fmt.Errorf("not implemented: Entries - entries"))
 }
 
-// Query returns QueryResolver implementation.
-func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
+// Query returns graph.QueryResolver implementation.
+func (r *Resolver) Query() graph.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }

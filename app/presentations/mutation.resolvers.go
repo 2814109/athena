@@ -1,4 +1,4 @@
-package graph
+package presentations
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -6,12 +6,14 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"log"
+	"my_gql_server/graph"
 	"my_gql_server/graph/model"
 	"my_gql_server/graph/validation"
 	"my_gql_server/infrastructures/repositories"
-	"my_gql_server/my_models"
+	models "my_gql_server/my_models"
+
+	"my_gql_server/usecases"
 )
 
 // CreateTodo is the resolver for the createTodo field.
@@ -56,10 +58,16 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 
 // CreateEnty is the resolver for the createEnty field.
 func (r *mutationResolver) CreateEnty(ctx context.Context, input model.CreateEntryRequest) (*models.Entry, error) {
-	panic(fmt.Errorf("not implemented: CreateEnty - createEnty"))
+	bookkeepingUseCase := usecases.NewBookkeepingService()
+
+	err := bookkeepingUseCase.CreateEntry(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
 }
 
-// Mutation returns MutationResolver implementation.
-func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
+// Mutation returns graph.MutationResolver implementation.
+func (r *Resolver) Mutation() graph.MutationResolver { return &mutationResolver{r} }
 
 type mutationResolver struct{ *Resolver }

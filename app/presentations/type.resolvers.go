@@ -1,4 +1,4 @@
-package graph
+package presentations
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -7,7 +7,7 @@ package graph
 import (
 	"context"
 	"fmt"
-	"log"
+	"my_gql_server/graph"
 	"my_gql_server/my_models"
 )
 
@@ -48,29 +48,28 @@ func (r *itemResolver) UpdatedAt(ctx context.Context, obj *models.Item) (string,
 
 // User is the resolver for the user field.
 func (r *itemResolver) User(ctx context.Context, obj *models.Item) (*models.User, error) {
-	return obj.R.User, nil
+	panic(fmt.Errorf("not implemented: User - user"))
 }
 
 // User is the resolver for the user field.
 func (r *todoResolver) User(ctx context.Context, obj *models.Todo) (*models.User, error) {
-	log.Printf("user %s", obj.R.User.Email)
-	return obj.R.User, nil
+	panic(fmt.Errorf("not implemented: User - user"))
 }
 
-// Credit returns CreditResolver implementation.
-func (r *Resolver) Credit() CreditResolver { return &creditResolver{r} }
+// Credit returns graph.CreditResolver implementation.
+func (r *Resolver) Credit() graph.CreditResolver { return &creditResolver{r} }
 
-// Debit returns DebitResolver implementation.
-func (r *Resolver) Debit() DebitResolver { return &debitResolver{r} }
+// Debit returns graph.DebitResolver implementation.
+func (r *Resolver) Debit() graph.DebitResolver { return &debitResolver{r} }
 
-// Entry returns EntryResolver implementation.
-func (r *Resolver) Entry() EntryResolver { return &entryResolver{r} }
+// Entry returns graph.EntryResolver implementation.
+func (r *Resolver) Entry() graph.EntryResolver { return &entryResolver{r} }
 
-// Item returns ItemResolver implementation.
-func (r *Resolver) Item() ItemResolver { return &itemResolver{r} }
+// Item returns graph.ItemResolver implementation.
+func (r *Resolver) Item() graph.ItemResolver { return &itemResolver{r} }
 
-// Todo returns TodoResolver implementation.
-func (r *Resolver) Todo() TodoResolver { return &todoResolver{r} }
+// Todo returns graph.TodoResolver implementation.
+func (r *Resolver) Todo() graph.TodoResolver { return &todoResolver{r} }
 
 type creditResolver struct{ *Resolver }
 type debitResolver struct{ *Resolver }
