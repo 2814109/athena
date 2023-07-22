@@ -90,6 +90,12 @@ models:
     model: ./my_models.Article
   Item:
     model: ./my_models.Item
+  Debit:
+    model: ./my_models.Debit
+  Credit:
+    model: ./my_models.Credit
+  Entry:
+    model: ./my_models.Entry
 
 directives:
   constraint:

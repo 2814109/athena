@@ -38,6 +38,9 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Credit() CreditResolver
+	Debit() DebitResolver
+	Entry() EntryResolver
 	Item() ItemResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
@@ -110,6 +113,17 @@ type ComplexityRoot struct {
 	}
 }
 
+type CreditResolver interface {
+	Amount(ctx context.Context, obj *models.Credit) (*float64, error)
+}
+type DebitResolver interface {
+	Amount(ctx context.Context, obj *models.Debit) (*float64, error)
+}
+type EntryResolver interface {
+	Date(ctx context.Context, obj *models.Entry) (string, error)
+	Debits(ctx context.Context, obj *models.Entry) ([]*models.Debit, error)
+	Credits(ctx context.Context, obj *models.Entry) ([]*models.Credit, error)
+}
 type ItemResolver interface {
 	CreatedAt(ctx context.Context, obj *models.Item) (string, error)
 	UpdatedAt(ctx context.Context, obj *models.Item) (string, error)
@@ -120,14 +134,14 @@ type MutationResolver interface {
 	CreateTodo(ctx context.Context, input model.CreateTodo) (*models.Todo, error)
 	UpdateTodo(ctx context.Context, input model.UpdateTodo) (*models.Todo, error)
 	CreateUser(ctx context.Context, input model.NewUser) (*models.User, error)
-	CreateEnty(ctx context.Context, input model.CreateEntryRequest) (*model.Entry, error)
+	CreateEnty(ctx context.Context, input model.CreateEntryRequest) (*models.Entry, error)
 }
 type QueryResolver interface {
 	Todos(ctx context.Context, userID int) ([]*models.Todo, error)
 	Todo(ctx context.Context, id int) (*models.Todo, error)
 	Articles(ctx context.Context, status model.ArticleStatuses) ([]*models.Article, error)
 	Items(ctx context.Context, userID int) ([]*models.Item, error)
-	Entries(ctx context.Context) ([]*model.Entry, error)
+	Entries(ctx context.Context) ([]*models.Entry, error)
 }
 type TodoResolver interface {
 	User(ctx context.Context, obj *models.Todo) (*models.User, error)
@@ -873,7 +887,7 @@ func (ec *executionContext) fieldContext_Article_status(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Credit_account_name(ctx context.Context, field graphql.CollectedField, obj *model.Credit) (ret graphql.Marshaler) {
+func (ec *executionContext) _Credit_account_name(ctx context.Context, field graphql.CollectedField, obj *models.Credit) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Credit_account_name(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -896,9 +910,9 @@ func (ec *executionContext) _Credit_account_name(ctx context.Context, field grap
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Credit_account_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -914,7 +928,7 @@ func (ec *executionContext) fieldContext_Credit_account_name(ctx context.Context
 	return fc, nil
 }
 
-func (ec *executionContext) _Credit_amount(ctx context.Context, field graphql.CollectedField, obj *model.Credit) (ret graphql.Marshaler) {
+func (ec *executionContext) _Credit_amount(ctx context.Context, field graphql.CollectedField, obj *models.Credit) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Credit_amount(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -928,7 +942,7 @@ func (ec *executionContext) _Credit_amount(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Amount, nil
+		return ec.resolvers.Credit().Amount(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -946,8 +960,8 @@ func (ec *executionContext) fieldContext_Credit_amount(ctx context.Context, fiel
 	fc = &graphql.FieldContext{
 		Object:     "Credit",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
 		},
@@ -955,7 +969,7 @@ func (ec *executionContext) fieldContext_Credit_amount(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _Debit_account_name(ctx context.Context, field graphql.CollectedField, obj *model.Debit) (ret graphql.Marshaler) {
+func (ec *executionContext) _Debit_account_name(ctx context.Context, field graphql.CollectedField, obj *models.Debit) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Debit_account_name(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -978,9 +992,9 @@ func (ec *executionContext) _Debit_account_name(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Debit_account_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -996,7 +1010,7 @@ func (ec *executionContext) fieldContext_Debit_account_name(ctx context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _Debit_amount(ctx context.Context, field graphql.CollectedField, obj *model.Debit) (ret graphql.Marshaler) {
+func (ec *executionContext) _Debit_amount(ctx context.Context, field graphql.CollectedField, obj *models.Debit) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Debit_amount(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -1010,7 +1024,7 @@ func (ec *executionContext) _Debit_amount(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Amount, nil
+		return ec.resolvers.Debit().Amount(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1028,8 +1042,8 @@ func (ec *executionContext) fieldContext_Debit_amount(ctx context.Context, field
 	fc = &graphql.FieldContext{
 		Object:     "Debit",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
 		},
@@ -1037,7 +1051,7 @@ func (ec *executionContext) fieldContext_Debit_amount(ctx context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Entry_description(ctx context.Context, field graphql.CollectedField, obj *model.Entry) (ret graphql.Marshaler) {
+func (ec *executionContext) _Entry_description(ctx context.Context, field graphql.CollectedField, obj *models.Entry) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Entry_description(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -1081,7 +1095,7 @@ func (ec *executionContext) fieldContext_Entry_description(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _Entry_date(ctx context.Context, field graphql.CollectedField, obj *model.Entry) (ret graphql.Marshaler) {
+func (ec *executionContext) _Entry_date(ctx context.Context, field graphql.CollectedField, obj *models.Entry) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Entry_date(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -1095,7 +1109,7 @@ func (ec *executionContext) _Entry_date(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Date, nil
+		return ec.resolvers.Entry().Date(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1116,8 +1130,8 @@ func (ec *executionContext) fieldContext_Entry_date(ctx context.Context, field g
 	fc = &graphql.FieldContext{
 		Object:     "Entry",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Date does not have child fields")
 		},
@@ -1125,7 +1139,7 @@ func (ec *executionContext) fieldContext_Entry_date(ctx context.Context, field g
 	return fc, nil
 }
 
-func (ec *executionContext) _Entry_debits(ctx context.Context, field graphql.CollectedField, obj *model.Entry) (ret graphql.Marshaler) {
+func (ec *executionContext) _Entry_debits(ctx context.Context, field graphql.CollectedField, obj *models.Entry) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Entry_debits(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -1139,7 +1153,7 @@ func (ec *executionContext) _Entry_debits(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Debits, nil
+		return ec.resolvers.Entry().Debits(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1148,17 +1162,17 @@ func (ec *executionContext) _Entry_debits(ctx context.Context, field graphql.Col
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Debit)
+	res := resTmp.([]*models.Debit)
 	fc.Result = res
-	return ec.marshalODebit2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐDebit(ctx, field.Selections, res)
+	return ec.marshalODebit2ᚕᚖmy_gql_serverᚋmy_modelsᚐDebit(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Entry_debits(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Entry",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "account_name":
@@ -1172,7 +1186,7 @@ func (ec *executionContext) fieldContext_Entry_debits(ctx context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Entry_credits(ctx context.Context, field graphql.CollectedField, obj *model.Entry) (ret graphql.Marshaler) {
+func (ec *executionContext) _Entry_credits(ctx context.Context, field graphql.CollectedField, obj *models.Entry) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Entry_credits(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -1186,7 +1200,7 @@ func (ec *executionContext) _Entry_credits(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Credits, nil
+		return ec.resolvers.Entry().Credits(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1195,17 +1209,17 @@ func (ec *executionContext) _Entry_credits(ctx context.Context, field graphql.Co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Credit)
+	res := resTmp.([]*models.Credit)
 	fc.Result = res
-	return ec.marshalOCredit2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐCredit(ctx, field.Selections, res)
+	return ec.marshalOCredit2ᚕᚖmy_gql_serverᚋmy_modelsᚐCredit(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Entry_credits(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Entry",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "account_name":
@@ -1750,9 +1764,9 @@ func (ec *executionContext) _Mutation_createEnty(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Entry)
+	res := resTmp.(*models.Entry)
 	fc.Result = res
-	return ec.marshalNEntry2ᚖmy_gql_serverᚋgraphᚋmodelᚐEntry(ctx, field.Selections, res)
+	return ec.marshalNEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createEnty(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2077,9 +2091,9 @@ func (ec *executionContext) _Query_entries(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Entry)
+	res := resTmp.([]*models.Entry)
 	fc.Result = res
-	return ec.marshalNEntry2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐEntry(ctx, field.Selections, res)
+	return ec.marshalNEntry2ᚕᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_entries(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4602,7 +4616,7 @@ func (ec *executionContext) _Article(ctx context.Context, sel ast.SelectionSet, 
 
 var creditImplementors = []string{"Credit"}
 
-func (ec *executionContext) _Credit(ctx context.Context, sel ast.SelectionSet, obj *model.Credit) graphql.Marshaler {
+func (ec *executionContext) _Credit(ctx context.Context, sel ast.SelectionSet, obj *models.Credit) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, creditImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -4615,9 +4629,22 @@ func (ec *executionContext) _Credit(ctx context.Context, sel ast.SelectionSet, o
 			out.Values[i] = ec._Credit_account_name(ctx, field, obj)
 
 		case "amount":
+			field := field
 
-			out.Values[i] = ec._Credit_amount(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Credit_amount(ctx, field, obj)
+				return res
+			}
 
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4631,7 +4658,7 @@ func (ec *executionContext) _Credit(ctx context.Context, sel ast.SelectionSet, o
 
 var debitImplementors = []string{"Debit"}
 
-func (ec *executionContext) _Debit(ctx context.Context, sel ast.SelectionSet, obj *model.Debit) graphql.Marshaler {
+func (ec *executionContext) _Debit(ctx context.Context, sel ast.SelectionSet, obj *models.Debit) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, debitImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -4644,9 +4671,22 @@ func (ec *executionContext) _Debit(ctx context.Context, sel ast.SelectionSet, ob
 			out.Values[i] = ec._Debit_account_name(ctx, field, obj)
 
 		case "amount":
+			field := field
 
-			out.Values[i] = ec._Debit_amount(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Debit_amount(ctx, field, obj)
+				return res
+			}
 
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4660,7 +4700,7 @@ func (ec *executionContext) _Debit(ctx context.Context, sel ast.SelectionSet, ob
 
 var entryImplementors = []string{"Entry"}
 
-func (ec *executionContext) _Entry(ctx context.Context, sel ast.SelectionSet, obj *model.Entry) graphql.Marshaler {
+func (ec *executionContext) _Entry(ctx context.Context, sel ast.SelectionSet, obj *models.Entry) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, entryImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -4673,23 +4713,62 @@ func (ec *executionContext) _Entry(ctx context.Context, sel ast.SelectionSet, ob
 			out.Values[i] = ec._Entry_description(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "date":
+			field := field
 
-			out.Values[i] = ec._Entry_date(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entry_date(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "debits":
+			field := field
 
-			out.Values[i] = ec._Entry_debits(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entry_debits(ctx, field, obj)
+				return res
+			}
 
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "credits":
+			field := field
 
-			out.Values[i] = ec._Entry_credits(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entry_credits(ctx, field, obj)
+				return res
+			}
 
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5552,11 +5631,11 @@ func (ec *executionContext) marshalNDate2string(ctx context.Context, sel ast.Sel
 	return res
 }
 
-func (ec *executionContext) marshalNEntry2my_gql_serverᚋgraphᚋmodelᚐEntry(ctx context.Context, sel ast.SelectionSet, v model.Entry) graphql.Marshaler {
+func (ec *executionContext) marshalNEntry2my_gql_serverᚋmy_modelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v models.Entry) graphql.Marshaler {
 	return ec._Entry(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNEntry2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐEntry(ctx context.Context, sel ast.SelectionSet, v []*model.Entry) graphql.Marshaler {
+func (ec *executionContext) marshalNEntry2ᚕᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v []*models.Entry) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5580,7 +5659,7 @@ func (ec *executionContext) marshalNEntry2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOEntry2ᚖmy_gql_serverᚋgraphᚋmodelᚐEntry(ctx, sel, v[i])
+			ret[i] = ec.marshalOEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5594,7 +5673,7 @@ func (ec *executionContext) marshalNEntry2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐ
 	return ret
 }
 
-func (ec *executionContext) marshalNEntry2ᚖmy_gql_serverᚋgraphᚋmodelᚐEntry(ctx context.Context, sel ast.SelectionSet, v *model.Entry) graphql.Marshaler {
+func (ec *executionContext) marshalNEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v *models.Entry) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6064,7 +6143,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalOCredit2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐCredit(ctx context.Context, sel ast.SelectionSet, v []*model.Credit) graphql.Marshaler {
+func (ec *executionContext) marshalOCredit2ᚕᚖmy_gql_serverᚋmy_modelsᚐCredit(ctx context.Context, sel ast.SelectionSet, v []*models.Credit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6091,7 +6170,7 @@ func (ec *executionContext) marshalOCredit2ᚕᚖmy_gql_serverᚋgraphᚋmodel�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOCredit2ᚖmy_gql_serverᚋgraphᚋmodelᚐCredit(ctx, sel, v[i])
+			ret[i] = ec.marshalOCredit2ᚖmy_gql_serverᚋmy_modelsᚐCredit(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6105,7 +6184,7 @@ func (ec *executionContext) marshalOCredit2ᚕᚖmy_gql_serverᚋgraphᚋmodel�
 	return ret
 }
 
-func (ec *executionContext) marshalOCredit2ᚖmy_gql_serverᚋgraphᚋmodelᚐCredit(ctx context.Context, sel ast.SelectionSet, v *model.Credit) graphql.Marshaler {
+func (ec *executionContext) marshalOCredit2ᚖmy_gql_serverᚋmy_modelsᚐCredit(ctx context.Context, sel ast.SelectionSet, v *models.Credit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6140,7 +6219,7 @@ func (ec *executionContext) unmarshalOCreditInput2ᚖmy_gql_serverᚋgraphᚋmod
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalODebit2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐDebit(ctx context.Context, sel ast.SelectionSet, v []*model.Debit) graphql.Marshaler {
+func (ec *executionContext) marshalODebit2ᚕᚖmy_gql_serverᚋmy_modelsᚐDebit(ctx context.Context, sel ast.SelectionSet, v []*models.Debit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6167,7 +6246,7 @@ func (ec *executionContext) marshalODebit2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalODebit2ᚖmy_gql_serverᚋgraphᚋmodelᚐDebit(ctx, sel, v[i])
+			ret[i] = ec.marshalODebit2ᚖmy_gql_serverᚋmy_modelsᚐDebit(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6181,7 +6260,7 @@ func (ec *executionContext) marshalODebit2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐ
 	return ret
 }
 
-func (ec *executionContext) marshalODebit2ᚖmy_gql_serverᚋgraphᚋmodelᚐDebit(ctx context.Context, sel ast.SelectionSet, v *model.Debit) graphql.Marshaler {
+func (ec *executionContext) marshalODebit2ᚖmy_gql_serverᚋmy_modelsᚐDebit(ctx context.Context, sel ast.SelectionSet, v *models.Debit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6216,7 +6295,7 @@ func (ec *executionContext) unmarshalODebitInput2ᚖmy_gql_serverᚋgraphᚋmode
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOEntry2ᚖmy_gql_serverᚋgraphᚋmodelᚐEntry(ctx context.Context, sel ast.SelectionSet, v *model.Entry) graphql.Marshaler {
+func (ec *executionContext) marshalOEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v *models.Entry) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6253,6 +6332,16 @@ func (ec *executionContext) marshalOStatusPattern2ᚖmy_gql_serverᚋgraphᚋmod
 		return graphql.Null
 	}
 	return v
+}
+
+func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalString(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {

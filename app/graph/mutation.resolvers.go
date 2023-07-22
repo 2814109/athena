@@ -55,7 +55,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 }
 
 // CreateEnty is the resolver for the createEnty field.
-func (r *mutationResolver) CreateEnty(ctx context.Context, input model.CreateEntryRequest) (*model.Entry, error) {
+func (r *mutationResolver) CreateEnty(ctx context.Context, input model.CreateEntryRequest) (*models.Entry, error) {
 	panic(fmt.Errorf("not implemented: CreateEnty - createEnty"))
 }
 

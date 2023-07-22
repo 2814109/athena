@@ -21,17 +21,7 @@ type CreateTodo struct {
 	UserID int            `json:"userId"`
 }
 
-type Credit struct {
-	AccountName *string  `json:"account_name,omitempty"`
-	Amount      *float64 `json:"amount,omitempty"`
-}
-
 type CreditInput struct {
-	AccountName *string  `json:"account_name,omitempty"`
-	Amount      *float64 `json:"amount,omitempty"`
-}
-
-type Debit struct {
 	AccountName *string  `json:"account_name,omitempty"`
 	Amount      *float64 `json:"amount,omitempty"`
 }
@@ -39,13 +29,6 @@ type Debit struct {
 type DebitInput struct {
 	AccountName *string  `json:"account_name,omitempty"`
 	Amount      *float64 `json:"amount,omitempty"`
-}
-
-type Entry struct {
-	Description string    `json:"description"`
-	Date        string    `json:"date"`
-	Debits      []*Debit  `json:"debits,omitempty"`
-	Credits     []*Credit `json:"credits,omitempty"`
 }
 
 type NewUser struct {

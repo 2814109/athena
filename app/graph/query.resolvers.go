@@ -74,7 +74,7 @@ func (r *queryResolver) Items(ctx context.Context, userID int) ([]*models.Item, 
 }
 
 // Entries is the resolver for the entries field.
-func (r *queryResolver) Entries(ctx context.Context) ([]*model.Entry, error) {
+func (r *queryResolver) Entries(ctx context.Context) ([]*models.Entry, error) {
 	panic(fmt.Errorf("not implemented: Entries - entries"))
 }
 
