@@ -36,6 +36,8 @@ func (b *bookkeepingService) CreateEntry(ctx context.Context, input model.Create
 
 	// b.dbConnect => repository layer
 
+	// def transaction entry, debit, credit
+
 	// ビジネスロジックに従って、データベースへのエントリ登録とバランスチェックなどの処理を実装
 	// トランザクションを使って、借方と貸方の合計が等しいことを確認するなど
 
