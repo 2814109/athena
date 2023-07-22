@@ -17,4 +17,4 @@ mg-force:
 # 	migrate --path db/migrations --database 'postgres://${PSQL_USER}:${PSQL_PASS}@localhost:5432/${PSQL_DBNAME}?sslmode=disable' -verbose drop
 
 create-m-%:
-	migrate create -ext sql -dir db/migrations -seq ${@:create-migration-%=%}
+	migrate create -ext sql -dir db/migrations -seq ${@:create-m-%=%}

@@ -8,6 +8,9 @@ var TableNames = struct {
 	Accounts                      string
 	Articles                      string
 	Categories                    string
+	Credits                       string
+	Debits                        string
+	Entries                       string
 	Items                         string
 	MaximumMonthlyTargetPayments  string
 	MonthlyTargetPaymentSnapshots string
@@ -23,6 +26,9 @@ var TableNames = struct {
 	Accounts:                      "accounts",
 	Articles:                      "articles",
 	Categories:                    "categories",
+	Credits:                       "credits",
+	Debits:                        "debits",
+	Entries:                       "entries",
 	Items:                         "items",
 	MaximumMonthlyTargetPayments:  "maximum_monthly_target_payments",
 	MonthlyTargetPaymentSnapshots: "monthly_target_payment_snapshots",
