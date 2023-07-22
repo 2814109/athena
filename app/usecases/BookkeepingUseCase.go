@@ -4,34 +4,17 @@ import (
 	"context"
 	"errors"
 	"my_gql_server/graph/model"
+	models "my_gql_server/my_models"
 )
 
 type BookkeepingUseCase interface {
 	CreateEntry(ctx context.Context, input model.CreateEntryRequest) error
-	// GetEntryByID(id int) (*Entry, error)
+	GetEntryByID(ctx context.Context, id int) (*models.Entry, error)
 }
 
 type bookkeepingService struct {
 	// データベースへのアクセスや他の依存関係が必要な場合はここに追加
 }
-
-// type Entry struct {
-// 	ID          int
-// 	Description string
-// 	Date        time.Time
-// 	Debits      []Debit
-// 	Credits     []Credit
-// }
-
-// type Debit struct {
-// 	AccountName string
-// 	Amount      float64
-// }
-
-// type Credit struct {
-// 	AccountName string
-// 	Amount      float64
-// }
 
 func NewBookkeepingService() BookkeepingUseCase {
 	return &bookkeepingService{}
@@ -48,8 +31,8 @@ func (b *bookkeepingService) CreateEntry(ctx context.Context, input model.Create
 	return nil
 }
 
-// func (b *bookkeepingService) GetEntryByID(id int) (*Entry, error) {
-// 	// ビジネスロジックに従って、指定されたIDの簿記エントリを取得する処理を実装
-// 	// データベースからデータを取得して返す
-// 	return nil, nil
-// }
+func (b *bookkeepingService) GetEntryByID(ctx context.Context, id int) (*models.Entry, error) {
+	// ビジネスロジックに従って、指定されたIDの簿記エントリを取得する処理を実装
+	// データベースからデータを取得して返す
+	return nil, nil
+}

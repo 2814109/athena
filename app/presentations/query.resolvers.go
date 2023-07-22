@@ -6,11 +6,11 @@ package presentations
 
 import (
 	"context"
-	"fmt"
 	"my_gql_server/graph"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
 	"my_gql_server/my_models"
+	"my_gql_server/usecases"
 
 	lop "github.com/samber/lo/parallel"
 )
@@ -74,9 +74,15 @@ func (r *queryResolver) Items(ctx context.Context, userID int) ([]*models.Item, 
 	return result, nil
 }
 
-// Entries is the resolver for the entries field.
-func (r *queryResolver) Entries(ctx context.Context) ([]*models.Entry, error) {
-	panic(fmt.Errorf("not implemented: Entries - entries"))
+// Entry is the resolver for the entry field.
+func (r *queryResolver) Entry(ctx context.Context, id int) (*models.Entry, error) {
+	bookkeepingUseCase := usecases.NewBookkeepingService()
+
+	entry, err := bookkeepingUseCase.GetEntryByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return entry, nil
 }
 
 // Query returns graph.QueryResolver implementation.

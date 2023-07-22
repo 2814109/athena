@@ -7,7 +7,7 @@ tasks:
   setup:
     cmds:
       - docker-compose build --no-cache && docker-compose up -d
-  schema-gen:
+  graphql-schema:
     cmds:
       - cd ./app && go run ./cmd/gqlgen_generate/main.go
   m-up:

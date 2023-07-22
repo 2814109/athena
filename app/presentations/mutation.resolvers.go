@@ -11,8 +11,7 @@ import (
 	"my_gql_server/graph/model"
 	"my_gql_server/graph/validation"
 	"my_gql_server/infrastructures/repositories"
-	models "my_gql_server/my_models"
-
+	"my_gql_server/my_models"
 	"my_gql_server/usecases"
 )
 

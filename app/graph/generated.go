@@ -94,7 +94,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Articles func(childComplexity int, status model.ArticleStatuses) int
-		Entries  func(childComplexity int) int
+		Entry    func(childComplexity int, id int) int
 		Items    func(childComplexity int, userID int) int
 		Todo     func(childComplexity int, id int) int
 		Todos    func(childComplexity int, userID int) int
@@ -141,7 +141,7 @@ type QueryResolver interface {
 	Todo(ctx context.Context, id int) (*models.Todo, error)
 	Articles(ctx context.Context, status model.ArticleStatuses) ([]*models.Article, error)
 	Items(ctx context.Context, userID int) ([]*models.Item, error)
-	Entries(ctx context.Context) ([]*models.Entry, error)
+	Entry(ctx context.Context, id int) (*models.Entry, error)
 }
 type TodoResolver interface {
 	User(ctx context.Context, obj *models.Todo) (*models.User, error)
@@ -355,12 +355,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Articles(childComplexity, args["status"].(model.ArticleStatuses)), true
 
-	case "Query.entries":
-		if e.complexity.Query.Entries == nil {
+	case "Query.entry":
+		if e.complexity.Query.Entry == nil {
 			break
 		}
 
-		return e.complexity.Query.Entries(childComplexity), true
+		args, err := ec.field_Query_entry_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Entry(childComplexity, args["ID"].(int)), true
 
 	case "Query.items":
 		if e.complexity.Query.Items == nil {
@@ -625,6 +630,21 @@ func (ec *executionContext) field_Query_articles_args(ctx context.Context, rawAr
 		}
 	}
 	args["status"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_entry_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["ID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ID"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["ID"] = arg0
 	return args, nil
 }
 
@@ -2065,8 +2085,8 @@ func (ec *executionContext) fieldContext_Query_items(ctx context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_entries(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_entries(ctx, field)
+func (ec *executionContext) _Query_entry(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_entry(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2079,7 +2099,7 @@ func (ec *executionContext) _Query_entries(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Entries(rctx)
+		return ec.resolvers.Query().Entry(rctx, fc.Args["ID"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2091,12 +2111,12 @@ func (ec *executionContext) _Query_entries(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.Entry)
+	res := resTmp.(*models.Entry)
 	fc.Result = res
-	return ec.marshalNEntry2ᚕᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx, field.Selections, res)
+	return ec.marshalNEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_entries(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_entry(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -2115,6 +2135,17 @@ func (ec *executionContext) fieldContext_Query_entries(ctx context.Context, fiel
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Entry", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_entry_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
 	}
 	return fc, nil
 }
@@ -5066,7 +5097,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "entries":
+		case "entry":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -5075,7 +5106,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_entries(ctx, field)
+				res = ec._Query_entry(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -5633,44 +5664,6 @@ func (ec *executionContext) marshalNDate2string(ctx context.Context, sel ast.Sel
 
 func (ec *executionContext) marshalNEntry2my_gql_serverᚋmy_modelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v models.Entry) graphql.Marshaler {
 	return ec._Entry(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNEntry2ᚕᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v []*models.Entry) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalOEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
 }
 
 func (ec *executionContext) marshalNEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v *models.Entry) graphql.Marshaler {
@@ -6293,13 +6286,6 @@ func (ec *executionContext) unmarshalODebitInput2ᚖmy_gql_serverᚋgraphᚋmode
 	}
 	res, err := ec.unmarshalInputDebitInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v *models.Entry) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Entry(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v interface{}) (*float64, error) {
