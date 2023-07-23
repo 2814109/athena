@@ -14,6 +14,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+
+	"github.com/rs/cors"
 )
 
 const defaultPort = "8888"
@@ -33,10 +35,14 @@ func main() {
 	boil.SetDB(connectDB)
 
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &presentations.Resolver{}}))
+	mux := http.NewServeMux()
+	handler := cors.Default().Handler(mux)
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
+
 }
