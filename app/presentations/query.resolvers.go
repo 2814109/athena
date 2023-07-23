@@ -6,6 +6,7 @@ package presentations
 
 import (
 	"context"
+	"fmt"
 	"my_gql_server/graph"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
@@ -91,6 +92,11 @@ func (r *queryResolver) Entry(ctx context.Context, id int) (*models.Entry, error
 		return nil, err
 	}
 	return entry, nil
+}
+
+// PredictCosts is the resolver for the predictCosts field.
+func (r *queryResolver) PredictCosts(ctx context.Context, userID int) ([]*models.PredictCost, error) {
+	panic(fmt.Errorf("not implemented: PredictCosts - predictCosts"))
 }
 
 // Query returns graph.QueryResolver implementation.
