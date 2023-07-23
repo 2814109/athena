@@ -30,6 +30,7 @@ type PredictCost struct {
 	CreatedAt    time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt    time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	Amount       types.Decimal `boil:"amount" json:"amount" toml:"amount" yaml:"amount"`
+	UserID       int           `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 
 	R *predictCostR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L predictCostL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -42,6 +43,7 @@ var PredictCostColumns = struct {
 	CreatedAt    string
 	UpdatedAt    string
 	Amount       string
+	UserID       string
 }{
 	ID:           "id",
 	CategoryName: "category_name",
@@ -49,6 +51,7 @@ var PredictCostColumns = struct {
 	CreatedAt:    "created_at",
 	UpdatedAt:    "updated_at",
 	Amount:       "amount",
+	UserID:       "user_id",
 }
 
 var PredictCostTableColumns = struct {
@@ -58,6 +61,7 @@ var PredictCostTableColumns = struct {
 	CreatedAt    string
 	UpdatedAt    string
 	Amount       string
+	UserID       string
 }{
 	ID:           "predict_costs.id",
 	CategoryName: "predict_costs.category_name",
@@ -65,6 +69,7 @@ var PredictCostTableColumns = struct {
 	CreatedAt:    "predict_costs.created_at",
 	UpdatedAt:    "predict_costs.updated_at",
 	Amount:       "predict_costs.amount",
+	UserID:       "predict_costs.user_id",
 }
 
 // Generated where
@@ -76,6 +81,7 @@ var PredictCostWhere = struct {
 	CreatedAt    whereHelpertime_Time
 	UpdatedAt    whereHelpertime_Time
 	Amount       whereHelpertypes_Decimal
+	UserID       whereHelperint
 }{
 	ID:           whereHelperint{field: "\"predict_costs\".\"id\""},
 	CategoryName: whereHelperstring{field: "\"predict_costs\".\"category_name\""},
@@ -83,23 +89,34 @@ var PredictCostWhere = struct {
 	CreatedAt:    whereHelpertime_Time{field: "\"predict_costs\".\"created_at\""},
 	UpdatedAt:    whereHelpertime_Time{field: "\"predict_costs\".\"updated_at\""},
 	Amount:       whereHelpertypes_Decimal{field: "\"predict_costs\".\"amount\""},
+	UserID:       whereHelperint{field: "\"predict_costs\".\"user_id\""},
 }
 
 // PredictCostRels is where relationship names are stored.
 var PredictCostRels = struct {
+	User                 string
 	CategoryNameCategory string
 }{
+	User:                 "User",
 	CategoryNameCategory: "CategoryNameCategory",
 }
 
 // predictCostR is where relationships are stored.
 type predictCostR struct {
+	User                 *User     `boil:"User" json:"User" toml:"User" yaml:"User"`
 	CategoryNameCategory *Category `boil:"CategoryNameCategory" json:"CategoryNameCategory" toml:"CategoryNameCategory" yaml:"CategoryNameCategory"`
 }
 
 // NewStruct creates a new relationship struct
 func (*predictCostR) NewStruct() *predictCostR {
 	return &predictCostR{}
+}
+
+func (r *predictCostR) GetUser() *User {
+	if r == nil {
+		return nil
+	}
+	return r.User
 }
 
 func (r *predictCostR) GetCategoryNameCategory() *Category {
@@ -113,9 +130,9 @@ func (r *predictCostR) GetCategoryNameCategory() *Category {
 type predictCostL struct{}
 
 var (
-	predictCostAllColumns            = []string{"id", "category_name", "label", "created_at", "updated_at", "amount"}
+	predictCostAllColumns            = []string{"id", "category_name", "label", "created_at", "updated_at", "amount", "user_id"}
 	predictCostColumnsWithoutDefault = []string{"category_name", "label", "created_at", "updated_at", "amount"}
-	predictCostColumnsWithDefault    = []string{"id"}
+	predictCostColumnsWithDefault    = []string{"id", "user_id"}
 	predictCostPrimaryKeyColumns     = []string{"id"}
 	predictCostGeneratedColumns      = []string{}
 )
@@ -418,6 +435,17 @@ func (q predictCostQuery) Exists(ctx context.Context, exec boil.ContextExecutor)
 	return count > 0, nil
 }
 
+// User pointed to by the foreign key.
+func (o *PredictCost) User(mods ...qm.QueryMod) userQuery {
+	queryMods := []qm.QueryMod{
+		qm.Where("\"id\" = ?", o.UserID),
+	}
+
+	queryMods = append(queryMods, mods...)
+
+	return Users(queryMods...)
+}
+
 // CategoryNameCategory pointed to by the foreign key.
 func (o *PredictCost) CategoryNameCategory(mods ...qm.QueryMod) categoryQuery {
 	queryMods := []qm.QueryMod{
@@ -427,6 +455,126 @@ func (o *PredictCost) CategoryNameCategory(mods ...qm.QueryMod) categoryQuery {
 	queryMods = append(queryMods, mods...)
 
 	return Categories(queryMods...)
+}
+
+// LoadUser allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for an N-1 relationship.
+func (predictCostL) LoadUser(ctx context.Context, e boil.ContextExecutor, singular bool, maybePredictCost interface{}, mods queries.Applicator) error {
+	var slice []*PredictCost
+	var object *PredictCost
+
+	if singular {
+		var ok bool
+		object, ok = maybePredictCost.(*PredictCost)
+		if !ok {
+			object = new(PredictCost)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybePredictCost)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybePredictCost))
+			}
+		}
+	} else {
+		s, ok := maybePredictCost.(*[]*PredictCost)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybePredictCost)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybePredictCost))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &predictCostR{}
+		}
+		args = append(args, object.UserID)
+
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &predictCostR{}
+			}
+
+			for _, a := range args {
+				if a == obj.UserID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.UserID)
+
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`users`),
+		qm.WhereIn(`users.id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load User")
+	}
+
+	var resultSlice []*User
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice User")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results of eager load for users")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for users")
+	}
+
+	if len(userAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if len(resultSlice) == 0 {
+		return nil
+	}
+
+	if singular {
+		foreign := resultSlice[0]
+		object.R.User = foreign
+		if foreign.R == nil {
+			foreign.R = &userR{}
+		}
+		foreign.R.PredictCosts = append(foreign.R.PredictCosts, object)
+		return nil
+	}
+
+	for _, local := range slice {
+		for _, foreign := range resultSlice {
+			if local.UserID == foreign.ID {
+				local.R.User = foreign
+				if foreign.R == nil {
+					foreign.R = &userR{}
+				}
+				foreign.R.PredictCosts = append(foreign.R.PredictCosts, local)
+				break
+			}
+		}
+	}
+
+	return nil
 }
 
 // LoadCategoryNameCategory allows an eager lookup of values, cached into the
@@ -544,6 +692,61 @@ func (predictCostL) LoadCategoryNameCategory(ctx context.Context, e boil.Context
 				break
 			}
 		}
+	}
+
+	return nil
+}
+
+// SetUserG of the predictCost to the related item.
+// Sets o.R.User to related.
+// Adds o to related.R.PredictCosts.
+// Uses the global database handle.
+func (o *PredictCost) SetUserG(ctx context.Context, insert bool, related *User) error {
+	return o.SetUser(ctx, boil.GetContextDB(), insert, related)
+}
+
+// SetUser of the predictCost to the related item.
+// Sets o.R.User to related.
+// Adds o to related.R.PredictCosts.
+func (o *PredictCost) SetUser(ctx context.Context, exec boil.ContextExecutor, insert bool, related *User) error {
+	var err error
+	if insert {
+		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
+			return errors.Wrap(err, "failed to insert into foreign table")
+		}
+	}
+
+	updateQuery := fmt.Sprintf(
+		"UPDATE \"predict_costs\" SET %s WHERE %s",
+		strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+		strmangle.WhereClause("\"", "\"", 2, predictCostPrimaryKeyColumns),
+	)
+	values := []interface{}{related.ID, o.ID}
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, updateQuery)
+		fmt.Fprintln(writer, values)
+	}
+	if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+		return errors.Wrap(err, "failed to update local table")
+	}
+
+	o.UserID = related.ID
+	if o.R == nil {
+		o.R = &predictCostR{
+			User: related,
+		}
+	} else {
+		o.R.User = related
+	}
+
+	if related.R == nil {
+		related.R = &userR{
+			PredictCosts: PredictCostSlice{o},
+		}
+	} else {
+		related.R.PredictCosts = append(related.R.PredictCosts, o)
 	}
 
 	return nil

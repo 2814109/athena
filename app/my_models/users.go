@@ -72,30 +72,36 @@ var UserWhere = struct {
 
 // UserRels is where relationship names are stored.
 var UserRels = struct {
+	Entries                     string
 	Items                       string
 	MaximumMonthlyPayments      string
 	MonthlyPaymentItemSnapshots string
 	MonthlyPaymentSnapshots     string
 	Payments                    string
+	PredictCosts                string
 	Todos                       string
 	Transactions                string
 }{
+	Entries:                     "Entries",
 	Items:                       "Items",
 	MaximumMonthlyPayments:      "MaximumMonthlyPayments",
 	MonthlyPaymentItemSnapshots: "MonthlyPaymentItemSnapshots",
 	MonthlyPaymentSnapshots:     "MonthlyPaymentSnapshots",
 	Payments:                    "Payments",
+	PredictCosts:                "PredictCosts",
 	Todos:                       "Todos",
 	Transactions:                "Transactions",
 }
 
 // userR is where relationships are stored.
 type userR struct {
+	Entries                     EntrySlice                      `boil:"Entries" json:"Entries" toml:"Entries" yaml:"Entries"`
 	Items                       ItemSlice                       `boil:"Items" json:"Items" toml:"Items" yaml:"Items"`
 	MaximumMonthlyPayments      MaximumMonthlyPaymentSlice      `boil:"MaximumMonthlyPayments" json:"MaximumMonthlyPayments" toml:"MaximumMonthlyPayments" yaml:"MaximumMonthlyPayments"`
 	MonthlyPaymentItemSnapshots MonthlyPaymentItemSnapshotSlice `boil:"MonthlyPaymentItemSnapshots" json:"MonthlyPaymentItemSnapshots" toml:"MonthlyPaymentItemSnapshots" yaml:"MonthlyPaymentItemSnapshots"`
 	MonthlyPaymentSnapshots     MonthlyPaymentSnapshotSlice     `boil:"MonthlyPaymentSnapshots" json:"MonthlyPaymentSnapshots" toml:"MonthlyPaymentSnapshots" yaml:"MonthlyPaymentSnapshots"`
 	Payments                    PaymentSlice                    `boil:"Payments" json:"Payments" toml:"Payments" yaml:"Payments"`
+	PredictCosts                PredictCostSlice                `boil:"PredictCosts" json:"PredictCosts" toml:"PredictCosts" yaml:"PredictCosts"`
 	Todos                       TodoSlice                       `boil:"Todos" json:"Todos" toml:"Todos" yaml:"Todos"`
 	Transactions                TransactionSlice                `boil:"Transactions" json:"Transactions" toml:"Transactions" yaml:"Transactions"`
 }
@@ -103,6 +109,13 @@ type userR struct {
 // NewStruct creates a new relationship struct
 func (*userR) NewStruct() *userR {
 	return &userR{}
+}
+
+func (r *userR) GetEntries() EntrySlice {
+	if r == nil {
+		return nil
+	}
+	return r.Entries
 }
 
 func (r *userR) GetItems() ItemSlice {
@@ -138,6 +151,13 @@ func (r *userR) GetPayments() PaymentSlice {
 		return nil
 	}
 	return r.Payments
+}
+
+func (r *userR) GetPredictCosts() PredictCostSlice {
+	if r == nil {
+		return nil
+	}
+	return r.PredictCosts
 }
 
 func (r *userR) GetTodos() TodoSlice {
@@ -463,6 +483,20 @@ func (q userQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool,
 	return count > 0, nil
 }
 
+// Entries retrieves all the entry's Entries with an executor.
+func (o *User) Entries(mods ...qm.QueryMod) entryQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"entries\".\"user_id\"=?", o.ID),
+	)
+
+	return Entries(queryMods...)
+}
+
 // Items retrieves all the item's Items with an executor.
 func (o *User) Items(mods ...qm.QueryMod) itemQuery {
 	var queryMods []qm.QueryMod
@@ -533,6 +567,20 @@ func (o *User) Payments(mods ...qm.QueryMod) paymentQuery {
 	return Payments(queryMods...)
 }
 
+// PredictCosts retrieves all the predict_cost's PredictCosts with an executor.
+func (o *User) PredictCosts(mods ...qm.QueryMod) predictCostQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"predict_costs\".\"user_id\"=?", o.ID),
+	)
+
+	return PredictCosts(queryMods...)
+}
+
 // Todos retrieves all the todo's Todos with an executor.
 func (o *User) Todos(mods ...qm.QueryMod) todoQuery {
 	var queryMods []qm.QueryMod
@@ -559,6 +607,120 @@ func (o *User) Transactions(mods ...qm.QueryMod) transactionQuery {
 	)
 
 	return Transactions(queryMods...)
+}
+
+// LoadEntries allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadEntries(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		var ok bool
+		object, ok = maybeUser.(*User)
+		if !ok {
+			object = new(User)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeUser))
+			}
+		}
+	} else {
+		s, ok := maybeUser.(*[]*User)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeUser))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`entries`),
+		qm.WhereIn(`entries.user_id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load entries")
+	}
+
+	var resultSlice []*Entry
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice entries")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on entries")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for entries")
+	}
+
+	if len(entryAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.Entries = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &entryR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.Entries = append(local.R.Entries, foreign)
+				if foreign.R == nil {
+					foreign.R = &entryR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
 }
 
 // LoadItems allows an eager lookup of values, cached into the
@@ -1131,6 +1293,120 @@ func (userL) LoadPayments(ctx context.Context, e boil.ContextExecutor, singular 
 	return nil
 }
 
+// LoadPredictCosts allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadPredictCosts(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		var ok bool
+		object, ok = maybeUser.(*User)
+		if !ok {
+			object = new(User)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeUser))
+			}
+		}
+	} else {
+		s, ok := maybeUser.(*[]*User)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeUser))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`predict_costs`),
+		qm.WhereIn(`predict_costs.user_id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load predict_costs")
+	}
+
+	var resultSlice []*PredictCost
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice predict_costs")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on predict_costs")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for predict_costs")
+	}
+
+	if len(predictCostAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.PredictCosts = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &predictCostR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.PredictCosts = append(local.R.PredictCosts, foreign)
+				if foreign.R == nil {
+					foreign.R = &predictCostR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
 // LoadTodos allows an eager lookup of values, cached into the
 // loaded structs of the objects. This is for a 1-M or N-M relationship.
 func (userL) LoadTodos(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
@@ -1356,6 +1632,68 @@ func (userL) LoadTransactions(ctx context.Context, e boil.ContextExecutor, singu
 		}
 	}
 
+	return nil
+}
+
+// AddEntriesG adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.Entries.
+// Sets related.R.User appropriately.
+// Uses the global database handle.
+func (o *User) AddEntriesG(ctx context.Context, insert bool, related ...*Entry) error {
+	return o.AddEntries(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddEntries adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.Entries.
+// Sets related.R.User appropriately.
+func (o *User) AddEntries(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Entry) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"entries\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, entryPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			Entries: related,
+		}
+	} else {
+		o.R.Entries = append(o.R.Entries, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &entryR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
 	return nil
 }
 
@@ -1660,6 +1998,68 @@ func (o *User) AddPayments(ctx context.Context, exec boil.ContextExecutor, inser
 	for _, rel := range related {
 		if rel.R == nil {
 			rel.R = &paymentR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
+	return nil
+}
+
+// AddPredictCostsG adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.PredictCosts.
+// Sets related.R.User appropriately.
+// Uses the global database handle.
+func (o *User) AddPredictCostsG(ctx context.Context, insert bool, related ...*PredictCost) error {
+	return o.AddPredictCosts(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddPredictCosts adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.PredictCosts.
+// Sets related.R.User appropriately.
+func (o *User) AddPredictCosts(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*PredictCost) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"predict_costs\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, predictCostPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			PredictCosts: related,
+		}
+	} else {
+		o.R.PredictCosts = append(o.R.PredictCosts, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &predictCostR{
 				User: o,
 			}
 		} else {

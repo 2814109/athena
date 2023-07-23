@@ -21,7 +21,7 @@ tasks:
       - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable force 1
   m-drop:
     comds:
-      - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable -verbose drop
+      - migrate --path db/migrations --database postgres://$PSQL_USER:$PSQL_PASS@localhost:5432/$PSQL_DBNAME?sslmode=disable drop
   create-db-schema:
     cmds:
       - docker run -v "$PWD/db/schema:/output" --net="host" schemaspy/schemaspy:latest -t pgsql \\ -host localhost:5432 -db $PSQL_DBNAME -u $PSQL_USER -p $PSQL_PASS -connprops useSSL\\\\=false -all
@@ -41,6 +41,7 @@ tasks:
   init-db:
     cmds:
       - task: m-force
+      - task: m-drop
       - task: m-up
       - task: generate-orm
       
