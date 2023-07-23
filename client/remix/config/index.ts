@@ -1,0 +1,1 @@
+export const endpoint = "http://localhost:8888/query"//'https://swapi-graphql.netlify.app/.netlify/functions/index'

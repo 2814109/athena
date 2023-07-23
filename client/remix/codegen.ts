@@ -1,8 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { CodegenConfig } from '@graphql-codegen/cli';
+import { endpoint } from './config/index';
 
 const config: CodegenConfig = {
-  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  schema: endpoint,
   documents: ['app/**/*.tsx', '!app/gql/**/*'],
   generates: {
     './app/gql/': {
