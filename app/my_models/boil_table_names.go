@@ -17,7 +17,7 @@ var TableNames = struct {
 	MonthlyPaymentSnapshots     string
 	PaymentTypes                string
 	Payments                    string
-	PredictAccounts             string
+	PredictCosts                string
 	SchemaMigrations            string
 	Statuses                    string
 	Todos                       string
@@ -37,7 +37,7 @@ var TableNames = struct {
 	MonthlyPaymentSnapshots:     "monthly_payment_snapshots",
 	PaymentTypes:                "payment_types",
 	Payments:                    "payments",
-	PredictAccounts:             "predict_accounts",
+	PredictCosts:                "predict_costs",
 	SchemaMigrations:            "schema_migrations",
 	Statuses:                    "statuses",
 	Todos:                       "todos",

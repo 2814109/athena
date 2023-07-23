@@ -51,20 +51,20 @@ var CategoryWhere = struct {
 
 // CategoryRels is where relationship names are stored.
 var CategoryRels = struct {
-	CategoryNameItems           string
-	CategoryNamePayments        string
-	CategoryNamePredictAccounts string
+	CategoryNameItems        string
+	CategoryNamePayments     string
+	CategoryNamePredictCosts string
 }{
-	CategoryNameItems:           "CategoryNameItems",
-	CategoryNamePayments:        "CategoryNamePayments",
-	CategoryNamePredictAccounts: "CategoryNamePredictAccounts",
+	CategoryNameItems:        "CategoryNameItems",
+	CategoryNamePayments:     "CategoryNamePayments",
+	CategoryNamePredictCosts: "CategoryNamePredictCosts",
 }
 
 // categoryR is where relationships are stored.
 type categoryR struct {
-	CategoryNameItems           ItemSlice           `boil:"CategoryNameItems" json:"CategoryNameItems" toml:"CategoryNameItems" yaml:"CategoryNameItems"`
-	CategoryNamePayments        PaymentSlice        `boil:"CategoryNamePayments" json:"CategoryNamePayments" toml:"CategoryNamePayments" yaml:"CategoryNamePayments"`
-	CategoryNamePredictAccounts PredictAccountSlice `boil:"CategoryNamePredictAccounts" json:"CategoryNamePredictAccounts" toml:"CategoryNamePredictAccounts" yaml:"CategoryNamePredictAccounts"`
+	CategoryNameItems        ItemSlice        `boil:"CategoryNameItems" json:"CategoryNameItems" toml:"CategoryNameItems" yaml:"CategoryNameItems"`
+	CategoryNamePayments     PaymentSlice     `boil:"CategoryNamePayments" json:"CategoryNamePayments" toml:"CategoryNamePayments" yaml:"CategoryNamePayments"`
+	CategoryNamePredictCosts PredictCostSlice `boil:"CategoryNamePredictCosts" json:"CategoryNamePredictCosts" toml:"CategoryNamePredictCosts" yaml:"CategoryNamePredictCosts"`
 }
 
 // NewStruct creates a new relationship struct
@@ -86,11 +86,11 @@ func (r *categoryR) GetCategoryNamePayments() PaymentSlice {
 	return r.CategoryNamePayments
 }
 
-func (r *categoryR) GetCategoryNamePredictAccounts() PredictAccountSlice {
+func (r *categoryR) GetCategoryNamePredictCosts() PredictCostSlice {
 	if r == nil {
 		return nil
 	}
-	return r.CategoryNamePredictAccounts
+	return r.CategoryNamePredictCosts
 }
 
 // categoryL is where Load methods for each relationship are stored.
@@ -430,18 +430,18 @@ func (o *Category) CategoryNamePayments(mods ...qm.QueryMod) paymentQuery {
 	return Payments(queryMods...)
 }
 
-// CategoryNamePredictAccounts retrieves all the predict_account's PredictAccounts with an executor via category_name column.
-func (o *Category) CategoryNamePredictAccounts(mods ...qm.QueryMod) predictAccountQuery {
+// CategoryNamePredictCosts retrieves all the predict_cost's PredictCosts with an executor via category_name column.
+func (o *Category) CategoryNamePredictCosts(mods ...qm.QueryMod) predictCostQuery {
 	var queryMods []qm.QueryMod
 	if len(mods) != 0 {
 		queryMods = append(queryMods, mods...)
 	}
 
 	queryMods = append(queryMods,
-		qm.Where("\"predict_accounts\".\"category_name\"=?", o.Classification),
+		qm.Where("\"predict_costs\".\"category_name\"=?", o.Classification),
 	)
 
-	return PredictAccounts(queryMods...)
+	return PredictCosts(queryMods...)
 }
 
 // LoadCategoryNameItems allows an eager lookup of values, cached into the
@@ -672,9 +672,9 @@ func (categoryL) LoadCategoryNamePayments(ctx context.Context, e boil.ContextExe
 	return nil
 }
 
-// LoadCategoryNamePredictAccounts allows an eager lookup of values, cached into the
+// LoadCategoryNamePredictCosts allows an eager lookup of values, cached into the
 // loaded structs of the objects. This is for a 1-M or N-M relationship.
-func (categoryL) LoadCategoryNamePredictAccounts(ctx context.Context, e boil.ContextExecutor, singular bool, maybeCategory interface{}, mods queries.Applicator) error {
+func (categoryL) LoadCategoryNamePredictCosts(ctx context.Context, e boil.ContextExecutor, singular bool, maybeCategory interface{}, mods queries.Applicator) error {
 	var slice []*Category
 	var object *Category
 
@@ -728,8 +728,8 @@ func (categoryL) LoadCategoryNamePredictAccounts(ctx context.Context, e boil.Con
 	}
 
 	query := NewQuery(
-		qm.From(`predict_accounts`),
-		qm.WhereIn(`predict_accounts.category_name in ?`, args...),
+		qm.From(`predict_costs`),
+		qm.WhereIn(`predict_costs.category_name in ?`, args...),
 	)
 	if mods != nil {
 		mods.Apply(query)
@@ -737,22 +737,22 @@ func (categoryL) LoadCategoryNamePredictAccounts(ctx context.Context, e boil.Con
 
 	results, err := query.QueryContext(ctx, e)
 	if err != nil {
-		return errors.Wrap(err, "failed to eager load predict_accounts")
+		return errors.Wrap(err, "failed to eager load predict_costs")
 	}
 
-	var resultSlice []*PredictAccount
+	var resultSlice []*PredictCost
 	if err = queries.Bind(results, &resultSlice); err != nil {
-		return errors.Wrap(err, "failed to bind eager loaded slice predict_accounts")
+		return errors.Wrap(err, "failed to bind eager loaded slice predict_costs")
 	}
 
 	if err = results.Close(); err != nil {
-		return errors.Wrap(err, "failed to close results in eager load on predict_accounts")
+		return errors.Wrap(err, "failed to close results in eager load on predict_costs")
 	}
 	if err = results.Err(); err != nil {
-		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for predict_accounts")
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for predict_costs")
 	}
 
-	if len(predictAccountAfterSelectHooks) != 0 {
+	if len(predictCostAfterSelectHooks) != 0 {
 		for _, obj := range resultSlice {
 			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
 				return err
@@ -760,10 +760,10 @@ func (categoryL) LoadCategoryNamePredictAccounts(ctx context.Context, e boil.Con
 		}
 	}
 	if singular {
-		object.R.CategoryNamePredictAccounts = resultSlice
+		object.R.CategoryNamePredictCosts = resultSlice
 		for _, foreign := range resultSlice {
 			if foreign.R == nil {
-				foreign.R = &predictAccountR{}
+				foreign.R = &predictCostR{}
 			}
 			foreign.R.CategoryNameCategory = object
 		}
@@ -773,9 +773,9 @@ func (categoryL) LoadCategoryNamePredictAccounts(ctx context.Context, e boil.Con
 	for _, foreign := range resultSlice {
 		for _, local := range slice {
 			if local.Classification == foreign.CategoryName {
-				local.R.CategoryNamePredictAccounts = append(local.R.CategoryNamePredictAccounts, foreign)
+				local.R.CategoryNamePredictCosts = append(local.R.CategoryNamePredictCosts, foreign)
 				if foreign.R == nil {
-					foreign.R = &predictAccountR{}
+					foreign.R = &predictCostR{}
 				}
 				foreign.R.CategoryNameCategory = local
 				break
@@ -910,20 +910,20 @@ func (o *Category) AddCategoryNamePayments(ctx context.Context, exec boil.Contex
 	return nil
 }
 
-// AddCategoryNamePredictAccountsG adds the given related objects to the existing relationships
+// AddCategoryNamePredictCostsG adds the given related objects to the existing relationships
 // of the category, optionally inserting them as new records.
-// Appends related to o.R.CategoryNamePredictAccounts.
+// Appends related to o.R.CategoryNamePredictCosts.
 // Sets related.R.CategoryNameCategory appropriately.
 // Uses the global database handle.
-func (o *Category) AddCategoryNamePredictAccountsG(ctx context.Context, insert bool, related ...*PredictAccount) error {
-	return o.AddCategoryNamePredictAccounts(ctx, boil.GetContextDB(), insert, related...)
+func (o *Category) AddCategoryNamePredictCostsG(ctx context.Context, insert bool, related ...*PredictCost) error {
+	return o.AddCategoryNamePredictCosts(ctx, boil.GetContextDB(), insert, related...)
 }
 
-// AddCategoryNamePredictAccounts adds the given related objects to the existing relationships
+// AddCategoryNamePredictCosts adds the given related objects to the existing relationships
 // of the category, optionally inserting them as new records.
-// Appends related to o.R.CategoryNamePredictAccounts.
+// Appends related to o.R.CategoryNamePredictCosts.
 // Sets related.R.CategoryNameCategory appropriately.
-func (o *Category) AddCategoryNamePredictAccounts(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*PredictAccount) error {
+func (o *Category) AddCategoryNamePredictCosts(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*PredictCost) error {
 	var err error
 	for _, rel := range related {
 		if insert {
@@ -933,9 +933,9 @@ func (o *Category) AddCategoryNamePredictAccounts(ctx context.Context, exec boil
 			}
 		} else {
 			updateQuery := fmt.Sprintf(
-				"UPDATE \"predict_accounts\" SET %s WHERE %s",
+				"UPDATE \"predict_costs\" SET %s WHERE %s",
 				strmangle.SetParamNames("\"", "\"", 1, []string{"category_name"}),
-				strmangle.WhereClause("\"", "\"", 2, predictAccountPrimaryKeyColumns),
+				strmangle.WhereClause("\"", "\"", 2, predictCostPrimaryKeyColumns),
 			)
 			values := []interface{}{o.Classification, rel.ID}
 
@@ -954,15 +954,15 @@ func (o *Category) AddCategoryNamePredictAccounts(ctx context.Context, exec boil
 
 	if o.R == nil {
 		o.R = &categoryR{
-			CategoryNamePredictAccounts: related,
+			CategoryNamePredictCosts: related,
 		}
 	} else {
-		o.R.CategoryNamePredictAccounts = append(o.R.CategoryNamePredictAccounts, related...)
+		o.R.CategoryNamePredictCosts = append(o.R.CategoryNamePredictCosts, related...)
 	}
 
 	for _, rel := range related {
 		if rel.R == nil {
-			rel.R = &predictAccountR{
+			rel.R = &predictCostR{
 				CategoryNameCategory: o,
 			}
 		} else {
