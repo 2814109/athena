@@ -19,7 +19,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import { useDehydratedState } from "use-dehydrated-state";
 
@@ -53,7 +53,9 @@ export default function MyApp() {
                   )}
                 >
                   <Outlet />
-                  <App />
+                  <Suspense fallback={<div>Loading</div>}>
+                    <App />
+                  </Suspense>
                 </ErrorBoundary>
               )}
             </QueryErrorResetBoundary>

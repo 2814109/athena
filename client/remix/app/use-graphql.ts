@@ -25,7 +25,7 @@ export function useGraphQL<TResult, TVariables>(
         }),
       }).then(response => response.json()) as Promise<ExecutionResult<TResult>>;
     },
-    
+    {suspense: true}
     
   );
 }
