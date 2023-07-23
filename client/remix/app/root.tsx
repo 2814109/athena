@@ -53,9 +53,6 @@ export default function MyApp() {
                   )}
                 >
                   <Outlet />
-                  <Suspense fallback={<div>Loading</div>}>
-                    <App />
-                  </Suspense>
                 </ErrorBoundary>
               )}
             </QueryErrorResetBoundary>
