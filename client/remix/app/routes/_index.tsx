@@ -1,4 +1,5 @@
 import type { V2_MetaFunction } from "@remix-run/node";
+import { css } from "styled-system/css";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -8,11 +9,9 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function Index() {
-
   return (
-
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
+    <div className={css({ fontSize: "2xl", fontWeight: "bold" })}>
+      Hello 🐼!
     </div>
-
   );
 }

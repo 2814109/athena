@@ -1,5 +1,6 @@
-// import Film from "./Film";
 import { graphql } from "./gql";
+// import type { LinksFunction } from "@remix-run/node";
+
 import { useGraphQL } from "./fetcher/use-graphql";
 
 // const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `

@@ -1,5 +1,5 @@
 // import { cssBundleHref } from "@remix-run/css-bundle";
-// import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -8,20 +8,22 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import styles from "./index.css";
 
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 
-import App from "./App";
 // root.tsx
 import {
   Hydrate,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 
 import { useDehydratedState } from "use-dehydrated-state";
+
+export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
 export default function MyApp() {
   const [queryClient] = useState(() => new QueryClient());
