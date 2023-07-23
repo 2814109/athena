@@ -14,6 +14,8 @@ import * as types from "./graphql";
 const documents = {
   "\n  query findTodoByIdQuery($id: Int!) {\n    todo(ID: $id) {\n      id\n    }\n  }\n":
     types.FindTodoByIdQueryDocument,
+  '\n  mutation createTodoMutation {\n    createTodo(input: { status: ACTIVE, text: "test", userId: 1 }) {\n      id\n    }\n  }\n':
+    types.CreateTodoMutationDocument,
 };
 
 /**
@@ -22,6 +24,12 @@ const documents = {
 export function graphql(
   source: "\n  query findTodoByIdQuery($id: Int!) {\n    todo(ID: $id) {\n      id\n    }\n  }\n"
 ): typeof import("./graphql").FindTodoByIdQueryDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation createTodoMutation {\n    createTodo(input: { status: ACTIVE, text: "test", userId: 1 }) {\n      id\n    }\n  }\n'
+): typeof import("./graphql").CreateTodoMutationDocument;
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
