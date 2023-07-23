@@ -30,30 +30,6 @@ services:
       - ${PSQL_PORT}:5432
     networks:
       - athena-network
-  function:
-    build:
-      context: .
-      dockerfile: ./docker/function/Dockerfile
-    volumes:
-      - ./function:/workspace
-    environment:
-      - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
-    ports:
-      - 8080:8080
-    tty: true
-    command: functions-framework --target=main --signature-type=event --debug
-  pubsub:
-    build:
-      context: .
-      dockerfile: ./docker/pubsub/Dockerfile
-    volumes:
-      # - ./scripts:/python-pubsub/samples/snippets/scripts
-      - ./pubsub:/python-pubsub/samples/snippets/pubsub
-    ports:
-      - 8085:8085
-    env_file: .env
-    tty: true
-    # command: ./scripts/entrypoint.sh
 volumes:
   db-store:
 networks:

@@ -1,3 +1,4 @@
 app/tmp/*
 db/schema/*
 __pycache__
+client/react-admin/node_modules

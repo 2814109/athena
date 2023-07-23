@@ -63,3 +63,11 @@ at Vscode command
 
 >Go: Restart language server
 ```
+
+
+## in PubSub Container
+```
+chmod +x ./scripts/entrypoint.sh
+
+sh ./scripts/entrypoint.sh
+```
