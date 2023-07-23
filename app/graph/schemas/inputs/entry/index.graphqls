@@ -1,5 +1,5 @@
 input DebitInput {
-  account_name: String
+  accountName: String
   amount: Float
 }
 

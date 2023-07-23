@@ -51,6 +51,11 @@ func (r *itemResolver) User(ctx context.Context, obj *models.Item) (*models.User
 	panic(fmt.Errorf("not implemented: User - user"))
 }
 
+// Amount is the resolver for the Amount field.
+func (r *predictCostResolver) Amount(ctx context.Context, obj *models.PredictCost) (int, error) {
+	panic(fmt.Errorf("not implemented: Amount - Amount"))
+}
+
 // User is the resolver for the user field.
 func (r *todoResolver) User(ctx context.Context, obj *models.Todo) (*models.User, error) {
 	panic(fmt.Errorf("not implemented: User - user"))
@@ -68,6 +73,9 @@ func (r *Resolver) Entry() graph.EntryResolver { return &entryResolver{r} }
 // Item returns graph.ItemResolver implementation.
 func (r *Resolver) Item() graph.ItemResolver { return &itemResolver{r} }
 
+// PredictCost returns graph.PredictCostResolver implementation.
+func (r *Resolver) PredictCost() graph.PredictCostResolver { return &predictCostResolver{r} }
+
 // Todo returns graph.TodoResolver implementation.
 func (r *Resolver) Todo() graph.TodoResolver { return &todoResolver{r} }
 
@@ -75,4 +83,5 @@ type creditResolver struct{ *Resolver }
 type debitResolver struct{ *Resolver }
 type entryResolver struct{ *Resolver }
 type itemResolver struct{ *Resolver }
+type predictCostResolver struct{ *Resolver }
 type todoResolver struct{ *Resolver }

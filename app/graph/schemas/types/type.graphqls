@@ -48,6 +48,12 @@ type Credit {
   amount: Float
 }
 
+type PredictCost {
+  id: ID!
+  categoryName: String!
+  label: String!
+  Amount: Int!
+}
 
 
 

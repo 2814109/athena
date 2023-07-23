@@ -43,6 +43,7 @@ type ResolverRoot interface {
 	Entry() EntryResolver
 	Item() ItemResolver
 	Mutation() MutationResolver
+	PredictCost() PredictCostResolver
 	Query() QueryResolver
 	Todo() TodoResolver
 }
@@ -86,10 +87,18 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateEnty func(childComplexity int, input model.CreateEntryRequest) int
-		CreateTodo func(childComplexity int, input model.CreateTodo) int
-		CreateUser func(childComplexity int, input model.NewUser) int
-		UpdateTodo func(childComplexity int, input model.UpdateTodo) int
+		CreateEnty        func(childComplexity int, input model.CreateEntryRequest) int
+		CreatePredictCost func(childComplexity int, input model.CreatePredictCost) int
+		CreateTodo        func(childComplexity int, input model.CreateTodo) int
+		CreateUser        func(childComplexity int, input model.NewUser) int
+		UpdateTodo        func(childComplexity int, input model.UpdateTodo) int
+	}
+
+	PredictCost struct {
+		Amount       func(childComplexity int) int
+		CategoryName func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Label        func(childComplexity int) int
 	}
 
 	Query struct {
@@ -135,6 +144,10 @@ type MutationResolver interface {
 	UpdateTodo(ctx context.Context, input model.UpdateTodo) (*models.Todo, error)
 	CreateUser(ctx context.Context, input model.NewUser) (*models.User, error)
 	CreateEnty(ctx context.Context, input model.CreateEntryRequest) (*models.Entry, error)
+	CreatePredictCost(ctx context.Context, input model.CreatePredictCost) (*models.PredictCost, error)
+}
+type PredictCostResolver interface {
+	Amount(ctx context.Context, obj *models.PredictCost) (int, error)
 }
 type QueryResolver interface {
 	Todos(ctx context.Context, userID int) ([]*models.Todo, error)
@@ -307,6 +320,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateEnty(childComplexity, args["input"].(model.CreateEntryRequest)), true
 
+	case "Mutation.createPredictCost":
+		if e.complexity.Mutation.CreatePredictCost == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createPredictCost_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreatePredictCost(childComplexity, args["input"].(model.CreatePredictCost)), true
+
 	case "Mutation.createTodo":
 		if e.complexity.Mutation.CreateTodo == nil {
 			break
@@ -342,6 +367,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateTodo(childComplexity, args["input"].(model.UpdateTodo)), true
+
+	case "PredictCost.Amount":
+		if e.complexity.PredictCost.Amount == nil {
+			break
+		}
+
+		return e.complexity.PredictCost.Amount(childComplexity), true
+
+	case "PredictCost.categoryName":
+		if e.complexity.PredictCost.CategoryName == nil {
+			break
+		}
+
+		return e.complexity.PredictCost.CategoryName(childComplexity), true
+
+	case "PredictCost.id":
+		if e.complexity.PredictCost.ID == nil {
+			break
+		}
+
+		return e.complexity.PredictCost.ID(childComplexity), true
+
+	case "PredictCost.label":
+		if e.complexity.PredictCost.Label == nil {
+			break
+		}
+
+		return e.complexity.PredictCost.Label(childComplexity), true
 
 	case "Query.articles":
 		if e.complexity.Query.Articles == nil {
@@ -454,6 +507,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := executionContext{rc, e}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCreateEntryRequest,
+		ec.unmarshalInputCreatePredictCost,
 		ec.unmarshalInputCreateTodo,
 		ec.unmarshalInputCreditInput,
 		ec.unmarshalInputDebitInput,
@@ -518,7 +572,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(parsedSchema, parsedSchema.Types[name]), nil
 }
 
-//go:embed "schemas/enums/enum.graphqls" "schemas/inputs/entry/index.graphqls" "schemas/inputs/input.graphqls" "schemas/inputs/todo/index.graphqls" "schemas/inputs/user/index.graphqls" "schemas/mutations/mutation.graphqls" "schemas/queries/query.graphqls" "schemas/schema.graphqls" "schemas/types/type.graphqls"
+//go:embed "schemas/enums/enum.graphqls" "schemas/inputs/entry/index.graphqls" "schemas/inputs/input.graphqls" "schemas/inputs/predict_cost/index.graphqls" "schemas/inputs/todo/index.graphqls" "schemas/inputs/user/index.graphqls" "schemas/mutations/mutation.graphqls" "schemas/queries/query.graphqls" "schemas/schema.graphqls" "schemas/types/type.graphqls"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -533,6 +587,7 @@ var sources = []*ast.Source{
 	{Name: "schemas/enums/enum.graphqls", Input: sourceData("schemas/enums/enum.graphqls"), BuiltIn: false},
 	{Name: "schemas/inputs/entry/index.graphqls", Input: sourceData("schemas/inputs/entry/index.graphqls"), BuiltIn: false},
 	{Name: "schemas/inputs/input.graphqls", Input: sourceData("schemas/inputs/input.graphqls"), BuiltIn: false},
+	{Name: "schemas/inputs/predict_cost/index.graphqls", Input: sourceData("schemas/inputs/predict_cost/index.graphqls"), BuiltIn: false},
 	{Name: "schemas/inputs/todo/index.graphqls", Input: sourceData("schemas/inputs/todo/index.graphqls"), BuiltIn: false},
 	{Name: "schemas/inputs/user/index.graphqls", Input: sourceData("schemas/inputs/user/index.graphqls"), BuiltIn: false},
 	{Name: "schemas/mutations/mutation.graphqls", Input: sourceData("schemas/mutations/mutation.graphqls"), BuiltIn: false},
@@ -553,6 +608,21 @@ func (ec *executionContext) field_Mutation_createEnty_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCreateEntryRequest2my_gql_serverᚋgraphᚋmodelᚐCreateEntryRequest(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createPredictCost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CreatePredictCost
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreatePredictCost2my_gql_serverᚋgraphᚋmodelᚐCreatePredictCost(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1822,6 +1892,247 @@ func (ec *executionContext) fieldContext_Mutation_createEnty(ctx context.Context
 	if fc.Args, err = ec.field_Mutation_createEnty_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createPredictCost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createPredictCost(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreatePredictCost(rctx, fc.Args["input"].(model.CreatePredictCost))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.PredictCost)
+	fc.Result = res
+	return ec.marshalNPredictCost2ᚖmy_gql_serverᚋmy_modelsᚐPredictCost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createPredictCost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_PredictCost_id(ctx, field)
+			case "categoryName":
+				return ec.fieldContext_PredictCost_categoryName(ctx, field)
+			case "label":
+				return ec.fieldContext_PredictCost_label(ctx, field)
+			case "Amount":
+				return ec.fieldContext_PredictCost_Amount(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PredictCost", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createPredictCost_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PredictCost_id(ctx context.Context, field graphql.CollectedField, obj *models.PredictCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PredictCost_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNID2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PredictCost_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PredictCost",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PredictCost_categoryName(ctx context.Context, field graphql.CollectedField, obj *models.PredictCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PredictCost_categoryName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CategoryName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PredictCost_categoryName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PredictCost",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PredictCost_label(ctx context.Context, field graphql.CollectedField, obj *models.PredictCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PredictCost_label(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Label, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PredictCost_label(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PredictCost",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PredictCost_Amount(ctx context.Context, field graphql.CollectedField, obj *models.PredictCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PredictCost_Amount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.PredictCost().Amount(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PredictCost_Amount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PredictCost",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -4383,6 +4694,53 @@ func (ec *executionContext) unmarshalInputCreateEntryRequest(ctx context.Context
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreatePredictCost(ctx context.Context, obj interface{}) (model.CreatePredictCost, error) {
+	var it model.CreatePredictCost
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"categoryName", "label", "amount"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "categoryName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryName"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CategoryName = data
+		case "label":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("label"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Label = data
+		case "amount":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("amount"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Amount = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateTodo(ctx context.Context, obj interface{}) (model.CreateTodo, error) {
 	var it model.CreateTodo
 	asMap := map[string]interface{}{}
@@ -4475,17 +4833,17 @@ func (ec *executionContext) unmarshalInputDebitInput(ctx context.Context, obj in
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"account_name", "amount"}
+	fieldsInOrder := [...]string{"accountName", "amount"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "account_name":
+		case "accountName":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("account_name"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountName"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
@@ -4978,6 +5336,77 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "createPredictCost":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createPredictCost(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var predictCostImplementors = []string{"PredictCost"}
+
+func (ec *executionContext) _PredictCost(ctx context.Context, sel ast.SelectionSet, obj *models.PredictCost) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, predictCostImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PredictCost")
+		case "id":
+
+			out.Values[i] = ec._PredictCost_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "categoryName":
+
+			out.Values[i] = ec._PredictCost_categoryName(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "label":
+
+			out.Values[i] = ec._PredictCost_label(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "Amount":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._PredictCost_Amount(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5645,6 +6074,11 @@ func (ec *executionContext) unmarshalNCreateEntryRequest2my_gql_serverᚋgraph�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreatePredictCost2my_gql_serverᚋgraphᚋmodelᚐCreatePredictCost(ctx context.Context, v interface{}) (model.CreatePredictCost, error) {
+	res, err := ec.unmarshalInputCreatePredictCost(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateTodo2my_gql_serverᚋgraphᚋmodelᚐCreateTodo(ctx context.Context, v interface{}) (model.CreateTodo, error) {
 	res, err := ec.unmarshalInputCreateTodo(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -5766,6 +6200,20 @@ func (ec *executionContext) marshalNItem2ᚖmy_gql_serverᚋmy_modelsᚐItem(ctx
 func (ec *executionContext) unmarshalNNewUser2my_gql_serverᚋgraphᚋmodelᚐNewUser(ctx context.Context, v interface{}) (model.NewUser, error) {
 	res, err := ec.unmarshalInputNewUser(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNPredictCost2my_gql_serverᚋmy_modelsᚐPredictCost(ctx context.Context, sel ast.SelectionSet, v models.PredictCost) graphql.Marshaler {
+	return ec._PredictCost(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPredictCost2ᚖmy_gql_serverᚋmy_modelsᚐPredictCost(ctx context.Context, sel ast.SelectionSet, v *models.PredictCost) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._PredictCost(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

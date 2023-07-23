@@ -15,6 +15,12 @@ type CreateEntryRequest struct {
 	Credits     []*CreditInput `json:"credits,omitempty"`
 }
 
+type CreatePredictCost struct {
+	CategoryName string `json:"categoryName"`
+	Label        string `json:"label"`
+	Amount       int    `json:"amount"`
+}
+
 type CreateTodo struct {
 	Status *StatusPattern `json:"status,omitempty"`
 	Text   string         `json:"text" validate:"required_if=Status ACTIVE,newline,omitempty"`
@@ -27,7 +33,7 @@ type CreditInput struct {
 }
 
 type DebitInput struct {
-	AccountName *string  `json:"account_name,omitempty"`
+	AccountName *string  `json:"accountName,omitempty"`
 	Amount      *float64 `json:"amount,omitempty"`
 }
 

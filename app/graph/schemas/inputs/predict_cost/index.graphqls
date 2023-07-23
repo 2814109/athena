@@ -1,0 +1,5 @@
+input CreatePredictCost {
+    categoryName: String!
+    label: String!
+    amount: Int!
+}

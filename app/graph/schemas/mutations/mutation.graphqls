@@ -3,4 +3,5 @@ type Mutation {
   updateTodo(input: UpdateTodo!): Todo!
   createUser(input: NewUser!): User!
   createEnty(input: CreateEntryRequest!): Entry!
+  createPredictCost(input: CreatePredictCost!): PredictCost!
 }
