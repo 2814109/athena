@@ -12,7 +12,10 @@ var TableNames = struct {
 	Debits                        string
 	Entries                       string
 	Items                         string
+	MaximumMonthlyPayments        string
 	MaximumMonthlyTargetPayments  string
+	MonthlyPaymentItemSnapshots   string
+	MonthlyPaymentSnapshots       string
 	MonthlyTargetPaymentSnapshots string
 	PaymentTypes                  string
 	Payments                      string
@@ -31,7 +34,10 @@ var TableNames = struct {
 	Debits:                        "debits",
 	Entries:                       "entries",
 	Items:                         "items",
+	MaximumMonthlyPayments:        "maximum_monthly_payments",
 	MaximumMonthlyTargetPayments:  "maximum_monthly_target_payments",
+	MonthlyPaymentItemSnapshots:   "monthly_payment_item_snapshots",
+	MonthlyPaymentSnapshots:       "monthly_payment_snapshots",
 	MonthlyTargetPaymentSnapshots: "monthly_target_payment_snapshots",
 	PaymentTypes:                  "payment_types",
 	Payments:                      "payments",

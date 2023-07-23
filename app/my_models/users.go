@@ -73,14 +73,20 @@ var UserWhere = struct {
 // UserRels is where relationship names are stored.
 var UserRels = struct {
 	Items                         string
+	MaximumMonthlyPayments        string
 	MaximumMonthlyTargetPayments  string
+	MonthlyPaymentItemSnapshots   string
+	MonthlyPaymentSnapshots       string
 	MonthlyTargetPaymentSnapshots string
 	Payments                      string
 	Todos                         string
 	Transactions                  string
 }{
 	Items:                         "Items",
+	MaximumMonthlyPayments:        "MaximumMonthlyPayments",
 	MaximumMonthlyTargetPayments:  "MaximumMonthlyTargetPayments",
+	MonthlyPaymentItemSnapshots:   "MonthlyPaymentItemSnapshots",
+	MonthlyPaymentSnapshots:       "MonthlyPaymentSnapshots",
 	MonthlyTargetPaymentSnapshots: "MonthlyTargetPaymentSnapshots",
 	Payments:                      "Payments",
 	Todos:                         "Todos",
@@ -90,7 +96,10 @@ var UserRels = struct {
 // userR is where relationships are stored.
 type userR struct {
 	Items                         ItemSlice                         `boil:"Items" json:"Items" toml:"Items" yaml:"Items"`
+	MaximumMonthlyPayments        MaximumMonthlyPaymentSlice        `boil:"MaximumMonthlyPayments" json:"MaximumMonthlyPayments" toml:"MaximumMonthlyPayments" yaml:"MaximumMonthlyPayments"`
 	MaximumMonthlyTargetPayments  MaximumMonthlyTargetPaymentSlice  `boil:"MaximumMonthlyTargetPayments" json:"MaximumMonthlyTargetPayments" toml:"MaximumMonthlyTargetPayments" yaml:"MaximumMonthlyTargetPayments"`
+	MonthlyPaymentItemSnapshots   MonthlyPaymentItemSnapshotSlice   `boil:"MonthlyPaymentItemSnapshots" json:"MonthlyPaymentItemSnapshots" toml:"MonthlyPaymentItemSnapshots" yaml:"MonthlyPaymentItemSnapshots"`
+	MonthlyPaymentSnapshots       MonthlyPaymentSnapshotSlice       `boil:"MonthlyPaymentSnapshots" json:"MonthlyPaymentSnapshots" toml:"MonthlyPaymentSnapshots" yaml:"MonthlyPaymentSnapshots"`
 	MonthlyTargetPaymentSnapshots MonthlyTargetPaymentSnapshotSlice `boil:"MonthlyTargetPaymentSnapshots" json:"MonthlyTargetPaymentSnapshots" toml:"MonthlyTargetPaymentSnapshots" yaml:"MonthlyTargetPaymentSnapshots"`
 	Payments                      PaymentSlice                      `boil:"Payments" json:"Payments" toml:"Payments" yaml:"Payments"`
 	Todos                         TodoSlice                         `boil:"Todos" json:"Todos" toml:"Todos" yaml:"Todos"`
@@ -109,11 +118,32 @@ func (r *userR) GetItems() ItemSlice {
 	return r.Items
 }
 
+func (r *userR) GetMaximumMonthlyPayments() MaximumMonthlyPaymentSlice {
+	if r == nil {
+		return nil
+	}
+	return r.MaximumMonthlyPayments
+}
+
 func (r *userR) GetMaximumMonthlyTargetPayments() MaximumMonthlyTargetPaymentSlice {
 	if r == nil {
 		return nil
 	}
 	return r.MaximumMonthlyTargetPayments
+}
+
+func (r *userR) GetMonthlyPaymentItemSnapshots() MonthlyPaymentItemSnapshotSlice {
+	if r == nil {
+		return nil
+	}
+	return r.MonthlyPaymentItemSnapshots
+}
+
+func (r *userR) GetMonthlyPaymentSnapshots() MonthlyPaymentSnapshotSlice {
+	if r == nil {
+		return nil
+	}
+	return r.MonthlyPaymentSnapshots
 }
 
 func (r *userR) GetMonthlyTargetPaymentSnapshots() MonthlyTargetPaymentSnapshotSlice {
@@ -467,6 +497,20 @@ func (o *User) Items(mods ...qm.QueryMod) itemQuery {
 	return Items(queryMods...)
 }
 
+// MaximumMonthlyPayments retrieves all the maximum_monthly_payment's MaximumMonthlyPayments with an executor.
+func (o *User) MaximumMonthlyPayments(mods ...qm.QueryMod) maximumMonthlyPaymentQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"maximum_monthly_payments\".\"user_id\"=?", o.ID),
+	)
+
+	return MaximumMonthlyPayments(queryMods...)
+}
+
 // MaximumMonthlyTargetPayments retrieves all the maximum_monthly_target_payment's MaximumMonthlyTargetPayments with an executor.
 func (o *User) MaximumMonthlyTargetPayments(mods ...qm.QueryMod) maximumMonthlyTargetPaymentQuery {
 	var queryMods []qm.QueryMod
@@ -479,6 +523,34 @@ func (o *User) MaximumMonthlyTargetPayments(mods ...qm.QueryMod) maximumMonthlyT
 	)
 
 	return MaximumMonthlyTargetPayments(queryMods...)
+}
+
+// MonthlyPaymentItemSnapshots retrieves all the monthly_payment_item_snapshot's MonthlyPaymentItemSnapshots with an executor.
+func (o *User) MonthlyPaymentItemSnapshots(mods ...qm.QueryMod) monthlyPaymentItemSnapshotQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"monthly_payment_item_snapshots\".\"user_id\"=?", o.ID),
+	)
+
+	return MonthlyPaymentItemSnapshots(queryMods...)
+}
+
+// MonthlyPaymentSnapshots retrieves all the monthly_payment_snapshot's MonthlyPaymentSnapshots with an executor.
+func (o *User) MonthlyPaymentSnapshots(mods ...qm.QueryMod) monthlyPaymentSnapshotQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"monthly_payment_snapshots\".\"user_id\"=?", o.ID),
+	)
+
+	return MonthlyPaymentSnapshots(queryMods...)
 }
 
 // MonthlyTargetPaymentSnapshots retrieves all the monthly_target_payment_snapshot's MonthlyTargetPaymentSnapshots with an executor.
@@ -651,6 +723,120 @@ func (userL) LoadItems(ctx context.Context, e boil.ContextExecutor, singular boo
 	return nil
 }
 
+// LoadMaximumMonthlyPayments allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadMaximumMonthlyPayments(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		var ok bool
+		object, ok = maybeUser.(*User)
+		if !ok {
+			object = new(User)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeUser))
+			}
+		}
+	} else {
+		s, ok := maybeUser.(*[]*User)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeUser))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`maximum_monthly_payments`),
+		qm.WhereIn(`maximum_monthly_payments.user_id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load maximum_monthly_payments")
+	}
+
+	var resultSlice []*MaximumMonthlyPayment
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice maximum_monthly_payments")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on maximum_monthly_payments")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for maximum_monthly_payments")
+	}
+
+	if len(maximumMonthlyPaymentAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.MaximumMonthlyPayments = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &maximumMonthlyPaymentR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.MaximumMonthlyPayments = append(local.R.MaximumMonthlyPayments, foreign)
+				if foreign.R == nil {
+					foreign.R = &maximumMonthlyPaymentR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
 // LoadMaximumMonthlyTargetPayments allows an eager lookup of values, cached into the
 // loaded structs of the objects. This is for a 1-M or N-M relationship.
 func (userL) LoadMaximumMonthlyTargetPayments(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
@@ -755,6 +941,234 @@ func (userL) LoadMaximumMonthlyTargetPayments(ctx context.Context, e boil.Contex
 				local.R.MaximumMonthlyTargetPayments = append(local.R.MaximumMonthlyTargetPayments, foreign)
 				if foreign.R == nil {
 					foreign.R = &maximumMonthlyTargetPaymentR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadMonthlyPaymentItemSnapshots allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadMonthlyPaymentItemSnapshots(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		var ok bool
+		object, ok = maybeUser.(*User)
+		if !ok {
+			object = new(User)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeUser))
+			}
+		}
+	} else {
+		s, ok := maybeUser.(*[]*User)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeUser))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`monthly_payment_item_snapshots`),
+		qm.WhereIn(`monthly_payment_item_snapshots.user_id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load monthly_payment_item_snapshots")
+	}
+
+	var resultSlice []*MonthlyPaymentItemSnapshot
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice monthly_payment_item_snapshots")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on monthly_payment_item_snapshots")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for monthly_payment_item_snapshots")
+	}
+
+	if len(monthlyPaymentItemSnapshotAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.MonthlyPaymentItemSnapshots = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &monthlyPaymentItemSnapshotR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.MonthlyPaymentItemSnapshots = append(local.R.MonthlyPaymentItemSnapshots, foreign)
+				if foreign.R == nil {
+					foreign.R = &monthlyPaymentItemSnapshotR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadMonthlyPaymentSnapshots allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadMonthlyPaymentSnapshots(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		var ok bool
+		object, ok = maybeUser.(*User)
+		if !ok {
+			object = new(User)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeUser))
+			}
+		}
+	} else {
+		s, ok := maybeUser.(*[]*User)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeUser))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`monthly_payment_snapshots`),
+		qm.WhereIn(`monthly_payment_snapshots.user_id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load monthly_payment_snapshots")
+	}
+
+	var resultSlice []*MonthlyPaymentSnapshot
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice monthly_payment_snapshots")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on monthly_payment_snapshots")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for monthly_payment_snapshots")
+	}
+
+	if len(monthlyPaymentSnapshotAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.MonthlyPaymentSnapshots = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &monthlyPaymentSnapshotR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.MonthlyPaymentSnapshots = append(local.R.MonthlyPaymentSnapshots, foreign)
+				if foreign.R == nil {
+					foreign.R = &monthlyPaymentSnapshotR{}
 				}
 				foreign.R.User = local
 				break
@@ -1283,6 +1697,68 @@ func (o *User) AddItems(ctx context.Context, exec boil.ContextExecutor, insert b
 	return nil
 }
 
+// AddMaximumMonthlyPaymentsG adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.MaximumMonthlyPayments.
+// Sets related.R.User appropriately.
+// Uses the global database handle.
+func (o *User) AddMaximumMonthlyPaymentsG(ctx context.Context, insert bool, related ...*MaximumMonthlyPayment) error {
+	return o.AddMaximumMonthlyPayments(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddMaximumMonthlyPayments adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.MaximumMonthlyPayments.
+// Sets related.R.User appropriately.
+func (o *User) AddMaximumMonthlyPayments(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*MaximumMonthlyPayment) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"maximum_monthly_payments\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, maximumMonthlyPaymentPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			MaximumMonthlyPayments: related,
+		}
+	} else {
+		o.R.MaximumMonthlyPayments = append(o.R.MaximumMonthlyPayments, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &maximumMonthlyPaymentR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
+	return nil
+}
+
 // AddMaximumMonthlyTargetPaymentsG adds the given related objects to the existing relationships
 // of the user, optionally inserting them as new records.
 // Appends related to o.R.MaximumMonthlyTargetPayments.
@@ -1336,6 +1812,130 @@ func (o *User) AddMaximumMonthlyTargetPayments(ctx context.Context, exec boil.Co
 	for _, rel := range related {
 		if rel.R == nil {
 			rel.R = &maximumMonthlyTargetPaymentR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
+	return nil
+}
+
+// AddMonthlyPaymentItemSnapshotsG adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.MonthlyPaymentItemSnapshots.
+// Sets related.R.User appropriately.
+// Uses the global database handle.
+func (o *User) AddMonthlyPaymentItemSnapshotsG(ctx context.Context, insert bool, related ...*MonthlyPaymentItemSnapshot) error {
+	return o.AddMonthlyPaymentItemSnapshots(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddMonthlyPaymentItemSnapshots adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.MonthlyPaymentItemSnapshots.
+// Sets related.R.User appropriately.
+func (o *User) AddMonthlyPaymentItemSnapshots(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*MonthlyPaymentItemSnapshot) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"monthly_payment_item_snapshots\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, monthlyPaymentItemSnapshotPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			MonthlyPaymentItemSnapshots: related,
+		}
+	} else {
+		o.R.MonthlyPaymentItemSnapshots = append(o.R.MonthlyPaymentItemSnapshots, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &monthlyPaymentItemSnapshotR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
+	return nil
+}
+
+// AddMonthlyPaymentSnapshotsG adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.MonthlyPaymentSnapshots.
+// Sets related.R.User appropriately.
+// Uses the global database handle.
+func (o *User) AddMonthlyPaymentSnapshotsG(ctx context.Context, insert bool, related ...*MonthlyPaymentSnapshot) error {
+	return o.AddMonthlyPaymentSnapshots(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddMonthlyPaymentSnapshots adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.MonthlyPaymentSnapshots.
+// Sets related.R.User appropriately.
+func (o *User) AddMonthlyPaymentSnapshots(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*MonthlyPaymentSnapshot) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"monthly_payment_snapshots\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, monthlyPaymentSnapshotPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			MonthlyPaymentSnapshots: related,
+		}
+	} else {
+		o.R.MonthlyPaymentSnapshots = append(o.R.MonthlyPaymentSnapshots, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &monthlyPaymentSnapshotR{
 				User: o,
 			}
 		} else {

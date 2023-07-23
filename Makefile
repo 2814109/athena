@@ -19,7 +19,3 @@ mg-force:
 create-m-%:
 	migrate create -ext sql -dir db/migrations -seq ${@:create-m-%=%}
 
-
-.PHONY:publish
-publish:
-  docker-compose exec pubsub python3 pubsub/my_publisher.py $(PUBSUB_PROJECT_ID) $(TOPIC_ID) ./pubsub/sample.json
