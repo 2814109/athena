@@ -1,6 +1,6 @@
 import Film from "./Film";
 import { graphql } from "./gql";
-import { useGraphQL } from "./use-graphql";
+import { useGraphQL } from "./fetcher/use-graphql";
 
 import { Suspense } from "react";
 
