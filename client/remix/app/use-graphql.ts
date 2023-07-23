@@ -24,6 +24,8 @@ export function useGraphQL<TResult, TVariables>(
           variables: queryKey[1],
         }),
       }).then(response => response.json()) as Promise<ExecutionResult<TResult>>;
-    }
+    },
+    
+    
   );
 }
