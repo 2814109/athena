@@ -1,5 +1,5 @@
-query GetTodoById {
-  todo(ID: 1){
-    id
-  }
-}
+# query GetTodoById {
+#   todo(ID: 1){
+#     id
+#   }
+# }

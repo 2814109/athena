@@ -1,27 +1,18 @@
-
-import type { CodegenConfig } from '@graphql-codegen/cli';
+/* eslint-disable import/no-extraneous-dependencies */
+import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  overwrite: true,
-  schema: "http://127.0.0.1:8888/query",
-  ignoreNoDocuments: true,
-  documents: ["graphqls/**/*.graphql"],
+  schema: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
+  documents: ['app/**/*.tsx', '!app/gql/**/*'],
   generates: {
-    "./src/__generated__/": {
-      preset: "client",
+    './app/gql/': {
+      preset: 'client',
       config: {
         documentMode: 'string',
-        avoidOptionals: true,
-        constEnums: true,
-        withHooks: true,
-        withComponent: false,
-        futureProofEnums: true
-
       },
-    }
+    },
   },
   hooks: { afterAllFileWrite: ['prettier --write'] },
-
 };
 
 export default config;
