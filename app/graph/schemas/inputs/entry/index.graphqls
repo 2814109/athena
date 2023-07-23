@@ -1,0 +1,17 @@
+input DebitInput {
+  account_name: String
+  amount: Float
+}
+
+input CreditInput {
+  account_name: String
+  amount: Float
+}
+
+
+input CreateEntryRequest {
+  description: String
+  date: String
+  debits: [DebitInput]
+  credits: [CreditInput]
+}

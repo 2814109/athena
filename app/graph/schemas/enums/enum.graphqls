@@ -5,3 +5,9 @@ enum ArticleStatuses{
     Deleted
     OnHold
 }
+
+enum StatusPattern {
+  ACTIVE
+  INACTIVE
+  PENDING
+}

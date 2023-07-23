@@ -518,7 +518,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(parsedSchema, parsedSchema.Types[name]), nil
 }
 
-//go:embed "schemas/enums/enum.graphqls" "schemas/inputs/input.graphqls" "schemas/mutations/mutation.graphqls" "schemas/queries/query.graphqls" "schemas/schema.graphqls" "schemas/types/type.graphqls"
+//go:embed "schemas/enums/enum.graphqls" "schemas/inputs/entry/index.graphqls" "schemas/inputs/input.graphqls" "schemas/inputs/todo/index.graphqls" "schemas/inputs/user/index.graphqls" "schemas/mutations/mutation.graphqls" "schemas/queries/query.graphqls" "schemas/schema.graphqls" "schemas/types/type.graphqls"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -531,7 +531,10 @@ func sourceData(filename string) string {
 
 var sources = []*ast.Source{
 	{Name: "schemas/enums/enum.graphqls", Input: sourceData("schemas/enums/enum.graphqls"), BuiltIn: false},
+	{Name: "schemas/inputs/entry/index.graphqls", Input: sourceData("schemas/inputs/entry/index.graphqls"), BuiltIn: false},
 	{Name: "schemas/inputs/input.graphqls", Input: sourceData("schemas/inputs/input.graphqls"), BuiltIn: false},
+	{Name: "schemas/inputs/todo/index.graphqls", Input: sourceData("schemas/inputs/todo/index.graphqls"), BuiltIn: false},
+	{Name: "schemas/inputs/user/index.graphqls", Input: sourceData("schemas/inputs/user/index.graphqls"), BuiltIn: false},
 	{Name: "schemas/mutations/mutation.graphqls", Input: sourceData("schemas/mutations/mutation.graphqls"), BuiltIn: false},
 	{Name: "schemas/queries/query.graphqls", Input: sourceData("schemas/queries/query.graphqls"), BuiltIn: false},
 	{Name: "schemas/schema.graphqls", Input: sourceData("schemas/schema.graphqls"), BuiltIn: false},

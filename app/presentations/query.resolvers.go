@@ -9,7 +9,7 @@ import (
 	"my_gql_server/graph"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
-	models "my_gql_server/my_models"
+	"my_gql_server/my_models"
 	"my_gql_server/usecases"
 
 	lop "github.com/samber/lo/parallel"

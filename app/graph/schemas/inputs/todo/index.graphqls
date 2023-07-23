@@ -1,0 +1,12 @@
+input CreateTodo {
+  status: StatusPattern
+  text: String! @constraint(format: "required_if=Status ACTIVE,newline,omitempty")
+  userId: Int!
+}
+
+input UpdateTodo {
+  ID: Int!
+  status: StatusPattern
+  text: String! @constraint(format: "required_if=Status ACTIVE,newline,omitempty")
+  userId: Int!
+}
