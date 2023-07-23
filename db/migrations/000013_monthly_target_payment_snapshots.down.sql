@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS monthly_target_payment_snapshots;

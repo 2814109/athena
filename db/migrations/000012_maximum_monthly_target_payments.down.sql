@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS maximum_monthly_target_payments;

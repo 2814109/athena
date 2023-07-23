@@ -1,3 +1,4 @@
+-- 品目単位の予算
 CREATE TABLE IF NOT EXISTS predict_accounts (
     id SERIAL PRIMARY KEY,
     category_name VARCHAR (50) NOT NULL references categories(classification),
