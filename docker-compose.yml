@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    container_name: ${APP_CONTAINER_NAME}
+    container_name: golang
     build: 
       context: .
       dockerfile: ./docker/golang/Dockerfile
@@ -16,7 +16,7 @@ services:
     networks:
       - athena-network
   db:
-    container_name: ${PSQL_HOST}
+    container_name: postgres
     build:
       context: .
       dockerfile: ./docker/postgres/Dockerfile

@@ -30,6 +30,8 @@ type Transaction struct {
 	Description  null.String       `boil:"description" json:"description,omitempty" toml:"description" yaml:"description,omitempty"`
 	DebitAmount  types.NullDecimal `boil:"debit_amount" json:"debit_amount,omitempty" toml:"debit_amount" yaml:"debit_amount,omitempty"`
 	CreditAmount types.NullDecimal `boil:"credit_amount" json:"credit_amount,omitempty" toml:"credit_amount" yaml:"credit_amount,omitempty"`
+	CreatedAt    time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt    time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	UserID       int               `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 	AccountID    null.Int          `boil:"account_id" json:"account_id,omitempty" toml:"account_id" yaml:"account_id,omitempty"`
 
@@ -43,6 +45,8 @@ var TransactionColumns = struct {
 	Description  string
 	DebitAmount  string
 	CreditAmount string
+	CreatedAt    string
+	UpdatedAt    string
 	UserID       string
 	AccountID    string
 }{
@@ -51,6 +55,8 @@ var TransactionColumns = struct {
 	Description:  "description",
 	DebitAmount:  "debit_amount",
 	CreditAmount: "credit_amount",
+	CreatedAt:    "created_at",
+	UpdatedAt:    "updated_at",
 	UserID:       "user_id",
 	AccountID:    "account_id",
 }
@@ -61,6 +67,8 @@ var TransactionTableColumns = struct {
 	Description  string
 	DebitAmount  string
 	CreditAmount string
+	CreatedAt    string
+	UpdatedAt    string
 	UserID       string
 	AccountID    string
 }{
@@ -69,6 +77,8 @@ var TransactionTableColumns = struct {
 	Description:  "transactions.description",
 	DebitAmount:  "transactions.debit_amount",
 	CreditAmount: "transactions.credit_amount",
+	CreatedAt:    "transactions.created_at",
+	UpdatedAt:    "transactions.updated_at",
 	UserID:       "transactions.user_id",
 	AccountID:    "transactions.account_id",
 }
@@ -119,6 +129,8 @@ var TransactionWhere = struct {
 	Description  whereHelpernull_String
 	DebitAmount  whereHelpertypes_NullDecimal
 	CreditAmount whereHelpertypes_NullDecimal
+	CreatedAt    whereHelpertime_Time
+	UpdatedAt    whereHelpertime_Time
 	UserID       whereHelperint
 	AccountID    whereHelpernull_Int
 }{
@@ -127,6 +139,8 @@ var TransactionWhere = struct {
 	Description:  whereHelpernull_String{field: "\"transactions\".\"description\""},
 	DebitAmount:  whereHelpertypes_NullDecimal{field: "\"transactions\".\"debit_amount\""},
 	CreditAmount: whereHelpertypes_NullDecimal{field: "\"transactions\".\"credit_amount\""},
+	CreatedAt:    whereHelpertime_Time{field: "\"transactions\".\"created_at\""},
+	UpdatedAt:    whereHelpertime_Time{field: "\"transactions\".\"updated_at\""},
 	UserID:       whereHelperint{field: "\"transactions\".\"user_id\""},
 	AccountID:    whereHelpernull_Int{field: "\"transactions\".\"account_id\""},
 }
@@ -169,8 +183,8 @@ func (r *transactionR) GetAccount() *Account {
 type transactionL struct{}
 
 var (
-	transactionAllColumns            = []string{"id", "date", "description", "debit_amount", "credit_amount", "user_id", "account_id"}
-	transactionColumnsWithoutDefault = []string{"date"}
+	transactionAllColumns            = []string{"id", "date", "description", "debit_amount", "credit_amount", "created_at", "updated_at", "user_id", "account_id"}
+	transactionColumnsWithoutDefault = []string{"date", "created_at", "updated_at"}
 	transactionColumnsWithDefault    = []string{"id", "description", "debit_amount", "credit_amount", "user_id", "account_id"}
 	transactionPrimaryKeyColumns     = []string{"id"}
 	transactionGeneratedColumns      = []string{}
@@ -950,6 +964,16 @@ func (o *Transaction) Insert(ctx context.Context, exec boil.ContextExecutor, col
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -1031,6 +1055,12 @@ func (o *Transaction) UpdateG(ctx context.Context, columns boil.Columns) (int64,
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *Transaction) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -1175,6 +1205,14 @@ func (o *Transaction) UpsertG(ctx context.Context, updateOnConflict bool, confli
 func (o *Transaction) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
 	if o == nil {
 		return errors.New("models: no transactions provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

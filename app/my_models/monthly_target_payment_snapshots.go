@@ -27,6 +27,7 @@ type MonthlyTargetPaymentSnapshot struct {
 	ID            int               `boil:"id" json:"id" toml:"id" yaml:"id"`
 	MonthlyAmount types.NullDecimal `boil:"monthly_amount" json:"monthly_amount,omitempty" toml:"monthly_amount" yaml:"monthly_amount,omitempty"`
 	Month         time.Time         `boil:"month" json:"month" toml:"month" yaml:"month"`
+	CreatedAt     time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UserID        int               `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 
 	R *monthlyTargetPaymentSnapshotR `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -37,11 +38,13 @@ var MonthlyTargetPaymentSnapshotColumns = struct {
 	ID            string
 	MonthlyAmount string
 	Month         string
+	CreatedAt     string
 	UserID        string
 }{
 	ID:            "id",
 	MonthlyAmount: "monthly_amount",
 	Month:         "month",
+	CreatedAt:     "created_at",
 	UserID:        "user_id",
 }
 
@@ -49,11 +52,13 @@ var MonthlyTargetPaymentSnapshotTableColumns = struct {
 	ID            string
 	MonthlyAmount string
 	Month         string
+	CreatedAt     string
 	UserID        string
 }{
 	ID:            "monthly_target_payment_snapshots.id",
 	MonthlyAmount: "monthly_target_payment_snapshots.monthly_amount",
 	Month:         "monthly_target_payment_snapshots.month",
+	CreatedAt:     "monthly_target_payment_snapshots.created_at",
 	UserID:        "monthly_target_payment_snapshots.user_id",
 }
 
@@ -63,11 +68,13 @@ var MonthlyTargetPaymentSnapshotWhere = struct {
 	ID            whereHelperint
 	MonthlyAmount whereHelpertypes_NullDecimal
 	Month         whereHelpertime_Time
+	CreatedAt     whereHelpertime_Time
 	UserID        whereHelperint
 }{
 	ID:            whereHelperint{field: "\"monthly_target_payment_snapshots\".\"id\""},
 	MonthlyAmount: whereHelpertypes_NullDecimal{field: "\"monthly_target_payment_snapshots\".\"monthly_amount\""},
 	Month:         whereHelpertime_Time{field: "\"monthly_target_payment_snapshots\".\"month\""},
+	CreatedAt:     whereHelpertime_Time{field: "\"monthly_target_payment_snapshots\".\"created_at\""},
 	UserID:        whereHelperint{field: "\"monthly_target_payment_snapshots\".\"user_id\""},
 }
 
@@ -99,8 +106,8 @@ func (r *monthlyTargetPaymentSnapshotR) GetUser() *User {
 type monthlyTargetPaymentSnapshotL struct{}
 
 var (
-	monthlyTargetPaymentSnapshotAllColumns            = []string{"id", "monthly_amount", "month", "user_id"}
-	monthlyTargetPaymentSnapshotColumnsWithoutDefault = []string{"month"}
+	monthlyTargetPaymentSnapshotAllColumns            = []string{"id", "monthly_amount", "month", "created_at", "user_id"}
+	monthlyTargetPaymentSnapshotColumnsWithoutDefault = []string{"month", "created_at"}
 	monthlyTargetPaymentSnapshotColumnsWithDefault    = []string{"id", "monthly_amount", "user_id"}
 	monthlyTargetPaymentSnapshotPrimaryKeyColumns     = []string{"id"}
 	monthlyTargetPaymentSnapshotGeneratedColumns      = []string{}
@@ -649,6 +656,13 @@ func (o *MonthlyTargetPaymentSnapshot) Insert(ctx context.Context, exec boil.Con
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -874,6 +888,13 @@ func (o *MonthlyTargetPaymentSnapshot) UpsertG(ctx context.Context, updateOnConf
 func (o *MonthlyTargetPaymentSnapshot) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
 	if o == nil {
 		return errors.New("models: no monthly_target_payment_snapshots provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

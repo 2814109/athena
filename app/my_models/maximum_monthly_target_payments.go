@@ -26,6 +26,8 @@ import (
 type MaximumMonthlyTargetPayment struct {
 	ID            int               `boil:"id" json:"id" toml:"id" yaml:"id"`
 	MonthlyAmount types.NullDecimal `boil:"monthly_amount" json:"monthly_amount,omitempty" toml:"monthly_amount" yaml:"monthly_amount,omitempty"`
+	CreatedAt     time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt     time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	UserID        int               `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 
 	R *maximumMonthlyTargetPaymentR `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -35,20 +37,28 @@ type MaximumMonthlyTargetPayment struct {
 var MaximumMonthlyTargetPaymentColumns = struct {
 	ID            string
 	MonthlyAmount string
+	CreatedAt     string
+	UpdatedAt     string
 	UserID        string
 }{
 	ID:            "id",
 	MonthlyAmount: "monthly_amount",
+	CreatedAt:     "created_at",
+	UpdatedAt:     "updated_at",
 	UserID:        "user_id",
 }
 
 var MaximumMonthlyTargetPaymentTableColumns = struct {
 	ID            string
 	MonthlyAmount string
+	CreatedAt     string
+	UpdatedAt     string
 	UserID        string
 }{
 	ID:            "maximum_monthly_target_payments.id",
 	MonthlyAmount: "maximum_monthly_target_payments.monthly_amount",
+	CreatedAt:     "maximum_monthly_target_payments.created_at",
+	UpdatedAt:     "maximum_monthly_target_payments.updated_at",
 	UserID:        "maximum_monthly_target_payments.user_id",
 }
 
@@ -83,10 +93,14 @@ func (w whereHelpertypes_NullDecimal) IsNotNull() qm.QueryMod {
 var MaximumMonthlyTargetPaymentWhere = struct {
 	ID            whereHelperint
 	MonthlyAmount whereHelpertypes_NullDecimal
+	CreatedAt     whereHelpertime_Time
+	UpdatedAt     whereHelpertime_Time
 	UserID        whereHelperint
 }{
 	ID:            whereHelperint{field: "\"maximum_monthly_target_payments\".\"id\""},
 	MonthlyAmount: whereHelpertypes_NullDecimal{field: "\"maximum_monthly_target_payments\".\"monthly_amount\""},
+	CreatedAt:     whereHelpertime_Time{field: "\"maximum_monthly_target_payments\".\"created_at\""},
+	UpdatedAt:     whereHelpertime_Time{field: "\"maximum_monthly_target_payments\".\"updated_at\""},
 	UserID:        whereHelperint{field: "\"maximum_monthly_target_payments\".\"user_id\""},
 }
 
@@ -118,8 +132,8 @@ func (r *maximumMonthlyTargetPaymentR) GetUser() *User {
 type maximumMonthlyTargetPaymentL struct{}
 
 var (
-	maximumMonthlyTargetPaymentAllColumns            = []string{"id", "monthly_amount", "user_id"}
-	maximumMonthlyTargetPaymentColumnsWithoutDefault = []string{}
+	maximumMonthlyTargetPaymentAllColumns            = []string{"id", "monthly_amount", "created_at", "updated_at", "user_id"}
+	maximumMonthlyTargetPaymentColumnsWithoutDefault = []string{"created_at", "updated_at"}
 	maximumMonthlyTargetPaymentColumnsWithDefault    = []string{"id", "monthly_amount", "user_id"}
 	maximumMonthlyTargetPaymentPrimaryKeyColumns     = []string{"id"}
 	maximumMonthlyTargetPaymentGeneratedColumns      = []string{}
@@ -668,6 +682,16 @@ func (o *MaximumMonthlyTargetPayment) Insert(ctx context.Context, exec boil.Cont
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -749,6 +773,12 @@ func (o *MaximumMonthlyTargetPayment) UpdateG(ctx context.Context, columns boil.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *MaximumMonthlyTargetPayment) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -893,6 +923,14 @@ func (o *MaximumMonthlyTargetPayment) UpsertG(ctx context.Context, updateOnConfl
 func (o *MaximumMonthlyTargetPayment) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
 	if o == nil {
 		return errors.New("models: no maximum_monthly_target_payments provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {
