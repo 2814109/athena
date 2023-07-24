@@ -8,7 +8,8 @@
     "predev": "pn generate",
     "start": "remix-serve build",
     "typecheck": "tsc",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen-w": "pn codegen -w"
   },
   "dependencies": {
     "@clerk/remix": "^2.9.0",

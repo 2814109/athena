@@ -223,7 +223,7 @@ export type CreateTodoMutationMutationVariables = Exact<{
 
 export type CreateTodoMutationMutation = {
   __typename?: "Mutation";
-  createTodo: { __typename?: "Todo"; id: string };
+  createTodo: { __typename?: "Todo"; id: string; content: string };
 };
 
 export class TypedDocumentString<TResult, TVariables>
@@ -255,6 +255,7 @@ export const CreateTodoMutationDocument = new TypedDocumentString(`
     mutation createTodoMutation {
   createTodo(input: {status: ACTIVE, text: "test", userId: 1}) {
     id
+    content
   }
 }
     `) as unknown as TypedDocumentString<
