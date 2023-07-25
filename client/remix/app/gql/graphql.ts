@@ -218,7 +218,7 @@ export type FindTodoByIdQueryQuery = {
 };
 
 export type CreateTodoMutationMutationVariables = Exact<{
-  [key: string]: never;
+  input: CreateTodo;
 }>;
 
 export type CreateTodoMutationMutation = {
@@ -261,8 +261,8 @@ export const FindTodoByIdQueryDocument = new TypedDocumentString(`
   FindTodoByIdQueryQueryVariables
 >;
 export const CreateTodoMutationDocument = new TypedDocumentString(`
-    mutation createTodoMutation {
-  createTodo(input: {status: ACTIVE, text: "test", userId: 1}) {
+    mutation createTodoMutation($input: CreateTodo!) {
+  createTodo(input: $input) {
     id
     content
   }

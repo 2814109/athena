@@ -1,5 +1,0 @@
-# query GetTodoById {
-#   todo(ID: 1){
-#     id
-#   }
-# }
