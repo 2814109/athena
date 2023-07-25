@@ -226,6 +226,15 @@ export type CreateTodoMutationMutation = {
   createTodo: { __typename?: "Todo"; id: string; content: string };
 };
 
+export type GetAllTodoByUserIdQueryQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetAllTodoByUserIdQueryQuery = {
+  __typename?: "Query";
+  todos: Array<{ __typename?: "Todo"; id: string }>;
+};
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -261,4 +270,14 @@ export const CreateTodoMutationDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<
   CreateTodoMutationMutation,
   CreateTodoMutationMutationVariables
+>;
+export const GetAllTodoByUserIdQueryDocument = new TypedDocumentString(`
+    query getAllTodoByUserIdQuery {
+  todos(userId: 1) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<
+  GetAllTodoByUserIdQueryQuery,
+  GetAllTodoByUserIdQueryQueryVariables
 >;

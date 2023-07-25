@@ -35,10 +35,20 @@ const createTodoDocuments = graphql(`
   }
 `);
 
+const getAllTodoByUserIdDocuments = graphql(`
+  query getAllTodoByUserIdQuery {
+    todos(userId: 1) {
+      id
+    }
+  }
+`);
+
 export default function App() {
   const { data } = useGraphQL(findTodoByIdDocuments, {
     id: 1,
   });
+
+  const { data: todos } = useGraphQL(getAllTodoByUserIdDocuments);
 
   const graphQLClient = new GraphQLClient(endpoint, { method: "POST" });
   const mutationKey = ["graphql", "create", "user"];
@@ -58,10 +68,12 @@ export default function App() {
   // console.log(mutation);
   return (
     <>
-      {data && <ul>{data.data?.todo.id}</ul>}
+      <ul> {todos && todos.data?.todos.map((todo) => <li>{todo.id}</li>)}</ul>
+
       <button type="button" onClick={() => mutation.mutate()}>
         Submit
       </button>
+      {data && <ul>{data.data?.todo.id}</ul>}
     </>
   );
 }
