@@ -214,8 +214,20 @@ export type FindTodoByIdQueryQueryVariables = Exact<{
 
 export type FindTodoByIdQueryQuery = {
   __typename?: "Query";
-  todo: { __typename?: "Todo"; id: string };
+  todo: {
+    __typename?: "Todo";
+    id: string;
+    user: { __typename?: "User" } & {
+      " $fragmentRefs"?: { UserItemFragment: UserItemFragment };
+    };
+  };
 };
+
+export type UserItemFragment = {
+  __typename?: "User";
+  id: string;
+  username: string;
+} & { " $fragmentName"?: "UserItemFragment" };
 
 export type CreateTodoMutationMutationVariables = Exact<{
   input: CreateTodo;
@@ -249,14 +261,28 @@ export class TypedDocumentString<TResult, TVariables>
     return this.value;
   }
 }
-
+export const UserItemFragmentDoc = new TypedDocumentString(
+  `
+    fragment UserItem on User {
+  id
+  username
+}
+    `,
+  { fragmentName: "UserItem" }
+) as unknown as TypedDocumentString<UserItemFragment, unknown>;
 export const FindTodoByIdQueryDocument = new TypedDocumentString(`
     query findTodoByIdQuery($id: Int!) {
   todo(ID: $id) {
     id
+    user {
+      ...UserItem
+    }
   }
 }
-    `) as unknown as TypedDocumentString<
+    fragment UserItem on User {
+  id
+  username
+}`) as unknown as TypedDocumentString<
   FindTodoByIdQueryQuery,
   FindTodoByIdQueryQueryVariables
 >;

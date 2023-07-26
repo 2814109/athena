@@ -23,9 +23,28 @@ const findTodoByIdDocuments = graphql(`
   query findTodoByIdQuery($id: Int!) {
     todo(ID: $id) {
       id
+      user {
+        ...UserItem
+      }
     }
   }
 `);
+
+const userFragment = graphql(`
+  fragment UserItem on User {
+    id
+    username
+  }
+`);
+
+// export const FilmFragment = graphql(/* GraphQL */ `
+//   fragment FilmItem on Film {
+//     id
+//     title
+//     releaseDate
+//     producers
+//   }
+// `);
 
 const createTodoDocuments = graphql(`
   mutation createTodoMutation($input: CreateTodo!) {

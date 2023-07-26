@@ -12,8 +12,10 @@ import * as types from "./graphql";
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-  "\n  query findTodoByIdQuery($id: Int!) {\n    todo(ID: $id) {\n      id\n    }\n  }\n":
+  "\n  query findTodoByIdQuery($id: Int!) {\n    todo(ID: $id) {\n      id\n      user {\n        ...UserItem\n      }\n    }\n  }\n":
     types.FindTodoByIdQueryDocument,
+  "\n  fragment UserItem on User {\n    id\n    username\n  }\n":
+    types.UserItemFragmentDoc,
   "\n  mutation createTodoMutation($input: CreateTodo!) {\n    createTodo(input: $input) {\n      id\n      content\n    }\n  }\n":
     types.CreateTodoMutationDocument,
   "\n  query getAllTodoByUserIdQuery {\n    todos(userId: 1) {\n      id\n    }\n  }\n":
@@ -24,8 +26,14 @@ const documents = {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n  query findTodoByIdQuery($id: Int!) {\n    todo(ID: $id) {\n      id\n    }\n  }\n"
+  source: "\n  query findTodoByIdQuery($id: Int!) {\n    todo(ID: $id) {\n      id\n      user {\n        ...UserItem\n      }\n    }\n  }\n"
 ): typeof import("./graphql").FindTodoByIdQueryDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n  fragment UserItem on User {\n    id\n    username\n  }\n"
+): typeof import("./graphql").UserItemFragmentDoc;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
