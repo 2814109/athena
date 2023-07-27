@@ -1,23 +1,10 @@
 import { graphql } from "./gql";
-// import type { LinksFunction } from "@remix-run/node";
 
 import { useGraphQL } from "./fetcher/use-graphql";
 import { useMutation } from "@tanstack/react-query";
 import { endpoint } from "config";
 import { GraphQLClient } from "graphql-request";
-import { ArticleStatuses, StatusPattern } from "./gql/graphql";
-
-// const allFilmsWithVariablesQueryDocument = graphql(/* GraphQL */ `
-//   query allFilmsWithVariablesQuery($first: Int!) {
-//     allFilms(first: $first) {
-//       edges {
-//         node {
-//           ...FilmItem
-//         }
-//       }
-//     }
-//   }
-// `);
+import { StatusPattern } from "./gql/graphql";
 
 const findTodoByIdDocuments = graphql(`
   query findTodoByIdQuery($id: Int!) {
@@ -36,15 +23,6 @@ const userFragment = graphql(`
     username
   }
 `);
-
-// export const FilmFragment = graphql(/* GraphQL */ `
-//   fragment FilmItem on Film {
-//     id
-//     title
-//     releaseDate
-//     producers
-//   }
-// `);
 
 const createTodoDocuments = graphql(`
   mutation createTodoMutation($input: CreateTodo!) {
@@ -90,11 +68,12 @@ export default function App() {
   });
   console.log(mutation.data);
 
-  // const mutation = useMutationGraphQL(createTodoDocuments);
-  // console.log(mutation);
   return (
     <>
-      <ul> {todos && todos.data?.todos.map((todo) => <li>{todo.id}</li>)}</ul>
+      <ul>
+        {todos &&
+          todos.data?.todos.map((todo) => <li key={todo.id}>{todo.id}</li>)}
+      </ul>
 
       <button type="button" onClick={() => mutation.mutate()}>
         Submit

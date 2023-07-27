@@ -15,7 +15,6 @@ export const Todos = () => {
   return (
     <>
       <ul>
-        {" "}
         {todos &&
           todos.data?.todos.map((todo) => <li key={todo.id}>{todo.id}</li>)}
       </ul>
