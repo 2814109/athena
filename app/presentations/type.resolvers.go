@@ -8,7 +8,7 @@ import (
 	"context"
 	"fmt"
 	"my_gql_server/graph"
-	"my_gql_server/my_models"
+	models "my_gql_server/my_models"
 )
 
 // Amount is the resolver for the amount field.
@@ -58,7 +58,7 @@ func (r *predictCostResolver) Amount(ctx context.Context, obj *models.PredictCos
 
 // User is the resolver for the user field.
 func (r *todoResolver) User(ctx context.Context, obj *models.Todo) (*models.User, error) {
-	panic(fmt.Errorf("not implemented: User - user"))
+	return obj.R.User, nil
 }
 
 // Credit returns graph.CreditResolver implementation.
