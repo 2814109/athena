@@ -1,7 +1,7 @@
-import { graphql } from "./gql";
+import { graphql } from "../gql";
 
-import { useGraphQL } from "./fetcher/use-graphql";
-import { useCreateTodo } from "./features/hooks/useCreateTodo";
+import { useGraphQL } from "../fetcher/use-graphql";
+import { useCreateTodo } from "./todo/hooks/useCreateTodo";
 
 const findTodoByIdDocuments = graphql(`
   query findTodoByIdQuery($id: Int!) {

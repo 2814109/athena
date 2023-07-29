@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import App from "~/App";
+import App from "~/features/App";
 
 export default function Index() {
   return (
