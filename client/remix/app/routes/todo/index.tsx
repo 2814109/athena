@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Todos } from "~/features/Todos";
+import { Todos } from "~/features/components/Todos";
 
 export default function Index() {
   return (

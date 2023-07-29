@@ -1,10 +1,7 @@
 import { graphql } from "./gql";
 
 import { useGraphQL } from "./fetcher/use-graphql";
-import { useMutation } from "@tanstack/react-query";
-import { endpoint } from "config";
-import { GraphQLClient } from "graphql-request";
-import { StatusPattern } from "./gql/graphql";
+import { useCreateTodo } from "./features/hooks/useCreateTodo";
 
 const findTodoByIdDocuments = graphql(`
   query findTodoByIdQuery($id: Int!) {
@@ -24,15 +21,6 @@ const userFragment = graphql(`
   }
 `);
 
-const createTodoDocuments = graphql(`
-  mutation createTodoMutation($input: CreateTodo!) {
-    createTodo(input: $input) {
-      id
-      content
-    }
-  }
-`);
-
 const getAllTodoByUserIdDocuments = graphql(`
   query getAllTodoByUserIdQuery {
     todos(userId: 1) {
@@ -48,24 +36,7 @@ export default function App() {
 
   const { data: todos } = useGraphQL(getAllTodoByUserIdDocuments);
 
-  const graphQLClient = new GraphQLClient(endpoint, { method: "POST" });
-
-  const mutation = useMutation({
-    mutationKey: [createTodoDocuments.__meta__],
-    mutationFn: () => {
-      return graphQLClient.request(createTodoDocuments.valueOf(), {
-        input: {
-          status: StatusPattern.Active,
-          text: "testwww",
-          userId: 1,
-        },
-      });
-    },
-    onSuccess: () => {
-      return null;
-    },
-  });
-  console.log(mutation.data);
+  const { mutation } = useCreateTodo();
 
   return (
     <>
