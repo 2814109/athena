@@ -49,10 +49,9 @@ export default function App() {
   const { data: todos } = useGraphQL(getAllTodoByUserIdDocuments);
 
   const graphQLClient = new GraphQLClient(endpoint, { method: "POST" });
-  const mutationKey = ["graphql", "create", "todo"];
 
   const mutation = useMutation({
-    mutationKey,
+    mutationKey: [createTodoDocuments.__meta__],
     mutationFn: () => {
       return graphQLClient.request(createTodoDocuments.valueOf(), {
         input: {
