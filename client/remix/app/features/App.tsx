@@ -1,4 +1,4 @@
-import { graphql } from "../gql";
+import { FragmentType, graphql, useFragment } from "../gql";
 
 import { useGraphQL } from "../fetcher/use-graphql";
 import { useCreateTodo } from "./todo/hooks/useCreateTodo";
@@ -48,7 +48,18 @@ export default function App() {
       <button type="button" onClick={() => mutation.mutate()}>
         Submit
       </button>
-      {data && <ul>{data.data?.todo.id}</ul>}
+
+      {data && <ul>{data.data?.todo.user.__typename}</ul>}
+      {data && <UserComponent user={data.data?.todo?.user} />}
     </>
   );
 }
+
+const UserComponent = (props: {
+  /* `film` property has the correct type 🎉 */
+  user?: FragmentType<typeof userFragment>;
+}) => {
+  const user = useFragment(userFragment, props.user);
+
+  return <h1>{user?.username}</h1>;
+};
