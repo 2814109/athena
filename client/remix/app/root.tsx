@@ -11,7 +11,7 @@ import {
 import styles from "./index.css";
 
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import { ErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary as ErrorBoundaryLib } from "react-error-boundary";
 
 // root.tsx
 import {
@@ -23,9 +23,29 @@ import { useState } from "react";
 
 import { useDehydratedState } from "use-dehydrated-state";
 
-export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
+import { rootAuthLoader } from "@clerk/remix/ssr.server";
+import type { LoaderFunction } from "@remix-run/node";
+import { ClerkApp, V2_ClerkErrorBoundary } from "@clerk/remix";
 
-export default function MyApp() {
+export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
+import type { V2_MetaFunction } from "@remix-run/node";
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: "New Remix App" },
+    { name: "description", content: "Welcome to Remix!" },
+  ];
+};
+// export const meta: MetaFunction = () => ({
+//   charset: "utf-8",
+//   title: "New Remix App",
+//   viewport: "width=device-width,initial-scale=1",
+// });
+
+export const loader: LoaderFunction = (args) => rootAuthLoader(args);
+export const ErrorBoundary = V2_ClerkErrorBoundary();
+
+function App() {
   const [queryClient] = useState(() => new QueryClient());
 
   const dehydratedState = useDehydratedState();
@@ -43,7 +63,7 @@ export default function MyApp() {
           <Hydrate state={dehydratedState}>
             <QueryErrorResetBoundary>
               {({ reset }) => (
-                <ErrorBoundary
+                <ErrorBoundaryLib
                   onReset={reset}
                   fallbackRender={({ resetErrorBoundary }) => (
                     <div>
@@ -55,7 +75,7 @@ export default function MyApp() {
                   )}
                 >
                   <Outlet />
-                </ErrorBoundary>
+                </ErrorBoundaryLib>
               )}
             </QueryErrorResetBoundary>
           </Hydrate>
@@ -67,3 +87,5 @@ export default function MyApp() {
     </html>
   );
 }
+
+export default ClerkApp(App);
