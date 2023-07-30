@@ -9,25 +9,24 @@ type Todo {
 
 type User {
   id: ID!
-  username: String!
+  name: String!
   email: String!
 }
 
 type Article {
-    id: ID!
-    title: String!
-    description: String!
-    status: String!
+  id: ID!
+  title: String!
+  description: String!
+  status: String!
 }
 
-
-type Item{
+type Item {
   id: ID!
   label: String!
   categoryName: String!
   createdAt: Date!
   updatedAt: Date!
-  cost:  Int!
+  cost: Int!
   user: User!
 }
 
@@ -54,7 +53,3 @@ type PredictCost {
   label: String!
   Amount: Int!
 }
-
-
-
-

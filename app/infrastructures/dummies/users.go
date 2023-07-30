@@ -21,7 +21,7 @@ func CreateDummyUsers(ctx context.Context, connectDB *sql.DB) {
 
 	users := lo.Times(count, func(i int) models.User {
 		return models.User{
-			Username: gofakeit.Username(),
+			Name:     gofakeit.Username(),
 			Password: gofakeit.Password(false, false, false, false, false, 8),
 			Email:    gofakeit.Email()}
 	})

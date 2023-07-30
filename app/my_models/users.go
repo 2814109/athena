@@ -24,7 +24,7 @@ import (
 // User is an object representing the database table.
 type User struct {
 	ID       int    `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Username string `boil:"username" json:"username" toml:"username" yaml:"username"`
+	Name     string `boil:"name" json:"name" toml:"name" yaml:"name"`
 	Password string `boil:"password" json:"password" toml:"password" yaml:"password"`
 	Email    string `boil:"email" json:"email" toml:"email" yaml:"email"`
 
@@ -34,24 +34,24 @@ type User struct {
 
 var UserColumns = struct {
 	ID       string
-	Username string
+	Name     string
 	Password string
 	Email    string
 }{
 	ID:       "id",
-	Username: "username",
+	Name:     "name",
 	Password: "password",
 	Email:    "email",
 }
 
 var UserTableColumns = struct {
 	ID       string
-	Username string
+	Name     string
 	Password string
 	Email    string
 }{
 	ID:       "users.id",
-	Username: "users.username",
+	Name:     "users.name",
 	Password: "users.password",
 	Email:    "users.email",
 }
@@ -60,12 +60,12 @@ var UserTableColumns = struct {
 
 var UserWhere = struct {
 	ID       whereHelperint
-	Username whereHelperstring
+	Name     whereHelperstring
 	Password whereHelperstring
 	Email    whereHelperstring
 }{
 	ID:       whereHelperint{field: "\"users\".\"id\""},
-	Username: whereHelperstring{field: "\"users\".\"username\""},
+	Name:     whereHelperstring{field: "\"users\".\"name\""},
 	Password: whereHelperstring{field: "\"users\".\"password\""},
 	Email:    whereHelperstring{field: "\"users\".\"email\""},
 }
@@ -178,8 +178,8 @@ func (r *userR) GetTransactions() TransactionSlice {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"id", "username", "password", "email"}
-	userColumnsWithoutDefault = []string{"username", "password", "email"}
+	userAllColumns            = []string{"id", "name", "password", "email"}
+	userColumnsWithoutDefault = []string{"name", "password", "email"}
 	userColumnsWithDefault    = []string{"id"}
 	userPrimaryKeyColumns     = []string{"id"}
 	userGeneratedColumns      = []string{}
