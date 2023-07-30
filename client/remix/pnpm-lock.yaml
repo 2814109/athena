@@ -44,6 +44,9 @@ dependencies:
   react-error-boundary:
     specifier: ^4.0.10
     version: 4.0.10(react@18.2.0)
+  react-hook-form:
+    specifier: ^7.45.2
+    version: 7.45.2(react@18.2.0)
   use-dehydrated-state:
     specifier: ^0.1.0
     version: 0.1.0
@@ -10802,6 +10805,15 @@ packages:
       react: '>=16.13.1'
     dependencies:
       '@babel/runtime': 7.22.6
+      react: 18.2.0
+    dev: false
+
+  /react-hook-form@7.45.2(react@18.2.0):
+    resolution: {integrity: sha512-9s45OdTaKN+4NSTbXVqeDITd/nwIg++nxJGL8+OD5uf1DxvhsXQ641kaYHk5K28cpIOTYm71O/fYk7rFaygb3A==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
       react: 18.2.0
     dev: false
 
