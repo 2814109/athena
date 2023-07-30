@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { TypedDocumentString } from '../gql/graphql';
 import { endpoint } from 'config';
 
-
 export function useGraphQL<TResult, TVariables>(
   document: TypedDocumentString<TResult, TVariables>,
   ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]

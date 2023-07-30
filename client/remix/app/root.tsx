@@ -1,4 +1,3 @@
-// import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction } from "@remix-run/node";
 import {
   Links,
@@ -13,7 +12,6 @@ import styles from "./index.css";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary as ErrorBoundaryLib } from "react-error-boundary";
 
-// root.tsx
 import {
   Hydrate,
   QueryClient,
@@ -36,11 +34,6 @@ export const meta: V2_MetaFunction = () => {
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
-// export const meta: MetaFunction = () => ({
-//   charset: "utf-8",
-//   title: "New Remix App",
-//   viewport: "width=device-width,initial-scale=1",
-// });
 
 export const loader: LoaderFunction = (args) => rootAuthLoader(args);
 export const ErrorBoundary = V2_ClerkErrorBoundary();
