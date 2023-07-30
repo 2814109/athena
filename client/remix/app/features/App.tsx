@@ -55,10 +55,7 @@ export default function App() {
   );
 }
 
-const UserComponent = (props: {
-  /* `film` property has the correct type 🎉 */
-  user?: FragmentType<typeof userFragment>;
-}) => {
+const UserComponent = (props: { user?: FragmentType<typeof userFragment> }) => {
   const user = useFragment(userFragment, props.user);
 
   return <h1>{user?.username}</h1>;
