@@ -1,10 +1,31 @@
 import { SignIn } from "@clerk/remix";
+import { css } from "styled-system/css";
 
 export default function SignInPage() {
   return (
-    <div>
-      <h1>Sign In route</h1>
+    <div
+      className={css({
+        display: "flex",
+        justifyContent: "center",
+        paddingTop: "clamp(2rem,10vw,5rem)",
+      })}
+    >
       <SignIn routing={"path"} path={"/sign-in"} />
+      <div
+        className={css({
+          bgColor: "#6c47ff",
+          color: "#fff",
+          fontSize: "14px",
+          padding: "1rem 2rem",
+          position: "fixed",
+          textAlign: "center",
+          bottom: "0",
+          width: "100vw",
+          zIndex: "20",
+        })}
+      >
+        <p>Sign up or sign in to continue.</p>
+      </div>
     </div>
   );
 }
