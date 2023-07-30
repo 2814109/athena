@@ -23,7 +23,15 @@ export default function Index() {
   return (
     <div>
       <Header />
-      <Outlet />
+      <div
+        className={css({
+          display: "flex",
+          justifyContent: "center",
+          paddingTop: "clamp(2rem,10vw,5rem)",
+        })}
+      >
+        <Outlet />
+      </div>
     </div>
   );
 }
