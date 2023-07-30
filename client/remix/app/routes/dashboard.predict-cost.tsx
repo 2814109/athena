@@ -3,14 +3,15 @@ import { useForm } from "react-hook-form";
 import { css } from "styled-system/css";
 
 export default function PredictCostPage() {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isLoaded, user } = useUser();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
   const onSubmit = (data: any) => console.log(data);
+
+  if (!isLoaded) return <Spinner />;
 
   return (
     <div>
@@ -39,3 +40,15 @@ export default function PredictCostPage() {
     </div>
   );
 }
+
+const Spinner = () => (
+  <div
+    className={css({
+      position: "relative",
+      width: "26px",
+      height: "26px",
+      border: "1px #6c47ff solid",
+      animation: "spin",
+    })}
+  />
+);
