@@ -229,15 +229,6 @@ export type UserItemFragment = {
   username: string;
 } & { " $fragmentName"?: "UserItemFragment" };
 
-export type CreateTodoMutationMutationVariables = Exact<{
-  input: CreateTodo;
-}>;
-
-export type CreateTodoMutationMutation = {
-  __typename?: "Mutation";
-  createTodo: { __typename?: "Todo"; id: string; content: string };
-};
-
 export type GetAllTodoByUserIdQueryQueryVariables = Exact<{
   [key: string]: never;
 }>;
@@ -285,17 +276,6 @@ export const FindTodoByIdQueryDocument = new TypedDocumentString(`
 }`) as unknown as TypedDocumentString<
   FindTodoByIdQueryQuery,
   FindTodoByIdQueryQueryVariables
->;
-export const CreateTodoMutationDocument = new TypedDocumentString(`
-    mutation createTodoMutation($input: CreateTodo!) {
-  createTodo(input: $input) {
-    id
-    content
-  }
-}
-    `) as unknown as TypedDocumentString<
-  CreateTodoMutationMutation,
-  CreateTodoMutationMutationVariables
 >;
 export const GetAllTodoByUserIdQueryDocument = new TypedDocumentString(`
     query getAllTodoByUserIdQuery {
