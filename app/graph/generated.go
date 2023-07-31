@@ -43,7 +43,6 @@ type ResolverRoot interface {
 	Entry() EntryResolver
 	Item() ItemResolver
 	Mutation() MutationResolver
-	PredictCost() PredictCostResolver
 	Query() QueryResolver
 	Todo() TodoResolver
 }
@@ -57,6 +56,10 @@ type ComplexityRoot struct {
 		ID          func(childComplexity int) int
 		Status      func(childComplexity int) int
 		Title       func(childComplexity int) int
+	}
+
+	Category struct {
+		Classification func(childComplexity int) int
 	}
 
 	Credit struct {
@@ -103,6 +106,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Articles     func(childComplexity int, status model.ArticleStatuses) int
+		Categories   func(childComplexity int) int
 		Entry        func(childComplexity int, id int) int
 		Items        func(childComplexity int, userID int) int
 		PredictCosts func(childComplexity int, userID int) int
@@ -147,9 +151,6 @@ type MutationResolver interface {
 	CreateEnty(ctx context.Context, input model.CreateEntryRequest) (*models.Entry, error)
 	CreatePredictCost(ctx context.Context, input model.CreatePredictCost) (*models.PredictCost, error)
 }
-type PredictCostResolver interface {
-	Amount(ctx context.Context, obj *models.PredictCost) (int, error)
-}
 type QueryResolver interface {
 	Todos(ctx context.Context, userID int) ([]*models.Todo, error)
 	Todo(ctx context.Context, id int) (*models.Todo, error)
@@ -157,6 +158,7 @@ type QueryResolver interface {
 	Items(ctx context.Context, userID int) ([]*models.Item, error)
 	Entry(ctx context.Context, id int) (*models.Entry, error)
 	PredictCosts(ctx context.Context, userID int) ([]*models.PredictCost, error)
+	Categories(ctx context.Context) ([]*models.Category, error)
 }
 type TodoResolver interface {
 	User(ctx context.Context, obj *models.Todo) (*models.User, error)
@@ -204,6 +206,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Article.Title(childComplexity), true
+
+	case "Category.Classification":
+		if e.complexity.Category.Classification == nil {
+			break
+		}
+
+		return e.complexity.Category.Classification(childComplexity), true
 
 	case "Credit.account_name":
 		if e.complexity.Credit.AccountName == nil {
@@ -409,6 +418,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Articles(childComplexity, args["status"].(model.ArticleStatuses)), true
+
+	case "Query.categories":
+		if e.complexity.Query.Categories == nil {
+			break
+		}
+
+		return e.complexity.Query.Categories(childComplexity), true
 
 	case "Query.entry":
 		if e.complexity.Query.Entry == nil {
@@ -999,6 +1015,50 @@ func (ec *executionContext) _Article_status(ctx context.Context, field graphql.C
 func (ec *executionContext) fieldContext_Article_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Article",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Category_Classification(ctx context.Context, field graphql.CollectedField, obj *models.Category) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Category_Classification(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Classification, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Category_Classification(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Category",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -2136,7 +2196,7 @@ func (ec *executionContext) _PredictCost_Amount(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.PredictCost().Amount(rctx, obj)
+		return obj.Amount, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2157,8 +2217,8 @@ func (ec *executionContext) fieldContext_PredictCost_Amount(ctx context.Context,
 	fc = &graphql.FieldContext{
 		Object:     "PredictCost",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -2554,6 +2614,51 @@ func (ec *executionContext) fieldContext_Query_predictCosts(ctx context.Context,
 	if fc.Args, err = ec.field_Query_predictCosts_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_categories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_categories(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Categories(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*models.Category)
+	fc.Result = res
+	return ec.marshalOCategory2ᚕᚖmy_gql_serverᚋmodelsᚐCategoryᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_categories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "Classification":
+				return ec.fieldContext_Category_Classification(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
+		},
 	}
 	return fc, nil
 }
@@ -5109,6 +5214,34 @@ func (ec *executionContext) _Article(ctx context.Context, sel ast.SelectionSet, 
 	return out
 }
 
+var categoryImplementors = []string{"Category"}
+
+func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet, obj *models.Category) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, categoryImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Category")
+		case "Classification":
+
+			out.Values[i] = ec._Category_Classification(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var creditImplementors = []string{"Credit"}
 
 func (ec *executionContext) _Credit(ctx context.Context, sel ast.SelectionSet, obj *models.Credit) graphql.Marshaler {
@@ -5474,42 +5607,29 @@ func (ec *executionContext) _PredictCost(ctx context.Context, sel ast.SelectionS
 			out.Values[i] = ec._PredictCost_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "categoryName":
 
 			out.Values[i] = ec._PredictCost_categoryName(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "label":
 
 			out.Values[i] = ec._PredictCost_label(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "Amount":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._PredictCost_Amount(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._PredictCost_Amount(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5668,6 +5788,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "categories":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_categories(ctx, field)
 				return res
 			}
 
@@ -6193,6 +6333,16 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNCategory2ᚖmy_gql_serverᚋmodelsᚐCategory(ctx context.Context, sel ast.SelectionSet, v *models.Category) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Category(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNCreateEntryRequest2my_gql_serverᚋgraphᚋmodelᚐCreateEntryRequest(ctx context.Context, v interface{}) (model.CreateEntryRequest, error) {
@@ -6755,6 +6905,53 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOCategory2ᚕᚖmy_gql_serverᚋmodelsᚐCategoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Category) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCategory2ᚖmy_gql_serverᚋmodelsᚐCategory(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalOCredit2ᚕᚖmy_gql_serverᚋmodelsᚐCredit(ctx context.Context, sel ast.SelectionSet, v []*models.Credit) graphql.Marshaler {

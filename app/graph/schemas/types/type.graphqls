@@ -53,3 +53,7 @@ type PredictCost {
   label: String!
   Amount: Int!
 }
+
+type Category {
+  Classification: String!
+}

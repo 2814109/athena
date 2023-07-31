@@ -99,6 +99,16 @@ func (r *queryResolver) PredictCosts(ctx context.Context, userID int) ([]*models
 	panic(fmt.Errorf("not implemented: PredictCosts - predictCosts"))
 }
 
+// Categories is the resolver for the categories field.
+func (r *queryResolver) Categories(ctx context.Context) ([]*models.Category, error) {
+	categoryUsecase := usecases.NewCategoryUsecase()
+	categories, err := categoryUsecase.View(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return *categories, nil
+}
+
 // Query returns graph.QueryResolver implementation.
 func (r *Resolver) Query() graph.QueryResolver { return &queryResolver{r} }
 

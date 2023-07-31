@@ -98,6 +98,8 @@ models:
     model: ./models.Entry
   PredictCost:
     model: ./models.PredictCost
+  Category:
+    model: ./models.Category
 
 directives:
   constraint:
