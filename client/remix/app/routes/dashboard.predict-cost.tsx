@@ -43,6 +43,14 @@ export default function PredictCostPage() {
           {errors.exampleRequired && <span>This field is required</span>}
           <br />
 
+          <label>category</label>
+          <select {...register("category", { required: true })}>
+            {categories?.data?.categories?.map(({ Classification }) => (
+              <option key={Classification}>{Classification}</option>
+            ))}
+          </select>
+          <br />
+
           <input className={css({ cursor: "pointer" })} type="submit" />
         </form>
       </div>
