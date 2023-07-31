@@ -14,6 +14,7 @@ type RepositoryInterface interface {
 	FindAllItemByUserId(ctx context.Context, userId int) (models.ItemSlice, error)
 	FindAllArticle(ctx context.Context, status model.ArticleStatuses) (models.ArticleSlice, error)
 	CreatePredictCost(ctx context.Context, input model.CreatePredictCost) (*models.PredictCost, error)
+	FindAllCategory(ctx context.Context) (*models.CategorySlice, error)
 }
 
 func NewRepository() RepositoryInterface {
