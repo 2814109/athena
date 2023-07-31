@@ -18,19 +18,18 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"github.com/volatiletech/sqlboiler/v4/queries/qmhelper"
-	"github.com/volatiletech/sqlboiler/v4/types"
 	"github.com/volatiletech/strmangle"
 )
 
 // PredictCost is an object representing the database table.
 type PredictCost struct {
-	ID           int           `boil:"id" json:"id" toml:"id" yaml:"id"`
-	CategoryName string        `boil:"category_name" json:"category_name" toml:"category_name" yaml:"category_name"`
-	Label        string        `boil:"label" json:"label" toml:"label" yaml:"label"`
-	CreatedAt    time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt    time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	Amount       types.Decimal `boil:"amount" json:"amount" toml:"amount" yaml:"amount"`
-	UserID       int           `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+	ID           int       `boil:"id" json:"id" toml:"id" yaml:"id"`
+	CategoryName string    `boil:"category_name" json:"category_name" toml:"category_name" yaml:"category_name"`
+	Label        string    `boil:"label" json:"label" toml:"label" yaml:"label"`
+	CreatedAt    time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt    time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	Amount       int       `boil:"amount" json:"amount" toml:"amount" yaml:"amount"`
+	UserID       int       `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 
 	R *predictCostR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L predictCostL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -80,7 +79,7 @@ var PredictCostWhere = struct {
 	Label        whereHelperstring
 	CreatedAt    whereHelpertime_Time
 	UpdatedAt    whereHelpertime_Time
-	Amount       whereHelpertypes_Decimal
+	Amount       whereHelperint
 	UserID       whereHelperint
 }{
 	ID:           whereHelperint{field: "\"predict_costs\".\"id\""},
@@ -88,7 +87,7 @@ var PredictCostWhere = struct {
 	Label:        whereHelperstring{field: "\"predict_costs\".\"label\""},
 	CreatedAt:    whereHelpertime_Time{field: "\"predict_costs\".\"created_at\""},
 	UpdatedAt:    whereHelpertime_Time{field: "\"predict_costs\".\"updated_at\""},
-	Amount:       whereHelpertypes_Decimal{field: "\"predict_costs\".\"amount\""},
+	Amount:       whereHelperint{field: "\"predict_costs\".\"amount\""},
 	UserID:       whereHelperint{field: "\"predict_costs\".\"user_id\""},
 }
 

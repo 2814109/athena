@@ -70,11 +70,13 @@ func (r *mutationResolver) CreateEnty(ctx context.Context, input model.CreateEnt
 // CreatePredictCost is the resolver for the createPredictCost field.
 func (r *mutationResolver) CreatePredictCost(ctx context.Context, input model.CreatePredictCost) (*models.PredictCost, error) {
 	predictCostUsecase := usecases.NewPredictCostService()
-	if err := predictCostUsecase.CreatePredictCost(ctx, input); err != nil {
+	result, err := predictCostUsecase.CreatePredictCost(ctx, input)
+
+	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	return result, nil
 }
 
 // Mutation returns graph.MutationResolver implementation.

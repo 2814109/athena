@@ -1,7 +1,6 @@
-version: '3'
+version: "3"
 
-dotenv: ['.env']
-
+dotenv: [".env"]
 
 tasks:
   setup:
@@ -44,4 +43,3 @@ tasks:
       - task: m-drop
       - task: m-up
       - task: generate-orm
-      

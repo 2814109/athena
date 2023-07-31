@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS predict_costs (
     label VARCHAR (50)  NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
-    amount NUMERIC NOT NULL,
+    amount INTEGER NOT NULL,
     user_id serial,
     CONSTRAINT fk_user FOREIGN KEY (user_id) references users(id)
 );
