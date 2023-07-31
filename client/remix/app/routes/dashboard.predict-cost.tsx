@@ -4,18 +4,24 @@ import { useForm } from "react-hook-form";
 import { css } from "styled-system/css";
 import { Spinner } from "~/components/Spinner";
 import { useGetCategories } from "~/features/category/hooks/useGetCategories";
+import { useCreatePredictCost } from "~/features/predictCost/hooks/useCreatePredictCost";
 
 export default function PredictCostPage() {
   const { isLoaded, user } = useUser();
 
   const { categories } = useGetCategories();
 
+  const { mutation } = useCreatePredictCost();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: any) => {
+    console.log(data);
+    mutation.mutate();
+  };
 
   if (!isLoaded) return <Spinner />;
 
