@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-	models "my_gql_server/my_models"
+	models "my_gql_server/models"
 
 	lop "github.com/samber/lo/parallel"
 )

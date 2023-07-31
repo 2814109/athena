@@ -1,5 +1,6 @@
 input CreatePredictCost {
-    categoryName: String!
-    label: String!
-    amount: Int!
+  categoryName: String!
+  label: String!
+  amount: Int!
+  userId: Int!
 }

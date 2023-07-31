@@ -6,13 +6,12 @@ package presentations
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"my_gql_server/graph"
 	"my_gql_server/graph/model"
 	"my_gql_server/graph/validation"
 	"my_gql_server/infrastructures/repositories"
-	"my_gql_server/my_models"
+	"my_gql_server/models"
 	"my_gql_server/usecases"
 )
 
@@ -70,7 +69,7 @@ func (r *mutationResolver) CreateEnty(ctx context.Context, input model.CreateEnt
 
 // CreatePredictCost is the resolver for the createPredictCost field.
 func (r *mutationResolver) CreatePredictCost(ctx context.Context, input model.CreatePredictCost) (*models.PredictCost, error) {
-	panic(fmt.Errorf("not implemented: CreatePredictCost - createPredictCost"))
+	return nil, nil
 }
 
 // Mutation returns graph.MutationResolver implementation.

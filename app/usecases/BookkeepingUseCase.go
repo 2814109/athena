@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"my_gql_server/graph/model"
-	models "my_gql_server/my_models"
+	models "my_gql_server/models"
 )
 
 type BookkeepingUseCase interface {

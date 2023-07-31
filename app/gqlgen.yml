@@ -83,21 +83,21 @@ models:
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
   Todo:
-    model: ./my_models.Todo
+    model: ./models.Todo
   User:
-    model: ./my_models.User
+    model: ./models.User
   Article:
-    model: ./my_models.Article
+    model: ./models.Article
   Item:
-    model: ./my_models.Item
+    model: ./models.Item
   Debit:
-    model: ./my_models.Debit
+    model: ./models.Debit
   Credit:
-    model: ./my_models.Credit
+    model: ./models.Credit
   Entry:
-    model: ./my_models.Entry
+    model: ./models.Entry
   PredictCost:
-    model: ./my_models.PredictCost
+    model: ./models.PredictCost
 
 directives:
   constraint:

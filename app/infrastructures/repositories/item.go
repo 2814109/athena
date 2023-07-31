@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 	"log"
-	models "my_gql_server/my_models"
+	models "my_gql_server/models"
 
 	_ "github.com/lib/pq"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"

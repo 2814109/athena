@@ -9,7 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"my_gql_server/graph/model"
-	"my_gql_server/my_models"
+	"my_gql_server/models"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -1286,7 +1286,7 @@ func (ec *executionContext) _Entry_debits(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.([]*models.Debit)
 	fc.Result = res
-	return ec.marshalODebit2ᚕᚖmy_gql_serverᚋmy_modelsᚐDebit(ctx, field.Selections, res)
+	return ec.marshalODebit2ᚕᚖmy_gql_serverᚋmodelsᚐDebit(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Entry_debits(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1333,7 +1333,7 @@ func (ec *executionContext) _Entry_credits(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.([]*models.Credit)
 	fc.Result = res
-	return ec.marshalOCredit2ᚕᚖmy_gql_serverᚋmy_modelsᚐCredit(ctx, field.Selections, res)
+	return ec.marshalOCredit2ᚕᚖmy_gql_serverᚋmodelsᚐCredit(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Entry_credits(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1647,7 +1647,7 @@ func (ec *executionContext) _Item_user(ctx context.Context, field graphql.Collec
 	}
 	res := resTmp.(*models.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖmy_gql_serverᚋmy_modelsᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖmy_gql_serverᚋmodelsᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Item_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1699,7 +1699,7 @@ func (ec *executionContext) _Mutation_createTodo(ctx context.Context, field grap
 	}
 	res := resTmp.(*models.Todo)
 	fc.Result = res
-	return ec.marshalNTodo2ᚖmy_gql_serverᚋmy_modelsᚐTodo(ctx, field.Selections, res)
+	return ec.marshalNTodo2ᚖmy_gql_serverᚋmodelsᚐTodo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createTodo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1762,7 +1762,7 @@ func (ec *executionContext) _Mutation_updateTodo(ctx context.Context, field grap
 	}
 	res := resTmp.(*models.Todo)
 	fc.Result = res
-	return ec.marshalNTodo2ᚖmy_gql_serverᚋmy_modelsᚐTodo(ctx, field.Selections, res)
+	return ec.marshalNTodo2ᚖmy_gql_serverᚋmodelsᚐTodo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updateTodo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1825,7 +1825,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	}
 	res := resTmp.(*models.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖmy_gql_serverᚋmy_modelsᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖmy_gql_serverᚋmodelsᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1888,7 +1888,7 @@ func (ec *executionContext) _Mutation_createEnty(ctx context.Context, field grap
 	}
 	res := resTmp.(*models.Entry)
 	fc.Result = res
-	return ec.marshalNEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx, field.Selections, res)
+	return ec.marshalNEntry2ᚖmy_gql_serverᚋmodelsᚐEntry(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createEnty(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1953,7 +1953,7 @@ func (ec *executionContext) _Mutation_createPredictCost(ctx context.Context, fie
 	}
 	res := resTmp.(*models.PredictCost)
 	fc.Result = res
-	return ec.marshalNPredictCost2ᚖmy_gql_serverᚋmy_modelsᚐPredictCost(ctx, field.Selections, res)
+	return ec.marshalNPredictCost2ᚖmy_gql_serverᚋmodelsᚐPredictCost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createPredictCost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2194,7 +2194,7 @@ func (ec *executionContext) _Query_todos(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.([]*models.Todo)
 	fc.Result = res
-	return ec.marshalNTodo2ᚕᚖmy_gql_serverᚋmy_modelsᚐTodoᚄ(ctx, field.Selections, res)
+	return ec.marshalNTodo2ᚕᚖmy_gql_serverᚋmodelsᚐTodoᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_todos(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2257,7 +2257,7 @@ func (ec *executionContext) _Query_todo(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(*models.Todo)
 	fc.Result = res
-	return ec.marshalNTodo2ᚖmy_gql_serverᚋmy_modelsᚐTodo(ctx, field.Selections, res)
+	return ec.marshalNTodo2ᚖmy_gql_serverᚋmodelsᚐTodo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_todo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2320,7 +2320,7 @@ func (ec *executionContext) _Query_articles(ctx context.Context, field graphql.C
 	}
 	res := resTmp.([]*models.Article)
 	fc.Result = res
-	return ec.marshalNArticle2ᚕᚖmy_gql_serverᚋmy_modelsᚐArticleᚄ(ctx, field.Selections, res)
+	return ec.marshalNArticle2ᚕᚖmy_gql_serverᚋmodelsᚐArticleᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_articles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2385,7 +2385,7 @@ func (ec *executionContext) _Query_items(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.([]*models.Item)
 	fc.Result = res
-	return ec.marshalNItem2ᚕᚖmy_gql_serverᚋmy_modelsᚐItemᚄ(ctx, field.Selections, res)
+	return ec.marshalNItem2ᚕᚖmy_gql_serverᚋmodelsᚐItemᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_items(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2456,7 +2456,7 @@ func (ec *executionContext) _Query_entry(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*models.Entry)
 	fc.Result = res
-	return ec.marshalNEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx, field.Selections, res)
+	return ec.marshalNEntry2ᚖmy_gql_serverᚋmodelsᚐEntry(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_entry(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2521,7 +2521,7 @@ func (ec *executionContext) _Query_predictCosts(ctx context.Context, field graph
 	}
 	res := resTmp.([]*models.PredictCost)
 	fc.Result = res
-	return ec.marshalNPredictCost2ᚕᚖmy_gql_serverᚋmy_modelsᚐPredictCostᚄ(ctx, field.Selections, res)
+	return ec.marshalNPredictCost2ᚕᚖmy_gql_serverᚋmodelsᚐPredictCostᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_predictCosts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2803,7 +2803,7 @@ func (ec *executionContext) _Todo_user(ctx context.Context, field graphql.Collec
 	}
 	res := resTmp.(*models.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖmy_gql_serverᚋmy_modelsᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖmy_gql_serverᚋmodelsᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Todo_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4795,7 +4795,7 @@ func (ec *executionContext) unmarshalInputCreatePredictCost(ctx context.Context,
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"categoryName", "label", "amount"}
+	fieldsInOrder := [...]string{"categoryName", "label", "amount", "userId"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4829,6 +4829,15 @@ func (ec *executionContext) unmarshalInputCreatePredictCost(ctx context.Context,
 				return it, err
 			}
 			it.Amount = data
+		case "userId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UserID = data
 		}
 	}
 
@@ -6107,7 +6116,7 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNArticle2ᚕᚖmy_gql_serverᚋmy_modelsᚐArticleᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Article) graphql.Marshaler {
+func (ec *executionContext) marshalNArticle2ᚕᚖmy_gql_serverᚋmodelsᚐArticleᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Article) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -6131,7 +6140,7 @@ func (ec *executionContext) marshalNArticle2ᚕᚖmy_gql_serverᚋmy_modelsᚐAr
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNArticle2ᚖmy_gql_serverᚋmy_modelsᚐArticle(ctx, sel, v[i])
+			ret[i] = ec.marshalNArticle2ᚖmy_gql_serverᚋmodelsᚐArticle(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6151,7 +6160,7 @@ func (ec *executionContext) marshalNArticle2ᚕᚖmy_gql_serverᚋmy_modelsᚐAr
 	return ret
 }
 
-func (ec *executionContext) marshalNArticle2ᚖmy_gql_serverᚋmy_modelsᚐArticle(ctx context.Context, sel ast.SelectionSet, v *models.Article) graphql.Marshaler {
+func (ec *executionContext) marshalNArticle2ᚖmy_gql_serverᚋmodelsᚐArticle(ctx context.Context, sel ast.SelectionSet, v *models.Article) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6216,11 +6225,11 @@ func (ec *executionContext) marshalNDate2string(ctx context.Context, sel ast.Sel
 	return res
 }
 
-func (ec *executionContext) marshalNEntry2my_gql_serverᚋmy_modelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v models.Entry) graphql.Marshaler {
+func (ec *executionContext) marshalNEntry2my_gql_serverᚋmodelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v models.Entry) graphql.Marshaler {
 	return ec._Entry(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNEntry2ᚖmy_gql_serverᚋmy_modelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v *models.Entry) graphql.Marshaler {
+func (ec *executionContext) marshalNEntry2ᚖmy_gql_serverᚋmodelsᚐEntry(ctx context.Context, sel ast.SelectionSet, v *models.Entry) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6260,7 +6269,7 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNItem2ᚕᚖmy_gql_serverᚋmy_modelsᚐItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Item) graphql.Marshaler {
+func (ec *executionContext) marshalNItem2ᚕᚖmy_gql_serverᚋmodelsᚐItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Item) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -6284,7 +6293,7 @@ func (ec *executionContext) marshalNItem2ᚕᚖmy_gql_serverᚋmy_modelsᚐItem�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNItem2ᚖmy_gql_serverᚋmy_modelsᚐItem(ctx, sel, v[i])
+			ret[i] = ec.marshalNItem2ᚖmy_gql_serverᚋmodelsᚐItem(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6304,7 +6313,7 @@ func (ec *executionContext) marshalNItem2ᚕᚖmy_gql_serverᚋmy_modelsᚐItem�
 	return ret
 }
 
-func (ec *executionContext) marshalNItem2ᚖmy_gql_serverᚋmy_modelsᚐItem(ctx context.Context, sel ast.SelectionSet, v *models.Item) graphql.Marshaler {
+func (ec *executionContext) marshalNItem2ᚖmy_gql_serverᚋmodelsᚐItem(ctx context.Context, sel ast.SelectionSet, v *models.Item) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6319,11 +6328,11 @@ func (ec *executionContext) unmarshalNNewUser2my_gql_serverᚋgraphᚋmodelᚐNe
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNPredictCost2my_gql_serverᚋmy_modelsᚐPredictCost(ctx context.Context, sel ast.SelectionSet, v models.PredictCost) graphql.Marshaler {
+func (ec *executionContext) marshalNPredictCost2my_gql_serverᚋmodelsᚐPredictCost(ctx context.Context, sel ast.SelectionSet, v models.PredictCost) graphql.Marshaler {
 	return ec._PredictCost(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPredictCost2ᚕᚖmy_gql_serverᚋmy_modelsᚐPredictCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.PredictCost) graphql.Marshaler {
+func (ec *executionContext) marshalNPredictCost2ᚕᚖmy_gql_serverᚋmodelsᚐPredictCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.PredictCost) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -6347,7 +6356,7 @@ func (ec *executionContext) marshalNPredictCost2ᚕᚖmy_gql_serverᚋmy_models�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPredictCost2ᚖmy_gql_serverᚋmy_modelsᚐPredictCost(ctx, sel, v[i])
+			ret[i] = ec.marshalNPredictCost2ᚖmy_gql_serverᚋmodelsᚐPredictCost(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6367,7 +6376,7 @@ func (ec *executionContext) marshalNPredictCost2ᚕᚖmy_gql_serverᚋmy_models�
 	return ret
 }
 
-func (ec *executionContext) marshalNPredictCost2ᚖmy_gql_serverᚋmy_modelsᚐPredictCost(ctx context.Context, sel ast.SelectionSet, v *models.PredictCost) graphql.Marshaler {
+func (ec *executionContext) marshalNPredictCost2ᚖmy_gql_serverᚋmodelsᚐPredictCost(ctx context.Context, sel ast.SelectionSet, v *models.PredictCost) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6392,11 +6401,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNTodo2my_gql_serverᚋmy_modelsᚐTodo(ctx context.Context, sel ast.SelectionSet, v models.Todo) graphql.Marshaler {
+func (ec *executionContext) marshalNTodo2my_gql_serverᚋmodelsᚐTodo(ctx context.Context, sel ast.SelectionSet, v models.Todo) graphql.Marshaler {
 	return ec._Todo(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNTodo2ᚕᚖmy_gql_serverᚋmy_modelsᚐTodoᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Todo) graphql.Marshaler {
+func (ec *executionContext) marshalNTodo2ᚕᚖmy_gql_serverᚋmodelsᚐTodoᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Todo) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -6420,7 +6429,7 @@ func (ec *executionContext) marshalNTodo2ᚕᚖmy_gql_serverᚋmy_modelsᚐTodo�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTodo2ᚖmy_gql_serverᚋmy_modelsᚐTodo(ctx, sel, v[i])
+			ret[i] = ec.marshalNTodo2ᚖmy_gql_serverᚋmodelsᚐTodo(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6440,7 +6449,7 @@ func (ec *executionContext) marshalNTodo2ᚕᚖmy_gql_serverᚋmy_modelsᚐTodo�
 	return ret
 }
 
-func (ec *executionContext) marshalNTodo2ᚖmy_gql_serverᚋmy_modelsᚐTodo(ctx context.Context, sel ast.SelectionSet, v *models.Todo) graphql.Marshaler {
+func (ec *executionContext) marshalNTodo2ᚖmy_gql_serverᚋmodelsᚐTodo(ctx context.Context, sel ast.SelectionSet, v *models.Todo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6455,11 +6464,11 @@ func (ec *executionContext) unmarshalNUpdateTodo2my_gql_serverᚋgraphᚋmodel�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUser2my_gql_serverᚋmy_modelsᚐUser(ctx context.Context, sel ast.SelectionSet, v models.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2my_gql_serverᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v models.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUser2ᚖmy_gql_serverᚋmy_modelsᚐUser(ctx context.Context, sel ast.SelectionSet, v *models.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖmy_gql_serverᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v *models.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6748,7 +6757,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalOCredit2ᚕᚖmy_gql_serverᚋmy_modelsᚐCredit(ctx context.Context, sel ast.SelectionSet, v []*models.Credit) graphql.Marshaler {
+func (ec *executionContext) marshalOCredit2ᚕᚖmy_gql_serverᚋmodelsᚐCredit(ctx context.Context, sel ast.SelectionSet, v []*models.Credit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6775,7 +6784,7 @@ func (ec *executionContext) marshalOCredit2ᚕᚖmy_gql_serverᚋmy_modelsᚐCre
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOCredit2ᚖmy_gql_serverᚋmy_modelsᚐCredit(ctx, sel, v[i])
+			ret[i] = ec.marshalOCredit2ᚖmy_gql_serverᚋmodelsᚐCredit(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6789,7 +6798,7 @@ func (ec *executionContext) marshalOCredit2ᚕᚖmy_gql_serverᚋmy_modelsᚐCre
 	return ret
 }
 
-func (ec *executionContext) marshalOCredit2ᚖmy_gql_serverᚋmy_modelsᚐCredit(ctx context.Context, sel ast.SelectionSet, v *models.Credit) graphql.Marshaler {
+func (ec *executionContext) marshalOCredit2ᚖmy_gql_serverᚋmodelsᚐCredit(ctx context.Context, sel ast.SelectionSet, v *models.Credit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6824,7 +6833,7 @@ func (ec *executionContext) unmarshalOCreditInput2ᚖmy_gql_serverᚋgraphᚋmod
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalODebit2ᚕᚖmy_gql_serverᚋmy_modelsᚐDebit(ctx context.Context, sel ast.SelectionSet, v []*models.Debit) graphql.Marshaler {
+func (ec *executionContext) marshalODebit2ᚕᚖmy_gql_serverᚋmodelsᚐDebit(ctx context.Context, sel ast.SelectionSet, v []*models.Debit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6851,7 +6860,7 @@ func (ec *executionContext) marshalODebit2ᚕᚖmy_gql_serverᚋmy_modelsᚐDebi
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalODebit2ᚖmy_gql_serverᚋmy_modelsᚐDebit(ctx, sel, v[i])
+			ret[i] = ec.marshalODebit2ᚖmy_gql_serverᚋmodelsᚐDebit(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6865,7 +6874,7 @@ func (ec *executionContext) marshalODebit2ᚕᚖmy_gql_serverᚋmy_modelsᚐDebi
 	return ret
 }
 
-func (ec *executionContext) marshalODebit2ᚖmy_gql_serverᚋmy_modelsᚐDebit(ctx context.Context, sel ast.SelectionSet, v *models.Debit) graphql.Marshaler {
+func (ec *executionContext) marshalODebit2ᚖmy_gql_serverᚋmodelsᚐDebit(ctx context.Context, sel ast.SelectionSet, v *models.Debit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

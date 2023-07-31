@@ -8,7 +8,7 @@ import (
 	"context"
 	"fmt"
 	"my_gql_server/graph"
-	"my_gql_server/my_models"
+	"my_gql_server/models"
 )
 
 // Amount is the resolver for the amount field.

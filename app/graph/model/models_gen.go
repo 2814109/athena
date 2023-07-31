@@ -19,6 +19,7 @@ type CreatePredictCost struct {
 	CategoryName string `json:"categoryName"`
 	Label        string `json:"label"`
 	Amount       int    `json:"amount"`
+	UserID       int    `json:"userId"`
 }
 
 type CreateTodo struct {
