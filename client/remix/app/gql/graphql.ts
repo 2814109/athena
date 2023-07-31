@@ -46,6 +46,11 @@ export enum ArticleStatuses {
   UnderReview = "UnderReview",
 }
 
+export type Category = {
+  __typename?: "Category";
+  Classification: Scalars["String"]["output"];
+};
+
 export type CreateEntryRequest = {
   credits?: InputMaybe<Array<InputMaybe<CreditInput>>>;
   date?: InputMaybe<Scalars["String"]["input"]>;
@@ -57,6 +62,7 @@ export type CreatePredictCost = {
   amount: Scalars["Int"]["input"];
   categoryName: Scalars["String"]["input"];
   label: Scalars["String"]["input"];
+  userId: Scalars["Int"]["input"];
 };
 
 export type CreateTodo = {
@@ -150,6 +156,7 @@ export type PredictCost = {
 export type Query = {
   __typename?: "Query";
   articles: Array<Article>;
+  categories?: Maybe<Array<Category>>;
   entry: Entry;
   items: Array<Item>;
   predictCosts: Array<PredictCost>;
@@ -205,7 +212,7 @@ export type User = {
   __typename?: "User";
   email: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
-  username: Scalars["String"]["output"];
+  name: Scalars["String"]["output"];
 };
 
 export type FindTodoByIdQueryQueryVariables = Exact<{
@@ -226,7 +233,7 @@ export type FindTodoByIdQueryQuery = {
 export type UserItemFragment = {
   __typename?: "User";
   id: string;
-  username: string;
+  name: string;
 } & { " $fragmentName"?: "UserItemFragment" };
 
 export type GetAllTodoByUserIdQueryQueryVariables = Exact<{
@@ -236,6 +243,25 @@ export type GetAllTodoByUserIdQueryQueryVariables = Exact<{
 export type GetAllTodoByUserIdQueryQuery = {
   __typename?: "Query";
   todos: Array<{ __typename?: "Todo"; id: string }>;
+};
+
+export type GetAllCategoryQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllCategoryQuery = {
+  __typename?: "Query";
+  categories?: Array<{
+    __typename?: "Category";
+    Classification: string;
+  }> | null;
+};
+
+export type CreateTodoMutationMutationVariables = Exact<{
+  input: CreateTodo;
+}>;
+
+export type CreateTodoMutationMutation = {
+  __typename?: "Mutation";
+  createTodo: { __typename?: "Todo"; id: string; content: string };
 };
 
 export class TypedDocumentString<TResult, TVariables>
@@ -256,7 +282,7 @@ export const UserItemFragmentDoc = new TypedDocumentString(
   `
     fragment UserItem on User {
   id
-  username
+  name
 }
     `,
   { fragmentName: "UserItem" }
@@ -272,7 +298,7 @@ export const FindTodoByIdQueryDocument = new TypedDocumentString(`
 }
     fragment UserItem on User {
   id
-  username
+  name
 }`) as unknown as TypedDocumentString<
   FindTodoByIdQueryQuery,
   FindTodoByIdQueryQueryVariables
@@ -286,4 +312,25 @@ export const GetAllTodoByUserIdQueryDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<
   GetAllTodoByUserIdQueryQuery,
   GetAllTodoByUserIdQueryQueryVariables
+>;
+export const GetAllCategoryDocument = new TypedDocumentString(`
+    query getAllCategory {
+  categories {
+    Classification
+  }
+}
+    `) as unknown as TypedDocumentString<
+  GetAllCategoryQuery,
+  GetAllCategoryQueryVariables
+>;
+export const CreateTodoMutationDocument = new TypedDocumentString(`
+    mutation createTodoMutation($input: CreateTodo!) {
+  createTodo(input: $input) {
+    id
+    content
+  }
+}
+    `) as unknown as TypedDocumentString<
+  CreateTodoMutationMutation,
+  CreateTodoMutationMutationVariables
 >;

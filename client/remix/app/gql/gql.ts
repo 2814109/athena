@@ -14,10 +14,14 @@ import * as types from "./graphql";
 const documents = {
   "\n  query findTodoByIdQuery($id: Int!) {\n    todo(ID: $id) {\n      id\n      user {\n        ...UserItem\n      }\n    }\n  }\n":
     types.FindTodoByIdQueryDocument,
-  "\n  fragment UserItem on User {\n    id\n    username\n  }\n":
+  "\n  fragment UserItem on User {\n    id\n    name\n  }\n":
     types.UserItemFragmentDoc,
   "\n  query getAllTodoByUserIdQuery {\n    todos(userId: 1) {\n      id\n    }\n  }\n":
     types.GetAllTodoByUserIdQueryDocument,
+  "\nquery getAllCategory{\n  categories{\n    Classification\n  }\n}\n":
+    types.GetAllCategoryDocument,
+  "\n  mutation createTodoMutation($input: CreateTodo!) {\n    createTodo(input: $input) {\n      id\n      content\n    }\n  }\n":
+    types.CreateTodoMutationDocument,
 };
 
 /**
@@ -30,7 +34,7 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n  fragment UserItem on User {\n    id\n    username\n  }\n"
+  source: "\n  fragment UserItem on User {\n    id\n    name\n  }\n"
 ): typeof import("./graphql").UserItemFragmentDoc;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -38,6 +42,18 @@ export function graphql(
 export function graphql(
   source: "\n  query getAllTodoByUserIdQuery {\n    todos(userId: 1) {\n      id\n    }\n  }\n"
 ): typeof import("./graphql").GetAllTodoByUserIdQueryDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\nquery getAllCategory{\n  categories{\n    Classification\n  }\n}\n"
+): typeof import("./graphql").GetAllCategoryDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n  mutation createTodoMutation($input: CreateTodo!) {\n    createTodo(input: $input) {\n      id\n      content\n    }\n  }\n"
+): typeof import("./graphql").CreateTodoMutationDocument;
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

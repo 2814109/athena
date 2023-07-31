@@ -8,6 +8,7 @@ import { useUser } from "@clerk/remix";
 import { getAuth } from "@clerk/remix/ssr.server";
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
+import { Suspense } from "react";
 import { css } from "styled-system/css";
 import { flex } from "styled-system/patterns";
 
@@ -30,7 +31,9 @@ export default function Index() {
           paddingTop: "clamp(2rem,10vw,5rem)",
         })}
       >
-        <Outlet />
+        <Suspense fallback={<>Loading</>}>
+          <Outlet />
+        </Suspense>
       </div>
     </div>
   );

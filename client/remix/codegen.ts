@@ -4,7 +4,7 @@ import { endpoint } from './config/index';
 
 const config: CodegenConfig = {
   schema: endpoint,
-  documents: ['app/**/*.tsx', '!app/gql/**/*'],
+  documents: ['app/**/*.tsx','app/**/*.ts', '!app/gql/**/*'],
   generates: {
     './app/gql/': {
       preset: 'client',

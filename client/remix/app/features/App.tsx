@@ -17,7 +17,7 @@ const findTodoByIdDocuments = graphql(`
 const userFragment = graphql(`
   fragment UserItem on User {
     id
-    username
+    name
   }
 `);
 
@@ -58,5 +58,5 @@ export default function App() {
 const UserComponent = (props: { user?: FragmentType<typeof userFragment> }) => {
   const user = useFragment(userFragment, props.user);
 
-  return <h1>{user?.username}</h1>;
+  return <h1>{user?.name}</h1>;
 };

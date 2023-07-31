@@ -9,7 +9,7 @@
     "start": "remix-serve build",
     "typecheck": "tsc",
     "codegen": "graphql-codegen --config codegen.ts",
-    "codegen-w": "pn codegen -w"
+    "codegen-w": "graphql-codegen --config codegen.ts -w"
   },
   "dependencies": {
     "@clerk/remix": "^2.9.0",
