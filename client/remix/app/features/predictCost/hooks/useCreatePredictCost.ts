@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { endpoint } from "config";
 import { GraphQLClient } from "graphql-request";
 import { graphql } from "~/gql"
+import { CreatePredictCost } from "~/gql/graphql";
 
 const createPredictCostDocuments = graphql(`
 mutation createPredictCostMutation($input: CreatePredictCost!){
@@ -18,12 +19,13 @@ export const useCreatePredictCost = () => {
 
   const mutation = useMutation({
     mutationKey: [createPredictCostDocuments.__meta__],
-    mutationFn: () => {
+    mutationFn: (input:CreatePredictCost) => {
       return graphQLClient.request(createPredictCostDocuments.valueOf(), {
-        input: {amount:100, categoryName:"食料品", label: "ご飯",userId: 1 },
+        input: input,
       });
     },
-    onSuccess: () => {
+      onSuccess: (response) => {
+        console.log(response)
       return null;
     },
   });

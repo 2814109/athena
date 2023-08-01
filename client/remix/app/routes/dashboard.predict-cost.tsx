@@ -5,6 +5,7 @@ import { css } from "styled-system/css";
 import { Spinner } from "~/components/Spinner";
 import { useGetCategories } from "~/features/category/hooks/useGetCategories";
 import { useCreatePredictCost } from "~/features/predictCost/hooks/useCreatePredictCost";
+import { CreatePredictCost } from "~/gql/graphql";
 
 export default function PredictCostPage() {
   const { isLoaded, user } = useUser();
@@ -17,10 +18,14 @@ export default function PredictCostPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const onSubmit = (data: any) => {
+  } = useForm<CreatePredictCost>();
+  const onSubmit = (data: CreatePredictCost) => {
     console.log(data);
-    mutation.mutate();
+    const request = {
+      ...data,
+      ...{ userId: 1 },
+    };
+    mutation.mutate(request);
   };
 
   if (!isLoaded) return <Spinner />;
@@ -36,21 +41,21 @@ export default function PredictCostPage() {
           </label>
           <input
             id="input-1"
-            defaultValue="default value of test"
-            {...register("example")}
+            type="number"
+            defaultValue={1}
+            {...register("amount", { required: true })}
           />
+          {errors.amount && <span>This field is required</span>}
+
           <label className={css({ display: "block" })} htmlFor="input-2">
             test
           </label>
-          <input
-            id="input-2"
-            {...register("exampleRequired", { required: true })}
-          />
-          {errors.exampleRequired && <span>This field is required</span>}
+          <input id="input-2" {...register("label", { required: true })} />
+          {errors.label && <span>This field is required</span>}
           <br />
 
           <label>category</label>
-          <select {...register("category", { required: true })}>
+          <select {...register("categoryName", { required: true })}>
             {categories?.data?.categories?.map(({ Classification }) => (
               <option key={Classification}>{Classification}</option>
             ))}
