@@ -1,16 +1,9 @@
-import {
-  SignedIn,
-  SignedOut,
-  RedirectToSignIn,
-  UserButton,
-} from "@clerk/remix";
-import { useUser } from "@clerk/remix";
 import { getAuth } from "@clerk/remix/ssr.server";
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { Suspense } from "react";
 import { css } from "styled-system/css";
-import { flex } from "styled-system/patterns";
+import { Header } from "~/components/Header";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId } = await getAuth(args);
@@ -22,7 +15,7 @@ export const loader: LoaderFunction = async (args) => {
 
 export default function Index() {
   return (
-    <div>
+    <>
       <Header />
       <div
         className={css({
@@ -37,40 +30,6 @@ export default function Index() {
           </div>
         </Suspense>
       </div>
-    </div>
-  );
-}
-
-const Header = () => {
-  const { user } = useUser();
-
-  return (
-    <>
-      <SignedIn>
-        <div
-          className={css({
-            padding: "0.5rem 1rem",
-            display: "flex",
-            justifyContent: "space-between",
-          })}
-        >
-          <h1>title</h1>
-          <div
-            className={css({
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              justifyContent: "end",
-            })}
-          >
-            {user?.firstName}
-            <UserButton />
-          </div>
-        </div>
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
     </>
   );
-};
+}
