@@ -32,7 +32,9 @@ export default function Index() {
         })}
       >
         <Suspense fallback={<>Loading</>}>
-          <Outlet />
+          <div>
+            <Outlet />
+          </div>
         </Suspense>
       </div>
     </div>
