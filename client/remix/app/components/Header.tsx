@@ -15,7 +15,7 @@ export const Header = () => {
       <SignedIn>
         <div
           className={css({
-            padding: "0.5rem 1rem",
+            padding: "1rem 3rem",
             display: "flex",
             justifyContent: "space-between",
           })}
