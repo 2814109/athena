@@ -10,6 +10,7 @@ import (
 type PredictCostUseCase interface {
 	CreatePredictCost(ctx context.Context, input model.CreatePredictCost) (*models.PredictCost, error)
 	GetAllPredictCostByUserId(ctx context.Context, userId int) (models.PredictCostSlice, error)
+	DeletePredictCost(ctx context.Context, predictCostId int) (bool, error)
 }
 
 type predictService struct {
@@ -40,4 +41,15 @@ func (p *predictService) GetAllPredictCostByUserId(ctx context.Context, userId i
 	}
 	return result, nil
 
+}
+
+func (p *predictService) DeletePredictCost(ctx context.Context, predictCostId int) (bool, error) {
+	repository := repositories.NewRepository()
+	result, err := repository.DeletePredictCostById(ctx, predictCostId)
+
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
 }

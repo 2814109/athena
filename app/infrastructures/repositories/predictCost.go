@@ -37,3 +37,15 @@ func (repository *repository) GetPredictCostByUserId(ctx context.Context, userId
 	}
 	return predictCosts, nil
 }
+
+func (repository *repository) DeletePredictCostById(ctx context.Context, predictCostId int) (bool, error) {
+	resource := &models.PredictCost{
+		ID: predictCostId,
+	}
+
+	_, err := resource.DeleteG(ctx)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}

@@ -6,7 +6,6 @@ package presentations
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"my_gql_server/graph"
 	"my_gql_server/graph/model"
@@ -81,8 +80,15 @@ func (r *mutationResolver) CreatePredictCost(ctx context.Context, input model.Cr
 }
 
 // DeletePredictCost is the resolver for the deletePredictCost field.
-func (r *mutationResolver) DeletePredictCost(ctx context.Context, predictCostID int) (bool, error) {
-	panic(fmt.Errorf("not implemented: DeletePredictCost - deletePredictCost"))
+func (r *mutationResolver) DeletePredictCost(ctx context.Context, predictCostId int) (bool, error) {
+	predictCostUsecase := usecases.NewPredictCostService()
+	result, err := predictCostUsecase.DeletePredictCost(ctx, predictCostId)
+
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
 }
 
 // Mutation returns graph.MutationResolver implementation.
