@@ -6,7 +6,7 @@ export const PredictCostTable = () => {
     <>
       <h1>Table Component</h1>
       {predictCosts?.map((predictCost) => (
-        <div>{predictCost.id}</div>
+        <div>{JSON.stringify(predictCost)}</div>
       ))}
     </>
   );

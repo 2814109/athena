@@ -5,15 +5,18 @@ import { graphql } from "~/gql";
 const getAllPredictCostDocuments = graphql(`
     query getAllPredictCostQuery{
         predictCosts(userId: 1){
-    id
+            id
+            label
+            categoryName
+            Amount
     } 
 }
 `)
 
 
 export const useGetAllPredictCost = () => {
-   const { data } = useGraphQL(getAllPredictCostDocuments);
+   const { data ,refetch} = useGraphQL(getAllPredictCostDocuments);
 
-  return {predictCosts: data?.data?.predictCosts}
+  return {predictCosts: data?.data?.predictCosts ,refetch}
 
 }

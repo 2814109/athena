@@ -3,11 +3,15 @@ import { endpoint } from "config";
 import { GraphQLClient } from "graphql-request";
 import { graphql } from "~/gql"
 import { CreatePredictCost } from "~/gql/graphql";
+import { useGetAllPredictCost } from "./useAllPredictCost";
 
 const createPredictCostDocuments = graphql(`
 mutation createPredictCostMutation($input: CreatePredictCost!){
   createPredictCost(input: $input){
     id
+    label
+    categoryName
+    Amount
   }
 }
 `)
@@ -15,6 +19,7 @@ mutation createPredictCostMutation($input: CreatePredictCost!){
 
 
 export const useCreatePredictCost = () => {
+    const {refetch} =useGetAllPredictCost()
       const graphQLClient = new GraphQLClient(endpoint, { method: "POST" });
 
   const mutation = useMutation({
@@ -25,7 +30,8 @@ export const useCreatePredictCost = () => {
       });
     },
       onSuccess: (response) => {
-        console.log(response)
+          console.log(response)
+          refetch()
       return null;
     },
   });
