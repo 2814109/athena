@@ -35,7 +35,6 @@ export default function PredictCostPage() {
       <Suspense fallback={<Spinner />}>
         <div>
           <h1>hello : {user?.id}</h1>
-          <h2>{JSON.stringify(categories)}</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
             <label className={css({ display: "block" })} htmlFor="input-1">
               test
@@ -55,8 +54,13 @@ export default function PredictCostPage() {
             {errors.label && <span>This field is required</span>}
             <br />
 
-            <label>category</label>
-            <select {...register("categoryName", { required: true })}>
+            <label className={css({ display: "block" })} htmlFor="input-3">
+              category
+            </label>
+            <select
+              id="input-3"
+              {...register("categoryName", { required: true })}
+            >
               {categories?.data?.categories?.map(({ Classification }) => (
                 <option key={Classification}>{Classification}</option>
               ))}

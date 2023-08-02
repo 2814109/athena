@@ -1,9 +1,9 @@
 import { getAuth } from "@clerk/remix/ssr.server";
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import { Suspense } from "react";
-import { css } from "styled-system/css";
+import { ReactNode, Suspense } from "react";
 import { Header } from "~/components/Header";
+import { MainContainer } from "~/styles/MainContainer";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId } = await getAuth(args);
@@ -17,19 +17,13 @@ export default function Index() {
   return (
     <>
       <Header />
-      <div
-        className={css({
-          display: "flex",
-          justifyContent: "center",
-          paddingTop: "clamp(2rem,10vw,5rem)",
-        })}
-      >
+      <MainContainer>
         <Suspense fallback={<>Loading</>}>
           <div>
             <Outlet />
           </div>
         </Suspense>
-      </div>
+      </MainContainer>
     </>
   );
 }
