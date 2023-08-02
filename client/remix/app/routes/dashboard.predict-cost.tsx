@@ -34,7 +34,7 @@ export default function PredictCostPage() {
     <>
       <Suspense fallback={<Spinner />}>
         <div>
-          <h1>hello : {user?.id}</h1>
+          <h1>hello</h1>
           <form onSubmit={handleSubmit(onSubmit)}>
             <label className={css({ display: "block" })} htmlFor="input-1">
               test
