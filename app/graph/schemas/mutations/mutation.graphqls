@@ -4,4 +4,5 @@ type Mutation {
   createUser(input: NewUser!): User!
   createEnty(input: CreateEntryRequest!): Entry!
   createPredictCost(input: CreatePredictCost!): PredictCost!
+  deletePredictCost(predictCostId: Int!): Boolean!
 }
