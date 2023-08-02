@@ -20,6 +20,8 @@ const documents = {
     types.GetAllTodoByUserIdQueryDocument,
   "\nquery getAllCategory{\n  categories{\n    Classification\n  }\n}\n":
     types.GetAllCategoryDocument,
+  "\n    query getAllPredictCostQuery{\n        predictCosts(userId: 1){\n    id\n    } \n}\n":
+    types.GetAllPredictCostQueryDocument,
   "\nmutation createPredictCostMutation($input: CreatePredictCost!){\n  createPredictCost(input: $input){\n    id\n  }\n}\n":
     types.CreatePredictCostMutationDocument,
   "\n  mutation createTodoMutation($input: CreateTodo!) {\n    createTodo(input: $input) {\n      id\n      content\n    }\n  }\n":
@@ -50,6 +52,12 @@ export function graphql(
 export function graphql(
   source: "\nquery getAllCategory{\n  categories{\n    Classification\n  }\n}\n"
 ): typeof import("./graphql").GetAllCategoryDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n    query getAllPredictCostQuery{\n        predictCosts(userId: 1){\n    id\n    } \n}\n"
+): typeof import("./graphql").GetAllPredictCostQueryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

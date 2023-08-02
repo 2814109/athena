@@ -6,6 +6,7 @@ import (
 	"my_gql_server/models"
 
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
 func (repository *repository) CreatePredictCost(ctx context.Context, input model.CreatePredictCost) (*models.PredictCost, error) {
@@ -26,4 +27,13 @@ func (repository *repository) CreatePredictCost(ctx context.Context, input model
 	}
 
 	return resource, nil
+}
+
+func (repository *repository) GetPredictCostByUserId(ctx context.Context, userId int) (models.PredictCostSlice, error) {
+
+	predictCosts, err := models.PredictCosts(qm.Load(models.PredictCostRels.User), models.PredictCostWhere.UserID.EQ(userId)).AllG(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return predictCosts, nil
 }

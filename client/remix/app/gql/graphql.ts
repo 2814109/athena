@@ -255,6 +255,15 @@ export type GetAllCategoryQuery = {
   }> | null;
 };
 
+export type GetAllPredictCostQueryQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetAllPredictCostQueryQuery = {
+  __typename?: "Query";
+  predictCosts: Array<{ __typename?: "PredictCost"; id: string }>;
+};
+
 export type CreatePredictCostMutationMutationVariables = Exact<{
   input: CreatePredictCost;
 }>;
@@ -331,6 +340,16 @@ export const GetAllCategoryDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<
   GetAllCategoryQuery,
   GetAllCategoryQueryVariables
+>;
+export const GetAllPredictCostQueryDocument = new TypedDocumentString(`
+    query getAllPredictCostQuery {
+  predictCosts(userId: 1) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<
+  GetAllPredictCostQueryQuery,
+  GetAllPredictCostQueryQueryVariables
 >;
 export const CreatePredictCostMutationDocument = new TypedDocumentString(`
     mutation createPredictCostMutation($input: CreatePredictCost!) {
