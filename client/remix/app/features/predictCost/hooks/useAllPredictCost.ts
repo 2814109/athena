@@ -1,3 +1,4 @@
+import { useGraphQL } from "~/fetcher/use-graphql";
 import { graphql } from "~/gql";
 
 
@@ -8,3 +9,11 @@ const getAllPredictCostDocuments = graphql(`
     } 
 }
 `)
+
+
+export const useGetAllPredictCost = () => {
+   const { data } = useGraphQL(getAllPredictCostDocuments);
+
+  return {predictCosts: data?.data?.predictCosts}
+
+}
