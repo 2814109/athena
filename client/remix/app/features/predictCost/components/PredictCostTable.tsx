@@ -5,7 +5,7 @@ export const PredictCostTable = () => {
   const initialValue = 0;
 
   const totalCounts = predictCosts
-    ?.map(({ Amount }) => Amount)
+    ?.map(({ amount }) => amount)
     .reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       initialValue

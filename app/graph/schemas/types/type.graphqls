@@ -51,7 +51,7 @@ type PredictCost {
   id: ID!
   categoryName: String!
   label: String!
-  Amount: Int!
+  amount: Int!
 }
 
 type Category {

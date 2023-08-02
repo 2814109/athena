@@ -11,7 +11,7 @@ mutation createPredictCostMutation($input: CreatePredictCost!){
     id
     label
     categoryName
-    Amount
+    amount
   }
 }
 `)

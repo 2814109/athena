@@ -379,7 +379,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateTodo(childComplexity, args["input"].(model.UpdateTodo)), true
 
-	case "PredictCost.Amount":
+	case "PredictCost.amount":
 		if e.complexity.PredictCost.Amount == nil {
 			break
 		}
@@ -2030,8 +2030,8 @@ func (ec *executionContext) fieldContext_Mutation_createPredictCost(ctx context.
 				return ec.fieldContext_PredictCost_categoryName(ctx, field)
 			case "label":
 				return ec.fieldContext_PredictCost_label(ctx, field)
-			case "Amount":
-				return ec.fieldContext_PredictCost_Amount(ctx, field)
+			case "amount":
+				return ec.fieldContext_PredictCost_amount(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PredictCost", field.Name)
 		},
@@ -2182,8 +2182,8 @@ func (ec *executionContext) fieldContext_PredictCost_label(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _PredictCost_Amount(ctx context.Context, field graphql.CollectedField, obj *models.PredictCost) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_PredictCost_Amount(ctx, field)
+func (ec *executionContext) _PredictCost_amount(ctx context.Context, field graphql.CollectedField, obj *models.PredictCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PredictCost_amount(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2213,7 +2213,7 @@ func (ec *executionContext) _PredictCost_Amount(ctx context.Context, field graph
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_PredictCost_Amount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PredictCost_amount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "PredictCost",
 		Field:      field,
@@ -2598,8 +2598,8 @@ func (ec *executionContext) fieldContext_Query_predictCosts(ctx context.Context,
 				return ec.fieldContext_PredictCost_categoryName(ctx, field)
 			case "label":
 				return ec.fieldContext_PredictCost_label(ctx, field)
-			case "Amount":
-				return ec.fieldContext_PredictCost_Amount(ctx, field)
+			case "amount":
+				return ec.fieldContext_PredictCost_amount(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PredictCost", field.Name)
 		},
@@ -5623,9 +5623,9 @@ func (ec *executionContext) _PredictCost(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "Amount":
+		case "amount":
 
-			out.Values[i] = ec._PredictCost_Amount(ctx, field, obj)
+			out.Values[i] = ec._PredictCost_amount(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

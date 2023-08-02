@@ -147,7 +147,7 @@ export type NewUser = {
 
 export type PredictCost = {
   __typename?: "PredictCost";
-  Amount: Scalars["Int"]["output"];
+  amount: Scalars["Int"]["output"];
   categoryName: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
   label: Scalars["String"]["output"];
@@ -266,7 +266,7 @@ export type GetAllPredictCostQueryQuery = {
     id: string;
     label: string;
     categoryName: string;
-    Amount: number;
+    amount: number;
   }>;
 };
 
@@ -281,7 +281,7 @@ export type CreatePredictCostMutationMutation = {
     id: string;
     label: string;
     categoryName: string;
-    Amount: number;
+    amount: number;
   };
 };
 
@@ -359,7 +359,7 @@ export const GetAllPredictCostQueryDocument = new TypedDocumentString(`
     id
     label
     categoryName
-    Amount
+    amount
   }
 }
     `) as unknown as TypedDocumentString<
@@ -372,7 +372,7 @@ export const CreatePredictCostMutationDocument = new TypedDocumentString(`
     id
     label
     categoryName
-    Amount
+    amount
   }
 }
     `) as unknown as TypedDocumentString<

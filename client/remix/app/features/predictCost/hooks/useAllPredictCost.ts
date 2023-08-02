@@ -8,7 +8,7 @@ const getAllPredictCostDocuments = graphql(`
             id
             label
             categoryName
-            Amount
+            amount
     } 
 }
 `)
