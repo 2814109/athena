@@ -24,6 +24,8 @@ const documents = {
     types.GetAllPredictCostQueryDocument,
   "\nmutation createPredictCostMutation($input: CreatePredictCost!){\n  createPredictCost(input: $input){\n    id\n    label\n    categoryName\n    amount\n  }\n}\n":
     types.CreatePredictCostMutationDocument,
+  "\nmutation deletePredictCostMutation($predictCostId:Int!){\n  deletePredictCost(predictCostId: $predictCostId)\n}\n":
+    types.DeletePredictCostMutationDocument,
   "\n  mutation createTodoMutation($input: CreateTodo!) {\n    createTodo(input: $input) {\n      id\n      content\n    }\n  }\n":
     types.CreateTodoMutationDocument,
 };
@@ -64,6 +66,12 @@ export function graphql(
 export function graphql(
   source: "\nmutation createPredictCostMutation($input: CreatePredictCost!){\n  createPredictCost(input: $input){\n    id\n    label\n    categoryName\n    amount\n  }\n}\n"
 ): typeof import("./graphql").CreatePredictCostMutationDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\nmutation deletePredictCostMutation($predictCostId:Int!){\n  deletePredictCost(predictCostId: $predictCostId)\n}\n"
+): typeof import("./graphql").DeletePredictCostMutationDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

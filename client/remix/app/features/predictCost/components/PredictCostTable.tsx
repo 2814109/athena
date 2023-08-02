@@ -1,4 +1,5 @@
 import { useGetAllPredictCost } from "../hooks/useAllPredictCost";
+import { PredictCostRow } from "./PredictCostRow";
 
 export const PredictCostTable = () => {
   const { predictCosts } = useGetAllPredictCost();
@@ -14,9 +15,11 @@ export const PredictCostTable = () => {
     <>
       <h1>Table Component</h1>
       <h2>Total : {`${totalCounts}`}</h2>
-      {predictCosts?.map((predictCost) => (
-        <div>{JSON.stringify(predictCost)}</div>
-      ))}
+      <>
+        {predictCosts?.map((predictCost) => (
+          <PredictCostRow key={predictCost.id} predictCost={predictCost} />
+        ))}
+      </>
     </>
   );
 };

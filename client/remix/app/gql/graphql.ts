@@ -118,6 +118,7 @@ export type Mutation = {
   createPredictCost: PredictCost;
   createTodo: Todo;
   createUser: User;
+  deletePredictCost: Scalars["Boolean"]["output"];
   updateTodo: Todo;
 };
 
@@ -135,6 +136,10 @@ export type MutationCreateTodoArgs = {
 
 export type MutationCreateUserArgs = {
   input: NewUser;
+};
+
+export type MutationDeletePredictCostArgs = {
+  predictCostId: Scalars["Int"]["input"];
 };
 
 export type MutationUpdateTodoArgs = {
@@ -285,6 +290,15 @@ export type CreatePredictCostMutationMutation = {
   };
 };
 
+export type DeletePredictCostMutationMutationVariables = Exact<{
+  predictCostId: Scalars["Int"]["input"];
+}>;
+
+export type DeletePredictCostMutationMutation = {
+  __typename?: "Mutation";
+  deletePredictCost: boolean;
+};
+
 export type CreateTodoMutationMutationVariables = Exact<{
   input: CreateTodo;
 }>;
@@ -378,6 +392,14 @@ export const CreatePredictCostMutationDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<
   CreatePredictCostMutationMutation,
   CreatePredictCostMutationMutationVariables
+>;
+export const DeletePredictCostMutationDocument = new TypedDocumentString(`
+    mutation deletePredictCostMutation($predictCostId: Int!) {
+  deletePredictCost(predictCostId: $predictCostId)
+}
+    `) as unknown as TypedDocumentString<
+  DeletePredictCostMutationMutation,
+  DeletePredictCostMutationMutationVariables
 >;
 export const CreateTodoMutationDocument = new TypedDocumentString(`
     mutation createTodoMutation($input: CreateTodo!) {
