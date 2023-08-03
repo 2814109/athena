@@ -1,8 +1,14 @@
 import { css } from "styled-system/css";
-import { useForm } from "react-hook-form";
+import {
+  FieldValues,
+  RegisterOptions,
+  UseFormRegisterReturn,
+  useForm,
+} from "react-hook-form";
 import { useGetCategories } from "~/features/category/hooks/useGetCategories";
 import { useCreatePredictCost } from "~/features/predictCost/hooks/useCreatePredictCost";
 import { CreatePredictCost } from "~/gql/graphql";
+import { LabelInputField } from "~/components/Form/LabelInputField";
 export const CreatePredictCostForm = () => {
   const { categories } = useGetCategories();
 
@@ -36,11 +42,12 @@ export const CreatePredictCostForm = () => {
         />
         {errors.amount && <span>This field is required</span>}
 
-        <label className={css({ display: "block" })} htmlFor="input-2">
-          test
-        </label>
-        <input id="input-2" {...register("label", { required: true })} />
-        {errors.label && <span>This field is required</span>}
+        <LabelInputField
+          label={"test"}
+          errors={errors.label}
+          register={register("label", { required: true })}
+        />
+
         <br />
 
         <label className={css({ display: "block" })} htmlFor="input-3">

@@ -1,22 +1,29 @@
-import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
+import { useId } from "react";
+import {
+  FieldError,
+  FieldName,
+  FieldValues,
+  UseFormRegisterReturn,
+} from "react-hook-form";
 import { css } from "styled-system/css";
 
 type Props<T extends FieldValues> = {
   label: string;
-  errors: FieldErrors;
-  register: UseFormRegister<T>;
+  errors: FieldError | undefined;
+  register: UseFormRegisterReturn<FieldName<T>>;
 };
-export const LabelInputField = ({
+export const LabelInputField = <T extends FieldValues>({
   label,
   register,
   errors,
-}: Props<FieldValues>) => {
+}: Props<T>) => {
+  const id = useId();
   return (
     <>
-      <label className={css({ display: "block" })} htmlFor="input-2">
+      <label className={css({ display: "block" })} htmlFor={id}>
         {label}
       </label>
-      <input id="input-2" {...register(label, { required: true })} />
+      <input id={id} {...register} />
       {errors && <span>This field is required</span>}
     </>
   );
