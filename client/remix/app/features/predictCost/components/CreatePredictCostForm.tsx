@@ -4,6 +4,7 @@ import { useGetCategories } from "~/features/category/hooks/useGetCategories";
 import { useCreatePredictCost } from "~/features/predictCost/hooks/useCreatePredictCost";
 import { CreatePredictCost } from "~/gql/graphql";
 import { LabelInputField } from "~/components/Form/LabelInputField";
+import { LabelSelectField } from "~/components/Form/LabelSelectField";
 export const CreatePredictCostForm = () => {
   const { categories } = useGetCategories();
 
@@ -39,14 +40,15 @@ export const CreatePredictCostForm = () => {
           register={register("label", { required: true })}
         />
 
-        <label className={css({ display: "block" })} htmlFor="input-3">
-          category
-        </label>
-        <select id="input-3" {...register("categoryName", { required: true })}>
-          {categories?.data?.categories?.map(({ Classification }) => (
-            <option key={Classification}>{Classification}</option>
-          ))}
-        </select>
+        <LabelSelectField<CreatePredictCost>
+          label={"categoryName"}
+          register={register("categoryName", { required: true })}
+          errorField={errors.categoryName}
+          options={categories?.data?.categories?.map(
+            ({ Classification }) => Classification
+          )}
+        />
+
         <br />
 
         <input className={css({ cursor: "pointer" })} type="submit" />
