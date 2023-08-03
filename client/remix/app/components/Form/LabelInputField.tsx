@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { InputHTMLAttributes, useId } from "react";
 import {
   FieldError,
   FieldName,
@@ -9,13 +9,14 @@ import { css } from "styled-system/css";
 
 type Props<T extends FieldValues> = {
   label: string;
-  errors: FieldError | undefined;
+  errorField: FieldError | undefined;
   register: UseFormRegisterReturn<FieldName<T>>;
-};
+} & { props?: InputHTMLAttributes<HTMLInputElement> };
 export const LabelInputField = <T extends FieldValues>({
   label,
   register,
-  errors,
+  errorField,
+  props,
 }: Props<T>) => {
   const id = useId();
   return (
@@ -23,8 +24,8 @@ export const LabelInputField = <T extends FieldValues>({
       <label className={css({ display: "block" })} htmlFor={id}>
         {label}
       </label>
-      <input id={id} {...register} />
-      {errors && <span>This field is required</span>}
+      <input type={props?.type} id={id} {...register} />
+      {errorField && <span>This field is required</span>}
     </>
   );
 };
