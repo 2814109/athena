@@ -8,7 +8,7 @@ import {
 import { css } from "styled-system/css";
 
 type Props<T extends FieldValues> = {
-  label: string;
+  label: keyof T;
   errorField: FieldError | undefined;
   register: UseFormRegisterReturn<FieldName<T>>;
 } & { props?: InputHTMLAttributes<HTMLInputElement> };
@@ -22,7 +22,7 @@ export const LabelInputField = <T extends FieldValues>({
   return (
     <>
       <label className={css({ display: "block" })} htmlFor={id}>
-        {label}
+        {`${String(label)}`}
       </label>
       <input type={props?.type} id={id} {...register} />
       {errorField && <span>This field is required</span>}

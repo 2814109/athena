@@ -26,15 +26,15 @@ export const CreatePredictCostForm = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <LabelInputField
+        <LabelInputField<CreatePredictCost>
           props={{ type: "number" }}
           label={"amount"}
           errorField={errors.label}
           register={register("amount", { required: true })}
         />
 
-        <LabelInputField
-          label={"test"}
+        <LabelInputField<CreatePredictCost>
+          label={"label"}
           errorField={errors.label}
           register={register("label", { required: true })}
         />
