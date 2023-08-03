@@ -2,6 +2,7 @@ import { useUser } from "@clerk/remix";
 import { Suspense } from "react";
 import { Spinner } from "~/components/Spinner";
 import { CreatePredictCostForm } from "~/features/predictCost/components/CreatePredictCostForm";
+import { PredictCostPieChart } from "~/features/predictCost/components/PredictCostPieChart";
 
 import { PredictCostTable } from "~/features/predictCost/components/PredictCostTable";
 export default function PredictCostPage() {
@@ -15,6 +16,9 @@ export default function PredictCostPage() {
         <div>
           <h1>hello</h1>
           <CreatePredictCostForm />
+        </div>
+        <div>
+          <PredictCostPieChart />
         </div>
         <PredictCostTable />
       </Suspense>
