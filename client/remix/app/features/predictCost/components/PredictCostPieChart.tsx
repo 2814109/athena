@@ -7,10 +7,20 @@ type Props = {
 };
 
 export const PredictCostPieChart = ({ pieChartData }: Props) => {
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+  const COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#FFBB28",
+    "#FF8042",
+    "#800080",
+    "#FF00FF",
+    "#FFD700",
+    "#00FF00",
+    "#FFA500",
+    "#800000",
+  ];
 
   return (
-    // <ResponsiveContainer width="100%" height="100%">
     <PieChart width={800} height={400}>
       <Pie
         data={pieChartData}
@@ -50,13 +60,12 @@ export const PredictCostPieChart = ({ pieChartData }: Props) => {
         fill="#8884d8"
         dataKey="value"
       >
-        {pieChartData.map((entry, index) => (
+        {pieChartData.map((_, index) => (
           <>
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           </>
         ))}
       </Pie>
     </PieChart>
-    // </ResponsiveContainer>
   );
 };
