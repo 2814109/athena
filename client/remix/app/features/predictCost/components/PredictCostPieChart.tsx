@@ -1,66 +1,57 @@
-import {
-  PieChart,
-  PieLabel,
-  Pie,
-  Sector,
-  Cell,
-  ResponsiveContainer,
-  Label,
-} from "recharts";
+import { PieChart, PieLabel, Pie, Cell } from "recharts";
 
-export const PredictCostPieChart = () => {
-  const data = [
-    { name: "Group A", value: 400 },
-    { name: "Group B", value: 300 },
-    { name: "Group C", value: 300 },
-    { name: "Group D", value: 200 },
-  ];
+type PieChartData = { name: string; value: number };
 
+type Props = {
+  pieChartData: PieChartData[];
+};
+
+export const PredictCostPieChart = ({ pieChartData }: Props) => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
-  const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel: PieLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-    index,
-  }) => {
-    const radius = 25 + innerRadius + (outerRadius - innerRadius);
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-    return (
-      <text
-        x={x}
-        y={y}
-        fill={COLORS[index]}
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-      >
-        {data[index].name}
-        {` ${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
   return (
     // <ResponsiveContainer width="100%" height="100%">
-    <PieChart width={400} height={400}>
+    <PieChart width={800} height={400}>
       <Pie
-        data={data}
+        data={pieChartData}
         cx="50%"
         cy="50%"
         labelLine={true}
-        label={renderCustomizedLabel}
+        label={({
+          cx,
+          cy,
+          midAngle,
+          innerRadius,
+          outerRadius,
+          percent,
+          index,
+        }) => {
+          const RADIAN = Math.PI / 180;
+          const radius = 25 + innerRadius + (outerRadius - innerRadius);
+          const x = cx + radius * Math.cos(-midAngle * RADIAN);
+          const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+          return (
+            <text
+              x={x}
+              y={y}
+              fill={COLORS[index]}
+              textAnchor={x > cx ? "start" : "end"}
+              dominantBaseline="central"
+            >
+              {`${pieChartData[index].name}(¥${pieChartData[
+                index
+              ].value.toLocaleString()})`}
+              {` ${(percent * 100).toFixed(0)}%`}
+            </text>
+          );
+        }}
         outerRadius={80}
         fill="#8884d8"
         dataKey="value"
       >
-        {data.map((entry, index) => (
+        {pieChartData.map((entry, index) => (
           <>
-            {/* <Label>{entry.name}</Label> */}
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           </>
         ))}
