@@ -3,13 +3,9 @@ import { Suspense } from "react";
 import { Spinner } from "~/components/Spinner";
 import { CreatePredictCostForm } from "~/features/predictCost/components/CreatePredictCostForm";
 import { PredictCostPieChart } from "~/features/predictCost/components/PredictCostPieChart";
+import { PredictCostStatistics } from "~/features/predictCost/components/PredictCostStatistics";
 
-import { PredictCostTable } from "~/features/predictCost/components/PredictCostTable";
 export default function PredictCostPage() {
-  const { isLoaded, user } = useUser();
-
-  if (!isLoaded) return <Spinner />;
-
   return (
     <>
       <Suspense fallback={<Spinner />}>
@@ -17,10 +13,7 @@ export default function PredictCostPage() {
           <h1>hello</h1>
           <CreatePredictCostForm />
         </div>
-        <div>
-          <PredictCostPieChart />
-        </div>
-        <PredictCostTable />
+        <PredictCostStatistics />
       </Suspense>
     </>
   );

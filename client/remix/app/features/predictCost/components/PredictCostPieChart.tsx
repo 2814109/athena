@@ -5,6 +5,7 @@ import {
   Sector,
   Cell,
   ResponsiveContainer,
+  Label,
 } from "recharts";
 
 export const PredictCostPieChart = () => {
@@ -27,7 +28,7 @@ export const PredictCostPieChart = () => {
     percent,
     index,
   }) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const radius = 25 + innerRadius + (outerRadius - innerRadius);
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -35,11 +36,12 @@ export const PredictCostPieChart = () => {
       <text
         x={x}
         y={y}
-        fill="white"
+        fill={COLORS[index]}
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {`${(percent * 100).toFixed(0)}%`}
+        {data[index].name}
+        {` ${(percent * 100).toFixed(0)}%`}
       </text>
     );
   };
@@ -50,14 +52,17 @@ export const PredictCostPieChart = () => {
         data={data}
         cx="50%"
         cy="50%"
-        labelLine={false}
+        labelLine={true}
         label={renderCustomizedLabel}
         outerRadius={80}
         fill="#8884d8"
         dataKey="value"
       >
         {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          <>
+            {/* <Label>{entry.name}</Label> */}
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          </>
         ))}
       </Pie>
     </PieChart>
