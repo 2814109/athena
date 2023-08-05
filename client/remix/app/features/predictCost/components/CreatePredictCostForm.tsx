@@ -16,7 +16,6 @@ export const CreatePredictCostForm = () => {
     formState: { errors },
   } = useForm<CreatePredictCost>();
   const onSubmit = (data: CreatePredictCost) => {
-    console.log(data);
     const request = {
       ...data,
       ...{ userId: 1 },

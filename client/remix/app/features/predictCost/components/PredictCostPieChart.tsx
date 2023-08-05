@@ -1,4 +1,4 @@
-import { PieChart, PieLabel, Pie, Cell } from "recharts";
+import { PieChart, Pie, Cell } from "recharts";
 
 type PieChartData = { name: string; value: number };
 

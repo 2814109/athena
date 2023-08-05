@@ -2,7 +2,6 @@ import { graphql } from "~/gql";
 import { useMutation } from "@tanstack/react-query";
 import { endpoint } from "config";
 import { GraphQLClient } from "graphql-request";
-import { CreatePredictCost } from "~/gql/graphql";
 import { useGetAllPredictCost } from "./useAllPredictCost";
 
 
