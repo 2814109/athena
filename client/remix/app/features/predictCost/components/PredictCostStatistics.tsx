@@ -1,5 +1,5 @@
 import { useGetAllPredictCost } from "../hooks/useAllPredictCost";
-import { PredictCostPieChart } from "./PredictCostPieChart";
+import { PredictCostPieChart } from "./PieChart/PredictCostPieChart";
 import { PredictCostTable } from "./PredictCostTable";
 
 export const PredictCostStatistics = () => {
