@@ -16,8 +16,6 @@ mutation createPredictCostMutation($input: CreatePredictCost!){
 }
 `)
 
-
-
 export const useCreatePredictCost = () => {
     const {refetch} =useGetAllPredictCost()
       const graphQLClient = new GraphQLClient(endpoint, { method: "POST" });

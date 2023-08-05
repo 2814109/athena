@@ -1,5 +1,4 @@
-import { ReactNode } from "react";
-import { PieChart, Pie, Cell } from "recharts";
+import { Cell } from "recharts";
 import { PIE_CHART_COLORS as COLORS } from "~/features/predictCost/styles/PIE_CHART_COLORS";
 import { PieChartData } from "../../types/PieChartData";
 import { PieChartContainer } from "./PieChartContainer";

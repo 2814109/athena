@@ -4,14 +4,11 @@ import { endpoint } from "config";
 import { GraphQLClient } from "graphql-request";
 import { useGetAllPredictCost } from "./useAllPredictCost";
 
-
 const deletePredictCostDocuments = graphql(`
 mutation deletePredictCostMutation($predictCostId:Int!){
   deletePredictCost(predictCostId: $predictCostId)
 }
 `)
-
-
 
 export const useDeletePredictCost = () => {
     const {refetch} =useGetAllPredictCost()

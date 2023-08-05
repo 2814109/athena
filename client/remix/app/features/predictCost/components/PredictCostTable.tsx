@@ -1,12 +1,10 @@
 import { PredictCost } from "~/gql/graphql";
-import { useGetAllPredictCost } from "../hooks/useAllPredictCost";
 import { PredictCostRow } from "./PredictCostRow";
 
 type Props = {
   predictCosts: PredictCost[] | undefined;
 };
 export const PredictCostTable = ({ predictCosts }: Props) => {
-  // const { predictCosts } = useGetAllPredictCost();
   const initialValue = 0;
 
   const totalCounts = predictCosts
