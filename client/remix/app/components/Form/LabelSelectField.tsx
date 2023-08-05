@@ -17,7 +17,6 @@ export const LabelSelectField = <T extends FieldValues>({
   label,
   register,
   errorField,
-  props,
   options,
 }: Props<T>) => {
   const id = useId();

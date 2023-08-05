@@ -1,5 +1,5 @@
 import { PieChart, Pie, Cell } from "recharts";
-
+import { PIE_CHART_COLORS as COLORS } from "~/features/predictCost/styles/PIE_CHART_COLORS";
 type PieChartData = { name: string; value: number };
 
 type Props = {
@@ -7,19 +7,6 @@ type Props = {
 };
 
 export const PredictCostPieChart = ({ pieChartData }: Props) => {
-  const COLORS = [
-    "#0088FE",
-    "#00C49F",
-    "#FFBB28",
-    "#FF8042",
-    "#800080",
-    "#FF00FF",
-    "#FFD700",
-    "#00FF00",
-    "#FFA500",
-    "#800000",
-  ];
-
   return (
     <PieChart width={800} height={400}>
       <Pie
