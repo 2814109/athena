@@ -1,6 +1,6 @@
 import { useGetAllPredictCost } from "../hooks/useAllPredictCost";
 import { PredictCostPieChart } from "./PieChart/PredictCostPieChart";
-import { PredictCostTable } from "./PredictCostTable";
+import { PredictCostTable } from "./Table/PredictCostTable";
 
 export const PredictCostStatistics = () => {
   const { predictCosts } = useGetAllPredictCost();
@@ -18,8 +18,13 @@ export const PredictCostStatistics = () => {
     return { name: key, value: calcValue ?? 0 };
   });
 
+  const totalCount = result
+    .map((element) => element.value)
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
   return (
     <>
+      <h1>Total Count ¥{totalCount.toLocaleString()}</h1>
       <div>
         <PredictCostPieChart pieChartData={result} />
       </div>

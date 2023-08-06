@@ -1,5 +1,5 @@
 import { PredictCost } from "~/gql/graphql";
-import { useDeletePredictCost } from "../hooks/useDeletePredictCost";
+import { useDeletePredictCost } from "../../hooks/useDeletePredictCost";
 
 type Props = {
   predictCost: PredictCost;
