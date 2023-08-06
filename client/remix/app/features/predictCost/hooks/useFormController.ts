@@ -3,12 +3,12 @@ import { useForm } from "react-hook-form";
 import { CreatePredictCost } from "~/gql/graphql";
 
 export const useFormController = () => {
-      const { mutation } = useCreatePredictCost();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CreatePredictCost>();
+    const { mutation } = useCreatePredictCost();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<CreatePredictCost>();
   const onSubmit = (data: CreatePredictCost) => {
     const request = {
       ...data,

@@ -1,9 +1,9 @@
-import { css } from "styled-system/css";
 import { useGetCategories } from "~/features/category/hooks/useGetCategories";
 import { CreatePredictCost } from "~/gql/graphql";
 import { LabelInputField } from "~/components/Form/LabelInputField";
 import { LabelSelectField } from "~/components/Form/LabelSelectField";
 import { useFormController } from "../hooks/useFormController";
+import { SubmitButton } from "~/components/Form/SubmitButton";
 export const CreatePredictCostForm = () => {
   const { categories } = useGetCategories();
   const { register, handleSubmitAction, errors } = useFormController();
@@ -32,10 +32,7 @@ export const CreatePredictCostForm = () => {
             ({ Classification }) => Classification
           )}
         />
-
-        <br />
-
-        <input className={css({ cursor: "pointer" })} type="submit" />
+        <SubmitButton />
       </form>
     </>
   );
