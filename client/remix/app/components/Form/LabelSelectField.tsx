@@ -22,13 +22,10 @@ export const LabelSelectField = <T extends FieldValues>({
   const id = useId();
   return (
     <>
-      <label
-        className={css({ display: "block", width: "50%" })}
-        htmlFor="input-3"
-      >
+      <label className={css({ display: "block", width: "100%" })} htmlFor={id}>
         {`${String(label)}`}
       </label>
-      <select id="input-3" {...register} className={css({ width: "50%" })}>
+      <select id={id} {...register} className={css({ width: "100%" })}>
         {options?.map((option) => (
           <option key={option}>{option}</option>
         ))}

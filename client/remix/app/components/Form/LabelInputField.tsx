@@ -21,14 +21,14 @@ export const LabelInputField = <T extends FieldValues>({
   const id = useId();
   return (
     <>
-      <label className={css({ display: "block", width: "50%" })} htmlFor={id}>
+      <label className={css({ display: "block", width: "100%" })} htmlFor={id}>
         {`${String(label)}`}
       </label>
       <input
         type={props?.type}
         id={id}
         {...register}
-        className={css({ width: "50%" })}
+        className={css({ width: "100%" })}
       />
       {errorField && <span>This field is required</span>}
     </>

@@ -4,13 +4,20 @@ import { LabelInputField } from "~/components/Form/LabelInputField";
 import { LabelSelectField } from "~/components/Form/LabelSelectField";
 import { useFormController } from "../hooks/useFormController";
 import { SubmitButton } from "~/components/Form/SubmitButton";
+import { css } from "styled-system/css";
+
 export const CreatePredictCostForm = () => {
   const { categories } = useGetCategories();
   const { register, handleSubmitAction, errors } = useFormController();
 
   return (
-    <>
-      <form onSubmit={handleSubmitAction()}>
+    <div
+      className={css({
+        display: "flex",
+        justifyContent: "center",
+      })}
+    >
+      <form className={css({ width: "1/2" })} onSubmit={handleSubmitAction()}>
         <LabelInputField<CreatePredictCost>
           props={{ type: "number" }}
           label={"amount"}
@@ -34,6 +41,6 @@ export const CreatePredictCostForm = () => {
         />
         <SubmitButton />
       </form>
-    </>
+    </div>
   );
 };
