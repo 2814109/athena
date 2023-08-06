@@ -1,31 +1,16 @@
 import { css } from "styled-system/css";
-import { useForm } from "react-hook-form";
 import { useGetCategories } from "~/features/category/hooks/useGetCategories";
-import { useCreatePredictCost } from "~/features/predictCost/hooks/useCreatePredictCost";
 import { CreatePredictCost } from "~/gql/graphql";
 import { LabelInputField } from "~/components/Form/LabelInputField";
 import { LabelSelectField } from "~/components/Form/LabelSelectField";
+import { useFormController } from "../hooks/useFormController";
 export const CreatePredictCostForm = () => {
   const { categories } = useGetCategories();
-
-  const { mutation } = useCreatePredictCost();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CreatePredictCost>();
-  const onSubmit = (data: CreatePredictCost) => {
-    const request = {
-      ...data,
-      ...{ userId: 1 },
-    };
-    mutation.mutate(request);
-  };
+  const { register, handleSubmitAction, errors } = useFormController();
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmitAction()}>
         <LabelInputField<CreatePredictCost>
           props={{ type: "number" }}
           label={"amount"}

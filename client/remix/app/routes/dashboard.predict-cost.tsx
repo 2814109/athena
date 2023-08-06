@@ -9,7 +9,6 @@ export default function PredictCostPage() {
     <>
       <Suspense fallback={<Spinner />}>
         <div>
-          <h1>hello</h1>
           <CreatePredictCostForm />
         </div>
         <PredictCostStatistics />
