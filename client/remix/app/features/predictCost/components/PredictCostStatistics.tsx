@@ -1,3 +1,4 @@
+import { css } from "styled-system/css";
 import { useGetAllPredictCost } from "../hooks/useAllPredictCost";
 import { PredictCostPieChart } from "./PieChart/PredictCostPieChart";
 import { PredictCostTable } from "./Table/PredictCostTable";
@@ -24,7 +25,14 @@ export const PredictCostStatistics = () => {
 
   return (
     <>
-      <h1>Total Count ¥{totalCount.toLocaleString()}</h1>
+      <h1
+        className={css({
+          display: "flex",
+          justifyContent: "center",
+        })}
+      >
+        Total Count ¥{totalCount.toLocaleString()}
+      </h1>
       <div>
         <PredictCostPieChart pieChartData={result} />
       </div>

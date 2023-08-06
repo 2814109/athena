@@ -11,7 +11,7 @@ export const PieChartContainer = ({
   children,
   pieChartData,
 }: PieChartContainerProps) => (
-  <PieChart width={800} height={400}>
+  <PieChart width={800} height={300}>
     <Pie
       data={pieChartData}
       cx="50%"

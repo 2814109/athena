@@ -28,7 +28,7 @@ export const LabelInputField = <T extends FieldValues>({
         type={props?.type}
         id={id}
         {...register}
-        className={css({ width: "100%" })}
+        className={css({ width: "100%", borderRadius: "8px", height: "2rem" })}
       />
       {errorField && <span>This field is required</span>}
     </>
