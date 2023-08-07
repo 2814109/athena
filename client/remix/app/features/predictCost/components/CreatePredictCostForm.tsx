@@ -4,6 +4,7 @@ import { useFormController } from "../hooks/useFormController";
 import { SubmitButton } from "~/components/Form/SubmitButton";
 import { css } from "styled-system/css";
 import { CategorySelectFiled } from "../forms/CategorySelectFiled";
+import { MarginContainer } from "~/styles/MarginContainer";
 
 export const CreatePredictCostForm = () => {
   const { register, handleSubmitAction, errors } = useFormController();
@@ -15,7 +16,12 @@ export const CreatePredictCostForm = () => {
         justifyContent: "center",
       })}
     >
-      <form className={css({ width: "1/2" })} onSubmit={handleSubmitAction()}>
+      <form
+        className={css({
+          width: "100%",
+        })}
+        onSubmit={handleSubmitAction()}
+      >
         <LabelInputField<CreatePredictCost>
           props={{ type: "number" }}
           label={"amount"}

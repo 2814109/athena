@@ -1,13 +1,14 @@
 import { css } from "styled-system/css";
+import { MarginContainer } from "~/styles/MarginContainer";
 
-export const SubmitButton = () => {
-  return (
-    <div
-      className={css({
-        display: "flex",
-        justifyContent: "center",
-      })}
-    >
+export const SubmitButton = () => (
+  <div
+    className={css({
+      display: "flex",
+      justifyContent: "center",
+    })}
+  >
+    <MarginContainer>
       <button
         className={css({
           cursor: "pointer",
@@ -19,6 +20,6 @@ export const SubmitButton = () => {
       >
         Submit
       </button>
-    </div>
-  );
-};
+    </MarginContainer>
+  </div>
+);
