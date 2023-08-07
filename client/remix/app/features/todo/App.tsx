@@ -1,7 +1,7 @@
-import { FragmentType, graphql, useFragment } from "../gql";
+import { FragmentType, graphql, useFragment } from "../../gql";
 
-import { useGraphQL } from "../fetcher/use-graphql";
-import { useCreateTodo } from "./todo/hooks/useCreateTodo";
+import { useGraphQL } from "../../fetcher/use-graphql";
+import { useCreateTodo } from "./hooks/useCreateTodo";
 
 const findTodoByIdDocuments = graphql(`
   query findTodoByIdQuery($id: Int!) {
