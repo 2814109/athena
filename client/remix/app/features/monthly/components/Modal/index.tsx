@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MonthlyForm } from "../Form/MonthlyForm";
 
 export const Modal = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(true);
 
   return (
     <>

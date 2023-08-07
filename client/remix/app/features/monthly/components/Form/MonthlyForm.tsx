@@ -4,14 +4,13 @@ import { useFormController } from "../../hooks/useFormController";
 import { SubmitButton } from "~/components/Form/SubmitButton";
 import { css } from "styled-system/css";
 import { CategorySelectFiled } from "~/components/Form/features/CategorySelectFiled";
+import { DatePicker } from "rsuite";
 
 export const MonthlyForm = () => {
   const { register, handleSubmitAction, errors } = useFormController();
 
   return (
     <>
-      <h1>Monthly Form</h1>
-
       <div
         className={css({
           display: "flex",
@@ -24,6 +23,12 @@ export const MonthlyForm = () => {
           })}
           onSubmit={handleSubmitAction()}
         >
+          <DatePicker
+            className={css({
+              width: "100%",
+            })}
+          />
+
           <LabelInputField<CreatePredictCost>
             props={{ type: "number" }}
             label={"amount"}

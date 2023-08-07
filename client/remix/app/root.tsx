@@ -8,10 +8,8 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import styles from "./index.css";
-
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary as ErrorBoundaryLib } from "react-error-boundary";
-
 import {
   Hydrate,
   QueryClient,

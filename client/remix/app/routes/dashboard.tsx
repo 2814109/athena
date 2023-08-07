@@ -1,9 +1,14 @@
 import { getAuth } from "@clerk/remix/ssr.server";
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import { ReactNode, Suspense } from "react";
+import { Suspense } from "react";
 import { Header } from "~/components/Header";
 import { MainContainer } from "~/styles/MainContainer";
+import styles from "rsuite/dist/rsuite.min.css";
+
+export function links() {
+  return [{ rel: "stylesheet", href: styles }];
+}
 
 export const loader: LoaderFunction = async (args) => {
   const { userId } = await getAuth(args);
