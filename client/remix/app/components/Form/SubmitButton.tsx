@@ -8,7 +8,7 @@ export const SubmitButton = () => (
       justifyContent: "center",
     })}
   >
-    <MarginContainer>
+    <MarginContainer size={"4"}>
       <button
         className={css({
           cursor: "pointer",
