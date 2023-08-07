@@ -3,7 +3,7 @@ import { LabelInputField } from "~/components/Form/LabelInputField";
 import { useFormController } from "../../hooks/useFormController";
 import { SubmitButton } from "~/components/Form/SubmitButton";
 import { css } from "styled-system/css";
-import { CategorySelectFiled } from "../../forms/CategorySelectFiled";
+import { CategorySelectFiled } from "~/components/Form/features/CategorySelectFiled";
 
 export const CreatePredictCostForm = () => {
   const { register, handleSubmitAction, errors } = useFormController();

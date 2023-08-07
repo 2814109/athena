@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { css } from "styled-system/css";
 import { Spinner } from "~/components/Spinner";
-import { Modal } from "~/features/predictCost/components/Modal";
+import { Modal } from "~/features/monthly/components/Modal/index";
 
 export default function MonthlyPage() {
   return (
