@@ -22,7 +22,10 @@ export const LabelSelectField = <T extends FieldValues>({
   const id = useId();
   return (
     <>
-      <label className={css({ display: "block", width: "100%" })} htmlFor={id}>
+      <label
+        className={css({ display: "block", width: "100%", py: "4" })}
+        htmlFor={id}
+      >
         {`${String(label)}`}
       </label>
       <select
