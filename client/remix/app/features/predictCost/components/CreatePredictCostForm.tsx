@@ -1,13 +1,11 @@
-import { useGetCategories } from "~/features/category/hooks/useGetCategories";
 import { CreatePredictCost } from "~/gql/graphql";
 import { LabelInputField } from "~/components/Form/LabelInputField";
-import { LabelSelectField } from "~/components/Form/LabelSelectField";
 import { useFormController } from "../hooks/useFormController";
 import { SubmitButton } from "~/components/Form/SubmitButton";
 import { css } from "styled-system/css";
+import { CategorySelectFiled } from "../forms/CategorySelectFiled";
 
 export const CreatePredictCostForm = () => {
-  const { categories } = useGetCategories();
   const { register, handleSubmitAction, errors } = useFormController();
 
   return (
@@ -31,13 +29,10 @@ export const CreatePredictCostForm = () => {
           register={register("label", { required: true })}
         />
 
-        <LabelSelectField<CreatePredictCost>
+        <CategorySelectFiled<CreatePredictCost>
           label={"categoryName"}
           register={register("categoryName", { required: true })}
           errorField={errors.categoryName}
-          options={categories?.data?.categories?.map(
-            ({ Classification }) => Classification
-          )}
         />
         <SubmitButton />
       </form>
