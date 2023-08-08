@@ -27,8 +27,6 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  Date: { input: any; output: any };
-  DateTime: { input: any; output: any };
   Time: { input: any; output: any };
 };
 
@@ -64,7 +62,7 @@ export type CreatePayment = {
   categoryName: Scalars["String"]["input"];
   cost: Scalars["Int"]["input"];
   label: Scalars["String"]["input"];
-  paymentAt: Scalars["Date"]["input"];
+  paymentAt: Scalars["Time"]["input"];
   paymentType: Scalars["String"]["input"];
   userId: Scalars["Int"]["input"];
 };
@@ -107,7 +105,7 @@ export type DebitInput = {
 export type Entry = {
   __typename?: "Entry";
   credits?: Maybe<Array<Maybe<Credit>>>;
-  date: Scalars["Date"]["output"];
+  date: Scalars["Time"]["output"];
   debits?: Maybe<Array<Maybe<Debit>>>;
   description: Scalars["String"]["output"];
 };
@@ -116,10 +114,10 @@ export type Item = {
   __typename?: "Item";
   categoryName: Scalars["String"]["output"];
   cost: Scalars["Int"]["output"];
-  createdAt: Scalars["Date"]["output"];
+  createdAt: Scalars["Time"]["output"];
   id: Scalars["ID"]["output"];
   label: Scalars["String"]["output"];
-  updatedAt: Scalars["Date"]["output"];
+  updatedAt: Scalars["Time"]["output"];
   user: User;
 };
 
@@ -190,9 +188,10 @@ export type PredictCost = {
 export type Query = {
   __typename?: "Query";
   articles: Array<Article>;
-  categories?: Maybe<Array<Category>>;
+  categories: Array<Category>;
   entry: Entry;
   items: Array<Item>;
+  payments: Array<Payment>;
   predictCosts: Array<PredictCost>;
   todo: Todo;
   todos: Array<Todo>;
@@ -207,6 +206,10 @@ export type QueryEntryArgs = {
 };
 
 export type QueryItemsArgs = {
+  userId: Scalars["Int"]["input"];
+};
+
+export type QueryPaymentsArgs = {
   userId: Scalars["Int"]["input"];
 };
 
@@ -247,6 +250,21 @@ export type User = {
   email: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
   name: Scalars["String"]["output"];
+};
+
+export type GetAllPaymentQueryQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllPaymentQueryQuery = {
+  __typename?: "Query";
+  payments: Array<{
+    __typename?: "Payment";
+    id: string;
+    label: string;
+    categoryName: string;
+    paymentAt: any;
+    cost: number;
+    paymentType: string;
+  }>;
 };
 
 export type GetAllPredictCostQueryQueryVariables = Exact<{
@@ -331,10 +349,7 @@ export type GetAllCategoryQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAllCategoryQuery = {
   __typename?: "Query";
-  categories?: Array<{
-    __typename?: "Category";
-    Classification: string;
-  }> | null;
+  categories: Array<{ __typename?: "Category"; Classification: string }>;
 };
 
 export type CreatePaymentMutationMutationVariables = Exact<{
@@ -374,6 +389,21 @@ export const UserItemFragmentDoc = new TypedDocumentString(
     `,
   { fragmentName: "UserItem" }
 ) as unknown as TypedDocumentString<UserItemFragment, unknown>;
+export const GetAllPaymentQueryDocument = new TypedDocumentString(`
+    query getAllPaymentQuery {
+  payments(userId: 1) {
+    id
+    label
+    categoryName
+    paymentAt
+    cost
+    paymentType
+  }
+}
+    `) as unknown as TypedDocumentString<
+  GetAllPaymentQueryQuery,
+  GetAllPaymentQueryQueryVariables
+>;
 export const GetAllPredictCostQueryDocument = new TypedDocumentString(`
     query getAllPredictCostQuery {
   predictCosts(userId: 1) {
