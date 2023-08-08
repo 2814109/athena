@@ -4,7 +4,8 @@ import { CreatePredictCost } from "~/gql/graphql";
 
 export const useFormController = () => {
     const { mutation } = useCreatePredictCost();
-    const {
+  const {
+      control,
         register,
         handleSubmit,
         formState: { errors },
@@ -19,5 +20,5 @@ export const useFormController = () => {
     
     const handleSubmitAction = () => handleSubmit(onSubmit)
 
-    return {register,handleSubmitAction, errors }
+    return {register,handleSubmitAction,control, errors }
 }

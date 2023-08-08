@@ -5,9 +5,10 @@ import { SubmitButton } from "~/components/Form/SubmitButton";
 import { css } from "styled-system/css";
 import { CategorySelectFiled } from "~/components/Form/features/CategorySelectFiled";
 import { DatePicker } from "rsuite";
+import { Controller } from "react-hook-form";
 
 export const MonthlyForm = () => {
-  const { register, handleSubmitAction, errors } = useFormController();
+  const { register, handleSubmitAction, control, errors } = useFormController();
 
   return (
     <>
@@ -23,10 +24,18 @@ export const MonthlyForm = () => {
           })}
           onSubmit={handleSubmitAction()}
         >
-          <DatePicker
-            className={css({
-              width: "100%",
-            })}
+          <Controller
+            name="label"
+            control={control}
+            render={({ field }) => (
+              <DatePicker
+                className={css({
+                  width: "100%",
+                })}
+                {...field}
+                value={new Date()}
+              />
+            )}
           />
 
           <LabelInputField<CreatePredictCost>
