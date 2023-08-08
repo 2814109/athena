@@ -18,6 +18,7 @@ type RepositoryInterface interface {
 	GetPredictCostByUserId(ctx context.Context, userId int) (models.PredictCostSlice, error)
 	DeletePredictCostById(ctx context.Context, predictCostId int) (bool, error)
 	CreatePayment(ctx context.Context, input model.CreatePayment) (*models.Payment, error)
+	GetPaymentsByUserId(ctx context.Context, userId int) (models.PaymentSlice, error)
 }
 
 func NewRepository() RepositoryInterface {

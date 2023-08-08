@@ -9,6 +9,7 @@ import (
 
 type PaymentUsecase interface {
 	Create(ctx context.Context, input model.CreatePayment) (*models.Payment, error)
+	GetAllPaymentByUserId(ctx context.Context, userId int) (models.PaymentSlice, error)
 }
 
 type paymentService struct {
@@ -26,4 +27,15 @@ func (p *paymentService) Create(ctx context.Context, input model.CreatePayment) 
 		return nil, err
 	}
 	return result, nil
+}
+
+func (p *paymentService) GetAllPaymentByUserId(ctx context.Context, userId int) (models.PaymentSlice, error) {
+	repository := repositories.NewRepository()
+	result, err := repository.GetPaymentsByUserId(ctx, userId)
+
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
 }

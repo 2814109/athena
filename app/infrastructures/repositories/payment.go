@@ -6,6 +6,7 @@ import (
 	"my_gql_server/models"
 
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
 func (repository *repository) CreatePayment(ctx context.Context, input model.CreatePayment) (*models.Payment, error) {
@@ -28,4 +29,13 @@ func (repository *repository) CreatePayment(ctx context.Context, input model.Cre
 	}
 
 	return resource, nil
+}
+
+func (repository *repository) GetPaymentsByUserId(ctx context.Context, userId int) (models.PaymentSlice, error) {
+
+	payments, err := models.Payments(qm.Load(models.PaymentRels.User), models.PaymentWhere.UserID.EQ(userId)).AllG(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return payments, nil
 }

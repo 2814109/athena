@@ -6,7 +6,6 @@ package presentations
 
 import (
 	"context"
-	"fmt"
 	"my_gql_server/graph"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
@@ -117,7 +116,13 @@ func (r *queryResolver) Categories(ctx context.Context) ([]*models.Category, err
 
 // Payments is the resolver for the payments field.
 func (r *queryResolver) Payments(ctx context.Context, userID int) ([]*models.Payment, error) {
-	panic(fmt.Errorf("not implemented: Payments - payments"))
+	usecase := usecases.NewPaymentService()
+
+	payments, err := usecase.GetAllPaymentByUserId(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	return payments, nil
 }
 
 // Query returns graph.QueryResolver implementation.
