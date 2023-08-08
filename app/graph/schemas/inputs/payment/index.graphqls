@@ -2,7 +2,7 @@ input CreatePayment {
   label: String!
   categoryName: String!
   paymentType: String!
-  paymentAt: Date!
+  paymentAt: Time!
   cost: Int!
   userId: Int!
 }

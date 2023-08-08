@@ -22,11 +22,6 @@ func (r *debitResolver) Amount(ctx context.Context, obj *models.Debit) (*float64
 	panic(fmt.Errorf("not implemented: Amount - amount"))
 }
 
-// Date is the resolver for the date field.
-func (r *entryResolver) Date(ctx context.Context, obj *models.Entry) (string, error) {
-	panic(fmt.Errorf("not implemented: Date - date"))
-}
-
 // Debits is the resolver for the debits field.
 func (r *entryResolver) Debits(ctx context.Context, obj *models.Entry) ([]*models.Debit, error) {
 	panic(fmt.Errorf("not implemented: Debits - debits"))
@@ -35,16 +30,6 @@ func (r *entryResolver) Debits(ctx context.Context, obj *models.Entry) ([]*model
 // Credits is the resolver for the credits field.
 func (r *entryResolver) Credits(ctx context.Context, obj *models.Entry) ([]*models.Credit, error) {
 	panic(fmt.Errorf("not implemented: Credits - credits"))
-}
-
-// CreatedAt is the resolver for the createdAt field.
-func (r *itemResolver) CreatedAt(ctx context.Context, obj *models.Item) (string, error) {
-	panic(fmt.Errorf("not implemented: CreatedAt - createdAt"))
-}
-
-// UpdatedAt is the resolver for the updatedAt field.
-func (r *itemResolver) UpdatedAt(ctx context.Context, obj *models.Item) (string, error) {
-	panic(fmt.Errorf("not implemented: UpdatedAt - updatedAt"))
 }
 
 // User is the resolver for the user field.
@@ -98,6 +83,15 @@ type todoResolver struct{ *Resolver }
 //   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //     it when you're done.
 //   - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *entryResolver) Date(ctx context.Context, obj *models.Entry) (string, error) {
+	panic(fmt.Errorf("not implemented: Date - date"))
+}
+func (r *itemResolver) CreatedAt(ctx context.Context, obj *models.Item) (string, error) {
+	panic(fmt.Errorf("not implemented: CreatedAt - createdAt"))
+}
+func (r *itemResolver) UpdatedAt(ctx context.Context, obj *models.Item) (string, error) {
+	panic(fmt.Errorf("not implemented: UpdatedAt - updatedAt"))
+}
 func (r *paymentResolver) PaymentAt(ctx context.Context, obj *models.Payment) (string, error) {
 	panic(fmt.Errorf("not implemented: PaymentAt - paymentAt"))
 }

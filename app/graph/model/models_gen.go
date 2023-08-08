@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"time"
 )
 
 type CreateEntryRequest struct {
@@ -16,12 +17,12 @@ type CreateEntryRequest struct {
 }
 
 type CreatePayment struct {
-	Label        string `json:"label"`
-	CategoryName string `json:"categoryName"`
-	PaymentType  string `json:"paymentType"`
-	PaymentAt    string `json:"paymentAt"`
-	Cost         int    `json:"cost"`
-	UserID       int    `json:"userId"`
+	Label        string    `json:"label"`
+	CategoryName string    `json:"categoryName"`
+	PaymentType  string    `json:"paymentType"`
+	PaymentAt    time.Time `json:"paymentAt"`
+	Cost         int       `json:"cost"`
+	UserID       int       `json:"userId"`
 }
 
 type CreatePredictCost struct {

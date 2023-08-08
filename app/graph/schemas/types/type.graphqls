@@ -1,5 +1,3 @@
-scalar Date
-scalar DateTime
 scalar Time
 
 type Todo {
@@ -26,15 +24,15 @@ type Item {
   id: ID!
   label: String!
   categoryName: String!
-  createdAt: Date!
-  updatedAt: Date!
+  createdAt: Time!
+  updatedAt: Time!
   cost: Int!
   user: User!
 }
 
 type Entry {
   description: String!
-  date: Date!
+  date: Time!
   debits: [Debit]
   credits: [Credit]
 }
