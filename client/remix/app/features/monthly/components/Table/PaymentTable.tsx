@@ -1,10 +1,10 @@
 import { Payment } from "~/gql/graphql";
+import { useGetAllPayment } from "../../hooks/useGetAllPayment";
 // import { PredictCostRow } from "../../../predictCost/components/Table/PredictCostRow";
 
-type Props = {
-  payments: Payment[] | undefined;
-};
-export const PaymentTable = ({ payments }: Props) => {
+export const PaymentTable = () => {
+  const { payments } = useGetAllPayment();
+
   const initialValue = 0;
 
   const totalCounts = payments

@@ -261,7 +261,6 @@ export type GetAllPaymentQueryQuery = {
     id: string;
     label: string;
     categoryName: string;
-    paymentAt: any;
     cost: number;
     paymentType: string;
   }>;
@@ -353,7 +352,7 @@ export type GetAllCategoryQuery = {
 };
 
 export type CreatePaymentMutationMutationVariables = Exact<{
-  [key: string]: never;
+  input: CreatePayment;
 }>;
 
 export type CreatePaymentMutationMutation = {
@@ -395,7 +394,6 @@ export const GetAllPaymentQueryDocument = new TypedDocumentString(`
     id
     label
     categoryName
-    paymentAt
     cost
     paymentType
   }
@@ -486,10 +484,8 @@ export const GetAllCategoryDocument = new TypedDocumentString(`
   GetAllCategoryQueryVariables
 >;
 export const CreatePaymentMutationDocument = new TypedDocumentString(`
-    mutation createPaymentMutation {
-  createPayment(
-    input: {cost: 100, categoryName: "食料品", label: "ご飯", userId: 1, paymentType: "Cash", paymentAt: "2023-08-08"}
-  ) {
+    mutation createPaymentMutation($input: CreatePayment!) {
+  createPayment(input: $input) {
     id
     cost
     paymentAt

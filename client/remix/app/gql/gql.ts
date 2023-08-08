@@ -12,7 +12,7 @@ import * as types from "./graphql";
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-  "\n    query getAllPaymentQuery{\n        payments(userId: 1){\n            id\n            label\n            categoryName\n            paymentAt\n            cost\n            paymentType\n        }\n    }\n":
+  "\n    query getAllPaymentQuery{\n        payments(userId: 1){\n            id\n            label\n            categoryName\n            cost\n            paymentType\n        }\n    }\n":
     types.GetAllPaymentQueryDocument,
   "\n    query getAllPredictCostQuery{\n        predictCosts(userId: 1){\n            id\n            label\n            categoryName\n            amount\n    } \n}\n":
     types.GetAllPredictCostQueryDocument,
@@ -30,7 +30,7 @@ const documents = {
     types.CreateTodoMutationDocument,
   "\nquery getAllCategory{\n  categories{\n    Classification\n  }\n}\n":
     types.GetAllCategoryDocument,
-  '\n    mutation createPaymentMutation{\n    createPayment(input: {cost:100, categoryName:"食料品", label: "ご飯",userId: 1,paymentType: "Cash", paymentAt: "2023-08-08" }) {\n        id\n        cost\n        paymentAt\n    }\n    }\n':
+  "\n    mutation createPaymentMutation($input: CreatePayment!){\n    createPayment(input: $input) {\n        id\n        cost\n        paymentAt\n    }\n    }\n":
     types.CreatePaymentMutationDocument,
 };
 
@@ -38,7 +38,7 @@ const documents = {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n    query getAllPaymentQuery{\n        payments(userId: 1){\n            id\n            label\n            categoryName\n            paymentAt\n            cost\n            paymentType\n        }\n    }\n"
+  source: "\n    query getAllPaymentQuery{\n        payments(userId: 1){\n            id\n            label\n            categoryName\n            cost\n            paymentType\n        }\n    }\n"
 ): typeof import("./graphql").GetAllPaymentQueryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -92,7 +92,7 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n    mutation createPaymentMutation{\n    createPayment(input: {cost:100, categoryName:"食料品", label: "ご飯",userId: 1,paymentType: "Cash", paymentAt: "2023-08-08" }) {\n        id\n        cost\n        paymentAt\n    }\n    }\n'
+  source: "\n    mutation createPaymentMutation($input: CreatePayment!){\n    createPayment(input: $input) {\n        id\n        cost\n        paymentAt\n    }\n    }\n"
 ): typeof import("./graphql").CreatePaymentMutationDocument;
 
 export function graphql(source: string) {

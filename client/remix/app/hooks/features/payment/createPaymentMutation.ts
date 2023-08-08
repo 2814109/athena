@@ -4,10 +4,11 @@ import { GraphQLClient } from "graphql-request";
 import { CreatePayment } from "~/gql/graphql";
 
 import { graphql } from "~/gql"
+import { useGetAllPayment } from "~/features/monthly/hooks/useGetAllPayment";
 
 const createPaymentDocuments = graphql(`
-    mutation createPaymentMutation{
-    createPayment(input: {cost:100, categoryName:"食料品", label: "ご飯",userId: 1,paymentType: "Cash", paymentAt: "2023-08-08" }) {
+    mutation createPaymentMutation($input: CreatePayment!){
+    createPayment(input: $input) {
         id
         cost
         paymentAt
@@ -16,6 +17,8 @@ const createPaymentDocuments = graphql(`
 `)
 
 export const useCreatePayment = () => {
+    const { refetch } = useGetAllPayment();
+
       const graphQLClient = new GraphQLClient(endpoint, { method: "POST" });
 
   const mutation = useMutation({
@@ -27,7 +30,7 @@ export const useCreatePayment = () => {
     },
       onSuccess: (response) => {
           console.log(response)
-        //   refetch()
+           refetch()
       return null;
     },
   });

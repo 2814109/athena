@@ -7,7 +7,6 @@ const getAllPaymentDocuments = graphql(`
             id
             label
             categoryName
-            paymentAt
             cost
             paymentType
         }

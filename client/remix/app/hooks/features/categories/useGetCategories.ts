@@ -1,4 +1,4 @@
-import { graphql } from "~/gql/gql";
+import { graphql } from "~/gql";
 
 import { useGraphQL } from "~/fetcher/use-graphql";
 
