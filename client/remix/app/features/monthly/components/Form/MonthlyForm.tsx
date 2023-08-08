@@ -1,4 +1,4 @@
-import { CreatePredictCost } from "~/gql/graphql";
+import { CreatePayment } from "~/gql/graphql";
 import { LabelInputField } from "~/components/Form/LabelInputField";
 import { useFormController } from "../../hooks/useFormController";
 import { SubmitButton } from "~/components/Form/SubmitButton";
@@ -25,7 +25,7 @@ export const MonthlyForm = () => {
           onSubmit={handleSubmitAction()}
         >
           <Controller
-            name="label"
+            name="paymentAt"
             control={control}
             render={({ field }) => (
               <DatePicker
@@ -38,20 +38,20 @@ export const MonthlyForm = () => {
             )}
           />
 
-          <LabelInputField<CreatePredictCost>
+          <LabelInputField<CreatePayment>
             props={{ type: "number" }}
-            label={"amount"}
+            label={"cost"}
             errorField={errors.label}
-            register={register("amount", { required: true })}
+            register={register("cost", { required: true })}
           />
 
-          <LabelInputField<CreatePredictCost>
+          <LabelInputField<CreatePayment>
             label={"label"}
             errorField={errors.label}
             register={register("label", { required: true })}
           />
 
-          <CategorySelectFiled<CreatePredictCost>
+          <CategorySelectFiled<CreatePayment>
             label={"categoryName"}
             register={register("categoryName", { required: true })}
             errorField={errors.categoryName}

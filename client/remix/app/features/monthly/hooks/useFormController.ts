@@ -1,16 +1,16 @@
-import { useCreatePredictCost } from "~/features/predictCost/hooks/useCreatePredictCost";
 import { useForm } from "react-hook-form";
-import { CreatePredictCost } from "~/gql/graphql";
+import { CreatePayment } from "~/gql/graphql";
+import { useCreatePayment } from "~/hooks/features/payment/createPaymentMutation";
 
 export const useFormController = () => {
-    const { mutation } = useCreatePredictCost();
+    const { mutation } = useCreatePayment();
   const {
       control,
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<CreatePredictCost>();
-  const onSubmit = (data: CreatePredictCost) => {
+    } = useForm<CreatePayment>();
+  const onSubmit = (data: CreatePayment) => {
     const request = {
       ...data,
       ...{ userId: 1 },
