@@ -5568,7 +5568,7 @@ func (ec *executionContext) unmarshalInputCreatePayment(ctx context.Context, obj
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"label", "categoryName", "paymentType", "paymentAt", "cost"}
+	fieldsInOrder := [...]string{"label", "categoryName", "paymentType", "paymentAt", "cost", "userId"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -5620,6 +5620,15 @@ func (ec *executionContext) unmarshalInputCreatePayment(ctx context.Context, obj
 				return it, err
 			}
 			it.Cost = data
+		case "userId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UserID = data
 		}
 	}
 

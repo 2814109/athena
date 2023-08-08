@@ -4,4 +4,5 @@ input CreatePayment {
   paymentType: String!
   paymentAt: Date!
   cost: Int!
+  userId: Int!
 }

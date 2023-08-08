@@ -21,6 +21,7 @@ type CreatePayment struct {
 	PaymentType  string `json:"paymentType"`
 	PaymentAt    string `json:"paymentAt"`
 	Cost         int    `json:"cost"`
+	UserID       int    `json:"userId"`
 }
 
 type CreatePredictCost struct {
