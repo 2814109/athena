@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"my_gql_server/graph"
 	"my_gql_server/models"
+	"time"
 )
 
 // Amount is the resolver for the amount field.
@@ -51,18 +52,13 @@ func (r *itemResolver) User(ctx context.Context, obj *models.Item) (*models.User
 	panic(fmt.Errorf("not implemented: User - user"))
 }
 
-// PaymentAt is the resolver for the paymentAt field.
-func (r *paymentResolver) PaymentAt(ctx context.Context, obj *models.Payment) (string, error) {
-	panic(fmt.Errorf("not implemented: PaymentAt - paymentAt"))
-}
-
 // CreateAt is the resolver for the createAt field.
-func (r *paymentResolver) CreateAt(ctx context.Context, obj *models.Payment) (string, error) {
+func (r *paymentResolver) CreateAt(ctx context.Context, obj *models.Payment) (*time.Time, error) {
 	panic(fmt.Errorf("not implemented: CreateAt - createAt"))
 }
 
 // UpdateAt is the resolver for the updateAt field.
-func (r *paymentResolver) UpdateAt(ctx context.Context, obj *models.Payment) (string, error) {
+func (r *paymentResolver) UpdateAt(ctx context.Context, obj *models.Payment) (*time.Time, error) {
 	panic(fmt.Errorf("not implemented: UpdateAt - updateAt"))
 }
 
@@ -95,3 +91,13 @@ type entryResolver struct{ *Resolver }
 type itemResolver struct{ *Resolver }
 type paymentResolver struct{ *Resolver }
 type todoResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//     it when you're done.
+//   - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *paymentResolver) PaymentAt(ctx context.Context, obj *models.Payment) (string, error) {
+	panic(fmt.Errorf("not implemented: PaymentAt - paymentAt"))
+}

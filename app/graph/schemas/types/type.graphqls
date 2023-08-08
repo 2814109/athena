@@ -1,4 +1,6 @@
 scalar Date
+scalar DateTime
+scalar Time
 
 type Todo {
   id: ID!
@@ -63,9 +65,9 @@ type Payment {
   label: String!
   categoryName: String!
   paymentType: String!
-  paymentAt: Date!
+  paymentAt: Time!
   cost: Int!
-  createAt: Date!
-  updateAt: Date!
+  createAt: Time!
+  updateAt: Time!
   userID: Int!
 }
