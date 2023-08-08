@@ -6,7 +6,6 @@ package presentations
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"my_gql_server/graph"
 	"my_gql_server/graph/model"
@@ -94,7 +93,14 @@ func (r *mutationResolver) DeletePredictCost(ctx context.Context, predictCostID 
 
 // CreatePayment is the resolver for the createPayment field.
 func (r *mutationResolver) CreatePayment(ctx context.Context, input model.CreatePayment) (*models.Payment, error) {
-	panic(fmt.Errorf("not implemented: CreatePayment - createPayment"))
+	usecase := usecases.NewPaymentService()
+	result, err := usecase.Create(ctx, input)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 // Mutation returns graph.MutationResolver implementation.
