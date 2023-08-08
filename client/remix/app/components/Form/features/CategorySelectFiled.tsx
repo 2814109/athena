@@ -6,7 +6,7 @@ import {
   UseFormRegisterReturn,
 } from "react-hook-form";
 import { LabelSelectField } from "~/components/Form/LabelSelectField";
-import { useGetCategories } from "~/hooks/useGetCategories";
+import { useGetCategories } from "~/hooks/features/categories/useGetCategories";
 
 type Props<T extends FieldValues> = {
   label: keyof T;

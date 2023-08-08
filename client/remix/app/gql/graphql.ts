@@ -28,6 +28,8 @@ export type Scalars = {
   Int: { input: number; output: number };
   Float: { input: number; output: number };
   Date: { input: any; output: any };
+  DateTime: { input: any; output: any };
+  Time: { input: any; output: any };
 };
 
 export type Article = {
@@ -56,6 +58,15 @@ export type CreateEntryRequest = {
   date?: InputMaybe<Scalars["String"]["input"]>;
   debits?: InputMaybe<Array<InputMaybe<DebitInput>>>;
   description?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreatePayment = {
+  categoryName: Scalars["String"]["input"];
+  cost: Scalars["Int"]["input"];
+  label: Scalars["String"]["input"];
+  paymentAt: Scalars["Date"]["input"];
+  paymentType: Scalars["String"]["input"];
+  userId: Scalars["Int"]["input"];
 };
 
 export type CreatePredictCost = {
@@ -115,6 +126,7 @@ export type Item = {
 export type Mutation = {
   __typename?: "Mutation";
   createEnty: Entry;
+  createPayment: Payment;
   createPredictCost: PredictCost;
   createTodo: Todo;
   createUser: User;
@@ -124,6 +136,10 @@ export type Mutation = {
 
 export type MutationCreateEntyArgs = {
   input: CreateEntryRequest;
+};
+
+export type MutationCreatePaymentArgs = {
+  input: CreatePayment;
 };
 
 export type MutationCreatePredictCostArgs = {
@@ -148,6 +164,19 @@ export type MutationUpdateTodoArgs = {
 
 export type NewUser = {
   name: Scalars["String"]["input"];
+};
+
+export type Payment = {
+  __typename?: "Payment";
+  categoryName: Scalars["String"]["output"];
+  cost: Scalars["Int"]["output"];
+  createAt: Scalars["Time"]["output"];
+  id: Scalars["ID"]["output"];
+  label: Scalars["String"]["output"];
+  paymentAt: Scalars["Time"]["output"];
+  paymentType: Scalars["String"]["output"];
+  updateAt: Scalars["Time"]["output"];
+  userID: Scalars["Int"]["output"];
 };
 
 export type PredictCost = {
@@ -220,46 +249,6 @@ export type User = {
   name: Scalars["String"]["output"];
 };
 
-export type FindTodoByIdQueryQueryVariables = Exact<{
-  id: Scalars["Int"]["input"];
-}>;
-
-export type FindTodoByIdQueryQuery = {
-  __typename?: "Query";
-  todo: {
-    __typename?: "Todo";
-    id: string;
-    user: { __typename?: "User" } & {
-      " $fragmentRefs"?: { UserItemFragment: UserItemFragment };
-    };
-  };
-};
-
-export type UserItemFragment = {
-  __typename?: "User";
-  id: string;
-  name: string;
-} & { " $fragmentName"?: "UserItemFragment" };
-
-export type GetAllTodoByUserIdQueryQueryVariables = Exact<{
-  [key: string]: never;
-}>;
-
-export type GetAllTodoByUserIdQueryQuery = {
-  __typename?: "Query";
-  todos: Array<{ __typename?: "Todo"; id: string }>;
-};
-
-export type GetAllCategoryQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetAllCategoryQuery = {
-  __typename?: "Query";
-  categories?: Array<{
-    __typename?: "Category";
-    Classification: string;
-  }> | null;
-};
-
 export type GetAllPredictCostQueryQueryVariables = Exact<{
   [key: string]: never;
 }>;
@@ -299,6 +288,36 @@ export type DeletePredictCostMutationMutation = {
   deletePredictCost: boolean;
 };
 
+export type FindTodoByIdQueryQueryVariables = Exact<{
+  id: Scalars["Int"]["input"];
+}>;
+
+export type FindTodoByIdQueryQuery = {
+  __typename?: "Query";
+  todo: {
+    __typename?: "Todo";
+    id: string;
+    user: { __typename?: "User" } & {
+      " $fragmentRefs"?: { UserItemFragment: UserItemFragment };
+    };
+  };
+};
+
+export type UserItemFragment = {
+  __typename?: "User";
+  id: string;
+  name: string;
+} & { " $fragmentName"?: "UserItemFragment" };
+
+export type GetAllTodoByUserIdQueryQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetAllTodoByUserIdQueryQuery = {
+  __typename?: "Query";
+  todos: Array<{ __typename?: "Todo"; id: string }>;
+};
+
 export type CreateTodoMutationMutationVariables = Exact<{
   input: CreateTodo;
 }>;
@@ -306,6 +325,30 @@ export type CreateTodoMutationMutationVariables = Exact<{
 export type CreateTodoMutationMutation = {
   __typename?: "Mutation";
   createTodo: { __typename?: "Todo"; id: string; content: string };
+};
+
+export type GetAllCategoryQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllCategoryQuery = {
+  __typename?: "Query";
+  categories?: Array<{
+    __typename?: "Category";
+    Classification: string;
+  }> | null;
+};
+
+export type CreatePaymentMutationMutationVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type CreatePaymentMutationMutation = {
+  __typename?: "Mutation";
+  createPayment: {
+    __typename?: "Payment";
+    id: string;
+    cost: number;
+    paymentAt: any;
+  };
 };
 
 export class TypedDocumentString<TResult, TVariables>
@@ -331,42 +374,6 @@ export const UserItemFragmentDoc = new TypedDocumentString(
     `,
   { fragmentName: "UserItem" }
 ) as unknown as TypedDocumentString<UserItemFragment, unknown>;
-export const FindTodoByIdQueryDocument = new TypedDocumentString(`
-    query findTodoByIdQuery($id: Int!) {
-  todo(ID: $id) {
-    id
-    user {
-      ...UserItem
-    }
-  }
-}
-    fragment UserItem on User {
-  id
-  name
-}`) as unknown as TypedDocumentString<
-  FindTodoByIdQueryQuery,
-  FindTodoByIdQueryQueryVariables
->;
-export const GetAllTodoByUserIdQueryDocument = new TypedDocumentString(`
-    query getAllTodoByUserIdQuery {
-  todos(userId: 1) {
-    id
-  }
-}
-    `) as unknown as TypedDocumentString<
-  GetAllTodoByUserIdQueryQuery,
-  GetAllTodoByUserIdQueryQueryVariables
->;
-export const GetAllCategoryDocument = new TypedDocumentString(`
-    query getAllCategory {
-  categories {
-    Classification
-  }
-}
-    `) as unknown as TypedDocumentString<
-  GetAllCategoryQuery,
-  GetAllCategoryQueryVariables
->;
 export const GetAllPredictCostQueryDocument = new TypedDocumentString(`
     query getAllPredictCostQuery {
   predictCosts(userId: 1) {
@@ -401,6 +408,32 @@ export const DeletePredictCostMutationDocument = new TypedDocumentString(`
   DeletePredictCostMutationMutation,
   DeletePredictCostMutationMutationVariables
 >;
+export const FindTodoByIdQueryDocument = new TypedDocumentString(`
+    query findTodoByIdQuery($id: Int!) {
+  todo(ID: $id) {
+    id
+    user {
+      ...UserItem
+    }
+  }
+}
+    fragment UserItem on User {
+  id
+  name
+}`) as unknown as TypedDocumentString<
+  FindTodoByIdQueryQuery,
+  FindTodoByIdQueryQueryVariables
+>;
+export const GetAllTodoByUserIdQueryDocument = new TypedDocumentString(`
+    query getAllTodoByUserIdQuery {
+  todos(userId: 1) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<
+  GetAllTodoByUserIdQueryQuery,
+  GetAllTodoByUserIdQueryQueryVariables
+>;
 export const CreateTodoMutationDocument = new TypedDocumentString(`
     mutation createTodoMutation($input: CreateTodo!) {
   createTodo(input: $input) {
@@ -411,4 +444,28 @@ export const CreateTodoMutationDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<
   CreateTodoMutationMutation,
   CreateTodoMutationMutationVariables
+>;
+export const GetAllCategoryDocument = new TypedDocumentString(`
+    query getAllCategory {
+  categories {
+    Classification
+  }
+}
+    `) as unknown as TypedDocumentString<
+  GetAllCategoryQuery,
+  GetAllCategoryQueryVariables
+>;
+export const CreatePaymentMutationDocument = new TypedDocumentString(`
+    mutation createPaymentMutation {
+  createPayment(
+    input: {cost: 100, categoryName: "食料品", label: "ご飯", userId: 1, paymentType: "Cash", paymentAt: "2023-08-08"}
+  ) {
+    id
+    cost
+    paymentAt
+  }
+}
+    `) as unknown as TypedDocumentString<
+  CreatePaymentMutationMutation,
+  CreatePaymentMutationMutationVariables
 >;
