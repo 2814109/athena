@@ -15,6 +15,14 @@ type CreateEntryRequest struct {
 	Credits     []*CreditInput `json:"credits,omitempty"`
 }
 
+type CreatePayment struct {
+	Label        string `json:"label"`
+	CategoryName string `json:"categoryName"`
+	PaymentType  string `json:"paymentType"`
+	PaymentAt    string `json:"paymentAt"`
+	Cost         int    `json:"cost"`
+}
+
 type CreatePredictCost struct {
 	CategoryName string `json:"categoryName"`
 	Label        string `json:"label"`

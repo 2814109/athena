@@ -51,6 +51,21 @@ func (r *itemResolver) User(ctx context.Context, obj *models.Item) (*models.User
 	panic(fmt.Errorf("not implemented: User - user"))
 }
 
+// PaymentAt is the resolver for the paymentAt field.
+func (r *paymentResolver) PaymentAt(ctx context.Context, obj *models.Payment) (string, error) {
+	panic(fmt.Errorf("not implemented: PaymentAt - paymentAt"))
+}
+
+// CreateAt is the resolver for the createAt field.
+func (r *paymentResolver) CreateAt(ctx context.Context, obj *models.Payment) (string, error) {
+	panic(fmt.Errorf("not implemented: CreateAt - createAt"))
+}
+
+// UpdateAt is the resolver for the updateAt field.
+func (r *paymentResolver) UpdateAt(ctx context.Context, obj *models.Payment) (string, error) {
+	panic(fmt.Errorf("not implemented: UpdateAt - updateAt"))
+}
+
 // User is the resolver for the user field.
 func (r *todoResolver) User(ctx context.Context, obj *models.Todo) (*models.User, error) {
 	return obj.R.User, nil
@@ -68,6 +83,9 @@ func (r *Resolver) Entry() graph.EntryResolver { return &entryResolver{r} }
 // Item returns graph.ItemResolver implementation.
 func (r *Resolver) Item() graph.ItemResolver { return &itemResolver{r} }
 
+// Payment returns graph.PaymentResolver implementation.
+func (r *Resolver) Payment() graph.PaymentResolver { return &paymentResolver{r} }
+
 // Todo returns graph.TodoResolver implementation.
 func (r *Resolver) Todo() graph.TodoResolver { return &todoResolver{r} }
 
@@ -75,4 +93,5 @@ type creditResolver struct{ *Resolver }
 type debitResolver struct{ *Resolver }
 type entryResolver struct{ *Resolver }
 type itemResolver struct{ *Resolver }
+type paymentResolver struct{ *Resolver }
 type todoResolver struct{ *Resolver }

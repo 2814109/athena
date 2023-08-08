@@ -1,0 +1,7 @@
+input CreatePayment {
+  label: String!
+  categoryName: String!
+  paymentType: String!
+  paymentAt: Date!
+  cost: Int!
+}
