@@ -34,7 +34,6 @@ export const MonthlyForm = () => {
                   width: "100%",
                 })}
                 {...field}
-                value={new Date()}
               />
             )}
           />

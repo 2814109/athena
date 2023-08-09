@@ -11,10 +11,8 @@ export const useFormController = () => {
         formState: { errors },
     } = useForm<CreatePayment>();
   const onSubmit = (data: CreatePayment) => {
-    
     const request = {
       ...data,
-      ...{paymentAt: new Date()},
       ...{ userId: 1 },
     };
     mutation.mutate(request);
