@@ -9,7 +9,7 @@ export const useFormController = () => {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<CreatePayment>();
+    } = useForm<CreatePayment>({defaultValues: {paymentAt: new Date()}});
   const onSubmit = (data: CreatePayment) => {
     const request = {
       ...data,
