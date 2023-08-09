@@ -32,6 +32,8 @@ const documents = {
     types.GetAllCategoryDocument,
   "\n    mutation createPaymentMutation($input: CreatePayment!){\n    createPayment(input: $input) {\n        id\n        cost\n        paymentAt\n    }\n    }\n":
     types.CreatePaymentMutationDocument,
+  "\n    query getAllPaymentType{\n        paymentTypes{\n            label\n        }\n}\n":
+    types.GetAllPaymentTypeDocument,
 };
 
 /**
@@ -94,6 +96,12 @@ export function graphql(
 export function graphql(
   source: "\n    mutation createPaymentMutation($input: CreatePayment!){\n    createPayment(input: $input) {\n        id\n        cost\n        paymentAt\n    }\n    }\n"
 ): typeof import("./graphql").CreatePaymentMutationDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\n    query getAllPaymentType{\n        paymentTypes{\n            label\n        }\n}\n"
+): typeof import("./graphql").GetAllPaymentTypeDocument;
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

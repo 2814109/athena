@@ -6,6 +6,7 @@ import { css } from "styled-system/css";
 import { CategorySelectFiled } from "~/components/Form/features/CategorySelectFiled";
 import { DatePicker } from "rsuite";
 import { Controller } from "react-hook-form";
+import { PaymentTypeSelectFiled } from "~/components/Form/features/PaymentTypeSelectField";
 
 export const MonthlyForm = () => {
   const { register, handleSubmitAction, control, errors } = useFormController();
@@ -54,6 +55,12 @@ export const MonthlyForm = () => {
           <CategorySelectFiled<CreatePayment>
             label={"categoryName"}
             register={register("categoryName", { required: true })}
+            errorField={errors.categoryName}
+          />
+
+          <PaymentTypeSelectFiled<CreatePayment>
+            label={"paymentType"}
+            register={register("paymentType", { required: true })}
             errorField={errors.categoryName}
           />
           <SubmitButton />

@@ -52,10 +52,6 @@ type NewUser struct {
 	Name string `json:"name"`
 }
 
-type PaymentType struct {
-	Label string `json:"label"`
-}
-
 type UpdateTodo struct {
 	ID     int            `json:"ID"`
 	Status *StatusPattern `json:"status,omitempty"`

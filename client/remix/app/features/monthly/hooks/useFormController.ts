@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { CreatePayment } from "~/gql/graphql";
-import { useCreatePayment } from "~/hooks/features/payment/createPaymentMutation";
+import { useCreatePayment } from "~/hooks/features/payment/useCreatePayment";
 
 export const useFormController = () => {
     const { mutation } = useCreatePayment();
@@ -11,8 +11,10 @@ export const useFormController = () => {
         formState: { errors },
     } = useForm<CreatePayment>();
   const onSubmit = (data: CreatePayment) => {
+    
     const request = {
       ...data,
+      ...{paymentAt: new Date()},
       ...{ userId: 1 },
     };
     mutation.mutate(request);

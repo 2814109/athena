@@ -184,7 +184,7 @@ type QueryResolver interface {
 	PredictCosts(ctx context.Context, userID int) ([]*models.PredictCost, error)
 	Categories(ctx context.Context) ([]*models.Category, error)
 	Payments(ctx context.Context, userID int) ([]*models.Payment, error)
-	PaymentTypes(ctx context.Context) ([]*model.PaymentType, error)
+	PaymentTypes(ctx context.Context) ([]*models.PaymentType, error)
 }
 type TodoResolver interface {
 	User(ctx context.Context, obj *models.Todo) (*models.User, error)
@@ -2762,7 +2762,7 @@ func (ec *executionContext) fieldContext_Payment_userID(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _PaymentType_label(ctx context.Context, field graphql.CollectedField, obj *model.PaymentType) (ret graphql.Marshaler) {
+func (ec *executionContext) _PaymentType_label(ctx context.Context, field graphql.CollectedField, obj *models.PaymentType) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_PaymentType_label(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -3523,9 +3523,9 @@ func (ec *executionContext) _Query_paymentTypes(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.PaymentType)
+	res := resTmp.([]*models.PaymentType)
 	fc.Result = res
-	return ec.marshalNPaymentType2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐPaymentTypeᚄ(ctx, field.Selections, res)
+	return ec.marshalNPaymentType2ᚕᚖmy_gql_serverᚋmodelsᚐPaymentTypeᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_paymentTypes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6639,7 +6639,7 @@ func (ec *executionContext) _Payment(ctx context.Context, sel ast.SelectionSet, 
 
 var paymentTypeImplementors = []string{"PaymentType"}
 
-func (ec *executionContext) _PaymentType(ctx context.Context, sel ast.SelectionSet, obj *model.PaymentType) graphql.Marshaler {
+func (ec *executionContext) _PaymentType(ctx context.Context, sel ast.SelectionSet, obj *models.PaymentType) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, paymentTypeImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -7692,7 +7692,7 @@ func (ec *executionContext) marshalNPayment2ᚖmy_gql_serverᚋmodelsᚐPayment(
 	return ec._Payment(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPaymentType2ᚕᚖmy_gql_serverᚋgraphᚋmodelᚐPaymentTypeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.PaymentType) graphql.Marshaler {
+func (ec *executionContext) marshalNPaymentType2ᚕᚖmy_gql_serverᚋmodelsᚐPaymentTypeᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.PaymentType) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -7716,7 +7716,7 @@ func (ec *executionContext) marshalNPaymentType2ᚕᚖmy_gql_serverᚋgraphᚋmo
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPaymentType2ᚖmy_gql_serverᚋgraphᚋmodelᚐPaymentType(ctx, sel, v[i])
+			ret[i] = ec.marshalNPaymentType2ᚖmy_gql_serverᚋmodelsᚐPaymentType(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -7736,7 +7736,7 @@ func (ec *executionContext) marshalNPaymentType2ᚕᚖmy_gql_serverᚋgraphᚋmo
 	return ret
 }
 
-func (ec *executionContext) marshalNPaymentType2ᚖmy_gql_serverᚋgraphᚋmodelᚐPaymentType(ctx context.Context, sel ast.SelectionSet, v *model.PaymentType) graphql.Marshaler {
+func (ec *executionContext) marshalNPaymentType2ᚖmy_gql_serverᚋmodelsᚐPaymentType(ctx context.Context, sel ast.SelectionSet, v *models.PaymentType) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")

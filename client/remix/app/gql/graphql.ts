@@ -177,6 +177,11 @@ export type Payment = {
   userID: Scalars["Int"]["output"];
 };
 
+export type PaymentType = {
+  __typename?: "PaymentType";
+  label: Scalars["String"]["output"];
+};
+
 export type PredictCost = {
   __typename?: "PredictCost";
   amount: Scalars["Int"]["output"];
@@ -191,6 +196,7 @@ export type Query = {
   categories: Array<Category>;
   entry: Entry;
   items: Array<Item>;
+  paymentTypes: Array<PaymentType>;
   payments: Array<Payment>;
   predictCosts: Array<PredictCost>;
   todo: Todo;
@@ -365,6 +371,13 @@ export type CreatePaymentMutationMutation = {
   };
 };
 
+export type GetAllPaymentTypeQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllPaymentTypeQuery = {
+  __typename?: "Query";
+  paymentTypes: Array<{ __typename?: "PaymentType"; label: string }>;
+};
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -494,4 +507,14 @@ export const CreatePaymentMutationDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<
   CreatePaymentMutationMutation,
   CreatePaymentMutationMutationVariables
+>;
+export const GetAllPaymentTypeDocument = new TypedDocumentString(`
+    query getAllPaymentType {
+  paymentTypes {
+    label
+  }
+}
+    `) as unknown as TypedDocumentString<
+  GetAllPaymentTypeQuery,
+  GetAllPaymentTypeQueryVariables
 >;
