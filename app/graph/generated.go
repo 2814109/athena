@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"my_gql_server/graph/model"
 	"my_gql_server/models"
+	"reflect"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -47,6 +48,7 @@ type ResolverRoot interface {
 	Payment() PaymentResolver
 	Query() QueryResolver
 	Todo() TodoResolver
+	PaymentType() PaymentTypeResolver
 }
 
 type DirectiveRoot struct {
@@ -125,6 +127,7 @@ type ComplexityRoot struct {
 		Categories   func(childComplexity int) int
 		Entry        func(childComplexity int, id int) int
 		Items        func(childComplexity int, userID int) int
+		PaymentTypes func(childComplexity int) int
 		Payments     func(childComplexity int, userID int) int
 		PredictCosts func(childComplexity int, userID int) int
 		Todo         func(childComplexity int, id int) int
@@ -141,6 +144,10 @@ type ComplexityRoot struct {
 		Email func(childComplexity int) int
 		ID    func(childComplexity int) int
 		Name  func(childComplexity int) int
+	}
+
+	PaymentType struct {
+		Label func(childComplexity int) int
 	}
 }
 
@@ -179,9 +186,13 @@ type QueryResolver interface {
 	PredictCosts(ctx context.Context, userID int) ([]*models.PredictCost, error)
 	Categories(ctx context.Context) ([]*models.Category, error)
 	Payments(ctx context.Context, userID int) ([]*models.Payment, error)
+	PaymentTypes(ctx context.Context) ([]reflect.Type, error)
 }
 type TodoResolver interface {
 	User(ctx context.Context, obj *models.Todo) (*models.User, error)
+}
+type PaymentTypeResolver interface {
+	Label(ctx context.Context, obj reflect.Type) (string, error)
 }
 
 type executableSchema struct {
@@ -557,6 +568,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Items(childComplexity, args["userId"].(int)), true
 
+	case "Query.paymentTypes":
+		if e.complexity.Query.PaymentTypes == nil {
+			break
+		}
+
+		return e.complexity.Query.PaymentTypes(childComplexity), true
+
 	case "Query.payments":
 		if e.complexity.Query.Payments == nil {
 			break
@@ -646,6 +664,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Name(childComplexity), true
+
+	case "paymentType.label":
+		if e.complexity.PaymentType.Label == nil {
+			break
+		}
+
+		return e.complexity.PaymentType.Label(childComplexity), true
 
 	}
 	return 0, false
@@ -3433,6 +3458,54 @@ func (ec *executionContext) fieldContext_Query_payments(ctx context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_paymentTypes(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_paymentTypes(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PaymentTypes(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]reflect.Type)
+	fc.Result = res
+	return ec.marshalNpaymentType2ᚕreflectᚐTypeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_paymentTypes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "label":
+				return ec.fieldContext_paymentType_label(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type paymentType", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query___type(ctx, field)
 	if err != nil {
@@ -5603,6 +5676,50 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 	return fc, nil
 }
 
+func (ec *executionContext) _paymentType_label(ctx context.Context, field graphql.CollectedField, obj reflect.Type) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_paymentType_label(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.PaymentType().Label(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_paymentType_label(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "paymentType",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 // endregion **************************** field.gotpl *****************************
 
 // region    **************************** input.gotpl *****************************
@@ -6777,6 +6894,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "paymentTypes":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_paymentTypes(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "__type":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -7200,6 +7340,47 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 			out.Values[i] = ec.___Type_specifiedByURL(ctx, field, obj)
 
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var paymentTypeImplementors = []string{"paymentType"}
+
+func (ec *executionContext) _paymentType(ctx context.Context, sel ast.SelectionSet, obj reflect.Type) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, paymentTypeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("paymentType")
+		case "label":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._paymentType_label(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -7966,6 +8147,60 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNpaymentType2reflectᚐType(ctx context.Context, sel ast.SelectionSet, v reflect.Type) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._paymentType(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNpaymentType2ᚕreflectᚐTypeᚄ(ctx context.Context, sel ast.SelectionSet, v []reflect.Type) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNpaymentType2reflectᚐType(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

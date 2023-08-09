@@ -69,3 +69,7 @@ type Payment {
   updateAt: Time!
   userID: Int!
 }
+
+type paymentType {
+  label: String!
+}

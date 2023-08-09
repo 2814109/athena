@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"my_gql_server/graph"
 	"my_gql_server/models"
+	"reflect"
 	"time"
 )
 
@@ -52,6 +53,11 @@ func (r *todoResolver) User(ctx context.Context, obj *models.Todo) (*models.User
 	return obj.R.User, nil
 }
 
+// Label is the resolver for the label field.
+func (r *paymentTypeResolver) Label(ctx context.Context, obj reflect.Type) (string, error) {
+	panic(fmt.Errorf("not implemented: Label - label"))
+}
+
 // Credit returns graph.CreditResolver implementation.
 func (r *Resolver) Credit() graph.CreditResolver { return &creditResolver{r} }
 
@@ -70,12 +76,16 @@ func (r *Resolver) Payment() graph.PaymentResolver { return &paymentResolver{r} 
 // Todo returns graph.TodoResolver implementation.
 func (r *Resolver) Todo() graph.TodoResolver { return &todoResolver{r} }
 
+// PaymentType returns graph.PaymentTypeResolver implementation.
+func (r *Resolver) PaymentType() graph.PaymentTypeResolver { return &paymentTypeResolver{r} }
+
 type creditResolver struct{ *Resolver }
 type debitResolver struct{ *Resolver }
 type entryResolver struct{ *Resolver }
 type itemResolver struct{ *Resolver }
 type paymentResolver struct{ *Resolver }
 type todoResolver struct{ *Resolver }
+type paymentTypeResolver struct{ *Resolver }
 
 // !!! WARNING !!!
 // The code below was going to be deleted when updating resolvers. It has been copied here so you have

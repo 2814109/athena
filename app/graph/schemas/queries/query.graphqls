@@ -7,4 +7,5 @@ type Query {
   predictCosts(userId: Int!): [PredictCost!]!
   categories: [Category!]!
   payments(userId: Int!): [Payment!]!
+  paymentTypes: [paymentType!]!
 }

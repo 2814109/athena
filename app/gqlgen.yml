@@ -102,6 +102,8 @@ models:
     model: ./models.Category
   Payment:
     model: ./models.Payment
+  paymentType:
+    model: ./models.paymentType
 
 directives:
   constraint:

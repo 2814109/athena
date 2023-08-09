@@ -6,11 +6,13 @@ package presentations
 
 import (
 	"context"
+	"fmt"
 	"my_gql_server/graph"
 	"my_gql_server/graph/model"
 	"my_gql_server/infrastructures/repositories"
 	"my_gql_server/models"
 	"my_gql_server/usecases"
+	"reflect"
 
 	lop "github.com/samber/lo/parallel"
 )
@@ -123,6 +125,11 @@ func (r *queryResolver) Payments(ctx context.Context, userID int) ([]*models.Pay
 		return nil, err
 	}
 	return payments, nil
+}
+
+// PaymentTypes is the resolver for the paymentTypes field.
+func (r *queryResolver) PaymentTypes(ctx context.Context) ([]reflect.Type, error) {
+	panic(fmt.Errorf("not implemented: PaymentTypes - paymentTypes"))
 }
 
 // Query returns graph.QueryResolver implementation.
