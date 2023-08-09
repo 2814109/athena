@@ -70,6 +70,6 @@ type Payment {
   userID: Int!
 }
 
-type paymentType {
+type PaymentType {
   label: String!
 }

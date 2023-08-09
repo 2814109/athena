@@ -12,7 +12,6 @@ import (
 	"my_gql_server/infrastructures/repositories"
 	"my_gql_server/models"
 	"my_gql_server/usecases"
-	"reflect"
 
 	lop "github.com/samber/lo/parallel"
 )
@@ -128,7 +127,7 @@ func (r *queryResolver) Payments(ctx context.Context, userID int) ([]*models.Pay
 }
 
 // PaymentTypes is the resolver for the paymentTypes field.
-func (r *queryResolver) PaymentTypes(ctx context.Context) ([]reflect.Type, error) {
+func (r *queryResolver) PaymentTypes(ctx context.Context) ([]*model.PaymentType, error) {
 	panic(fmt.Errorf("not implemented: PaymentTypes - paymentTypes"))
 }
 
