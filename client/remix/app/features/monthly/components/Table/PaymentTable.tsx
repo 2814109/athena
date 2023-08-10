@@ -1,6 +1,4 @@
-import { Payment } from "~/gql/graphql";
 import { useGetAllPayment } from "../../hooks/useGetAllPayment";
-// import { PredictCostRow } from "../../../predictCost/components/Table/PredictCostRow";
 
 export const PaymentTable = () => {
   const { payments } = useGetAllPayment();
@@ -19,8 +17,7 @@ export const PaymentTable = () => {
       <h2>Total : {`${totalCounts}`}</h2>
       <>
         {payments?.map((payment) => (
-          <></>
-          // <PredictCostRow key={predictCost.id} predictCost={predictCost} />
+          <div key={payment.id} />
         ))}
       </>
     </>
