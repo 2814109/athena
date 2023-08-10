@@ -1,7 +1,8 @@
-import { useGetAllPayment } from "../../hooks/useGetAllPayment";
-import { Graph } from "../Graph";
+import { useGetAllPayment } from "../hooks/useGetAllPayment";
+import { Graph } from "./Graph";
+import { Index } from "./Table";
 
-export const PaymentTable = () => {
+export const Summary = () => {
   const { payments } = useGetAllPayment();
 
   const initialValue = 0;
@@ -17,9 +18,9 @@ export const PaymentTable = () => {
     <>
       <h1>Table Component</h1>
       <h2>Total : {`${totalCounts}`}</h2>
-      <>
-        <Graph payments={payments} />
-      </>
+      <Graph payments={payments} />
+
+      <Index />
     </>
   );
 };

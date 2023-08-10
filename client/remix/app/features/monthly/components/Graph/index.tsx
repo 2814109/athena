@@ -38,7 +38,7 @@ export const Graph = ({ payments }: Props) => {
       <XAxis dataKey="paymentAt" padding={{ left: 10, right: 10 }} />
       <YAxis />
       <Tooltip />
-      <Legend />
+      {/* <Legend /> */}
       <CartesianGrid strokeDasharray="4 6" />
       <Bar dataKey="cost" fill="#8884d8" />
     </BarChart>
