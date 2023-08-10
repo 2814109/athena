@@ -1,5 +1,13 @@
 import { useGetAllPayment } from "../../hooks/useGetAllPayment";
-import { BarChart, Bar, XAxis } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Legend,
+} from "recharts";
 
 export const PaymentTable = () => {
   const { payments } = useGetAllPayment();
@@ -31,7 +39,10 @@ export const PaymentTable = () => {
           data={payments}
         >
           <XAxis dataKey="paymentAt" padding={{ left: 10, right: 10 }} />
-
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <CartesianGrid strokeDasharray="3 3" />
           <Bar dataKey="cost" fill="#8884d8" />
         </BarChart>
       </>
