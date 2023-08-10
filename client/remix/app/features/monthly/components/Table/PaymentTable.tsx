@@ -18,7 +18,18 @@ export const PaymentTable = () => {
       <h1>Table Component</h1>
       <h2>Total : {`${totalCounts}`}</h2>
       <>
-        <BarChart width={150} height={40} data={payments}>
+        <BarChart
+          width={800}
+          height={300}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+          barSize={20}
+          data={payments}
+        >
           <XAxis dataKey="paymentAt" padding={{ left: 10, right: 10 }} />
 
           <Bar dataKey="cost" fill="#8884d8" />
