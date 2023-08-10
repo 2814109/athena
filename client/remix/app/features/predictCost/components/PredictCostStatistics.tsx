@@ -19,9 +19,13 @@ export const PredictCostStatistics = () => {
     return { name: key, value: calcValue ?? 0 };
   });
 
+  const initCount = 0;
   const totalCount = result
     .map((element) => element.value)
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    .reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      initCount
+    );
 
   return (
     <>

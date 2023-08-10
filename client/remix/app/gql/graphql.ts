@@ -269,6 +269,7 @@ export type GetAllPaymentQueryQuery = {
     categoryName: string;
     cost: number;
     paymentType: string;
+    paymentAt: any;
   }>;
 };
 
@@ -409,6 +410,7 @@ export const GetAllPaymentQueryDocument = new TypedDocumentString(`
     categoryName
     cost
     paymentType
+    paymentAt
   }
 }
     `) as unknown as TypedDocumentString<

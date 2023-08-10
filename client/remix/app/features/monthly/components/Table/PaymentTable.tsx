@@ -1,4 +1,5 @@
 import { useGetAllPayment } from "../../hooks/useGetAllPayment";
+import { BarChart, Bar, XAxis } from "recharts";
 
 export const PaymentTable = () => {
   const { payments } = useGetAllPayment();
@@ -11,14 +12,17 @@ export const PaymentTable = () => {
       (accumulator, currentValue) => accumulator + currentValue,
       initialValue
     );
+  console.log(payments);
   return (
     <>
       <h1>Table Component</h1>
       <h2>Total : {`${totalCounts}`}</h2>
       <>
-        {payments?.map((payment) => (
-          <div key={payment.id} />
-        ))}
+        <BarChart width={150} height={40} data={payments}>
+          <XAxis dataKey="paymentAt" padding={{ left: 10, right: 10 }} />
+
+          <Bar dataKey="cost" fill="#8884d8" />
+        </BarChart>
       </>
     </>
   );
