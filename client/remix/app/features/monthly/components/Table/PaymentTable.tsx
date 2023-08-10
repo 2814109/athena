@@ -42,7 +42,7 @@ export const PaymentTable = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="4 6" />
           <Bar dataKey="cost" fill="#8884d8" />
         </BarChart>
       </>
