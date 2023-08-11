@@ -59,13 +59,14 @@ export const Graph = ({ payments, totalCounts }: Props) => {
   const mergeData = [...dataSet.slice(0, today.getDate()), ...restDataset];
 
   const addAccumulateCount = mergeData.map((data, index, array) => {
-    const accumulateCount = array
+    const originAccumulateCount = array
       .slice(0, index + 1)
       .map(({ count, predictCount }) => Number(count) + predictCount)
       .reduce(
         (accumulator, currentValue) => (accumulator ?? 0) + (currentValue ?? 0),
         0
       );
+    const accumulateCount = Math.ceil(originAccumulateCount);
 
     return { accumulateCount, date: data.date, count: data.count };
   });

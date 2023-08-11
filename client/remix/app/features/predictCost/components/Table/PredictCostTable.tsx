@@ -16,7 +16,7 @@ export const PredictCostTable = ({ predictCosts }: Props) => {
   return (
     <>
       <h1>Table Component</h1>
-      <h2>Total : {`${totalCounts}`}</h2>
+      <h2>Total : {`${totalCounts?.toLocaleString()}`}</h2>
       <>
         {predictCosts?.map((predictCost) => (
           <PredictCostRow key={predictCost.id} predictCost={predictCost} />
