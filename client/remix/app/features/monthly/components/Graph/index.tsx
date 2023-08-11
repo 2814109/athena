@@ -1,4 +1,12 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import {
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Line,
+  ComposedChart,
+} from "recharts";
 import { PaymentsType } from "../../types/PaymentsType";
 import { getAllDatesInMonth } from "~/libs/getAllDatesInMonth";
 import { isDatesEqual } from "~/libs/isDatesEqual";
@@ -45,7 +53,7 @@ export const Graph = ({ payments, totalCounts }: Props) => {
   return (
     <>
       <h2>prediction : ¥{Math.ceil(restCost + (totalCounts ?? 0))}</h2>
-      <BarChart
+      <ComposedChart
         width={800}
         height={300}
         margin={{
@@ -60,9 +68,12 @@ export const Graph = ({ payments, totalCounts }: Props) => {
         <XAxis dataKey="date" padding={{ left: 10, right: 10 }} />
         <YAxis />
         <Tooltip />
-        <CartesianGrid strokeDasharray="4 6" />
         <Bar dataKey="count" fill="#8884d8" />
-      </BarChart>
+
+        <Line type="monotone" dataKey="count" stroke="#ff7300" />
+
+        <CartesianGrid strokeDasharray="4 6" />
+      </ComposedChart>
     </>
   );
 };
