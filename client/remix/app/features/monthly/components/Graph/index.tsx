@@ -40,6 +40,7 @@ export const Graph = ({ payments, totalCounts }: Props) => {
     return {
       date: formatDate(dateObject.date),
       count: countByDate,
+      predictCount: 0,
     };
   });
 
@@ -51,7 +52,8 @@ export const Graph = ({ payments, totalCounts }: Props) => {
     .slice(today.getDate() - 1, -1)
     .map((dateObject) => ({
       date: formatDate(dateObject.date),
-      count: averageCost,
+      count: 0,
+      predictCount: averageCost,
     }));
 
   const mergeData = [...dataSet.slice(0, today.getDate()), ...restDataset];
@@ -59,7 +61,7 @@ export const Graph = ({ payments, totalCounts }: Props) => {
   const addAccumulateCount = mergeData.map((data, index, array) => {
     const accumulateCount = array
       .slice(0, index + 1)
-      .map(({ count }) => count)
+      .map(({ count, predictCount }) => Number(count) + predictCount)
       .reduce(
         (accumulator, currentValue) => (accumulator ?? 0) + (currentValue ?? 0),
         0
