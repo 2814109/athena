@@ -53,7 +53,11 @@ export const TableContainer = ({ payments }: PaymentsType) => {
 
         <Cell style={{ padding: "6px" }}>
           {(rowData) => (
-            <Button appearance="link" onClick={() => handleOnClick(rowData.id)}>
+            <Button
+              appearance="link"
+              color="red"
+              onClick={() => handleOnClick(rowData.id)}
+            >
               Delete
             </Button>
           )}
