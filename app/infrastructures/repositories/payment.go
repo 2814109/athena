@@ -39,3 +39,15 @@ func (repository *repository) GetPaymentsByUserId(ctx context.Context, userId in
 	}
 	return payments, nil
 }
+
+func (repository *repository) DeletePaymentById(ctx context.Context, paymentId int) (bool, error) {
+	resource := &models.Payment{
+		ID: paymentId,
+	}
+
+	_, err := resource.DeleteG(ctx)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}

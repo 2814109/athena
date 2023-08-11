@@ -10,6 +10,7 @@ import (
 type PaymentUsecase interface {
 	Create(ctx context.Context, input model.CreatePayment) (*models.Payment, error)
 	GetAllPaymentByUserId(ctx context.Context, userId int) (models.PaymentSlice, error)
+	DeletePayment(ctx context.Context, paymentId int) (bool, error)
 }
 
 type paymentService struct {
@@ -38,4 +39,14 @@ func (p *paymentService) GetAllPaymentByUserId(ctx context.Context, userId int) 
 	}
 	return result, nil
 
+}
+
+func (p *paymentService) DeletePayment(ctx context.Context, paymentId int) (bool, error) {
+	repository := repositories.NewRepository()
+	result, err := repository.DeletePaymentById(ctx, paymentId)
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
 }
