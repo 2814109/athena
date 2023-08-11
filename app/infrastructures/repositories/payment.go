@@ -33,7 +33,7 @@ func (repository *repository) CreatePayment(ctx context.Context, input model.Cre
 
 func (repository *repository) GetPaymentsByUserId(ctx context.Context, userId int) (models.PaymentSlice, error) {
 
-	payments, err := models.Payments(qm.Load(models.PaymentRels.User), models.PaymentWhere.UserID.EQ(userId)).AllG(ctx)
+	payments, err := models.Payments(qm.Load(models.PaymentRels.User), models.PaymentWhere.UserID.EQ(userId), qm.OrderBy("payment_at ASC")).AllG(ctx)
 	if err != nil {
 		return nil, err
 	}
