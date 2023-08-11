@@ -1,6 +1,6 @@
 import { useGetAllPayment } from "../hooks/useGetAllPayment";
 import { Graph } from "./Graph";
-import { Index } from "./Table";
+import { Table } from "./Table";
 
 export const Summary = () => {
   const { payments } = useGetAllPayment();
@@ -20,7 +20,7 @@ export const Summary = () => {
       <h2>Total : {`${totalCounts}`}</h2>
       <Graph payments={payments} />
 
-      <Index />
+      <Table payments={payments} />
     </>
   );
 };

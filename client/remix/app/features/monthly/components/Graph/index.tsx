@@ -1,27 +1,7 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  Legend,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import { PaymentsType } from "../../types/PaymentsType";
 
-type Props = {
-  payments:
-    | {
-        __typename?: "Payment" | undefined;
-        id: string;
-        label: string;
-        categoryName: string;
-        cost: number;
-        paymentType: string;
-        paymentAt: any;
-      }[]
-    | undefined;
-};
-export const Graph = ({ payments }: Props) => {
+export const Graph = ({ payments }: PaymentsType) => {
   return (
     <BarChart
       width={800}
@@ -38,7 +18,6 @@ export const Graph = ({ payments }: Props) => {
       <XAxis dataKey="paymentAt" padding={{ left: 10, right: 10 }} />
       <YAxis />
       <Tooltip />
-      {/* <Legend /> */}
       <CartesianGrid strokeDasharray="4 6" />
       <Bar dataKey="cost" fill="#8884d8" />
     </BarChart>

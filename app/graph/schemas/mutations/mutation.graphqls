@@ -6,4 +6,5 @@ type Mutation {
   createPredictCost(input: CreatePredictCost!): PredictCost!
   deletePredictCost(predictCostId: Int!): Boolean!
   createPayment(input: CreatePayment!): Payment!
+  deletePayment(paymentId: Int!): Boolean!
 }

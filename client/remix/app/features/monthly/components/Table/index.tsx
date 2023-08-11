@@ -6,7 +6,9 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
-export const Index = () => {
+import { PaymentsType } from "../../types/PaymentsType";
+
+export const Table = ({ payments }: PaymentsType) => {
   type User = {
     firstName: string;
     lastName: string;
@@ -75,6 +77,10 @@ export const Index = () => {
           ))}
         </tbody>
       </table>
+
+      {payments?.map((payment) => (
+        <div>{JSON.stringify(payment)}</div>
+      ))}
     </>
   );
 };
