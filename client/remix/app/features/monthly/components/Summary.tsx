@@ -16,7 +16,7 @@ export const Summary = () => {
   console.log(payments);
   return (
     <>
-      <h2>Total : ¥{`${totalCounts}`}</h2>
+      <h2>Total : ¥{`${totalCounts?.toLocaleString()}`}</h2>
       <Graph payments={payments} totalCounts={totalCounts} />
 
       <Table payments={payments} />
