@@ -16,58 +16,49 @@ export const TableContainer = ({ payments }: PaymentsType) => {
     mutation.mutate(paymentId);
   };
   return (
-    <>
-      {/* {payments?.map((payment) => (
-        <PaymentRow payment={payment as Payment} />
-      ))} */}
+    <Table
+      height={400}
+      data={rowData}
+      onRowClick={(rowData) => {
+        console.log(rowData);
+      }}
+    >
+      <Column width={60} align="center" fixed>
+        <HeaderCell>Id</HeaderCell>
+        <Cell dataKey="id" />
+      </Column>
 
-      <Table
-        height={400}
-        data={rowData}
-        onRowClick={(rowData) => {
-          console.log(rowData);
-        }}
-      >
-        <Column width={60} align="center" fixed>
-          <HeaderCell>Id</HeaderCell>
-          <Cell dataKey="id" />
-        </Column>
+      <Column width={200}>
+        <HeaderCell>Label</HeaderCell>
+        <Cell dataKey="label" />
+      </Column>
 
-        <Column width={200}>
-          <HeaderCell>Label</HeaderCell>
-          <Cell dataKey="label" />
-        </Column>
+      <Column width={150}>
+        <HeaderCell>Category</HeaderCell>
+        <Cell dataKey="categoryName" />
+      </Column>
 
-        <Column width={150}>
-          <HeaderCell>Category</HeaderCell>
-          <Cell dataKey="categoryName" />
-        </Column>
+      <Column width={100}>
+        <HeaderCell>Cost</HeaderCell>
+        <Cell dataKey="cost" />
+      </Column>
 
-        <Column width={100}>
-          <HeaderCell>Cost</HeaderCell>
-          <Cell dataKey="cost" />
-        </Column>
+      <Column width={200}>
+        <HeaderCell>PaymentAt</HeaderCell>
+        <Cell dataKey="paymentAt" />
+      </Column>
 
-        <Column width={200}>
-          <HeaderCell>PaymentAt</HeaderCell>
-          <Cell dataKey="paymentAt" />
-        </Column>
+      <Column width={100} fixed="right">
+        <HeaderCell>...</HeaderCell>
 
-        <Column width={100} fixed="right">
-          <HeaderCell>...</HeaderCell>
-
-          <Cell style={{ padding: "6px" }}>
-            {(rowData) => (
-              <Button
-                appearance="link"
-                onClick={() => handleOnClick(rowData.id)}
-              >
-                Delete
-              </Button>
-            )}
-          </Cell>
-        </Column>
-      </Table>
-    </>
+        <Cell style={{ padding: "6px" }}>
+          {(rowData) => (
+            <Button appearance="link" onClick={() => handleOnClick(rowData.id)}>
+              Delete
+            </Button>
+          )}
+        </Cell>
+      </Column>
+    </Table>
   );
 };
