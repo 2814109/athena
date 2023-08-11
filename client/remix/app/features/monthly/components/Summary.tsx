@@ -18,7 +18,7 @@ export const Summary = () => {
     <>
       <h1>Table Component</h1>
       <h2>Total : {`${totalCounts}`}</h2>
-      <Graph payments={payments} />
+      <Graph payments={payments} totalCounts={totalCounts} />
 
       <Table payments={payments} />
     </>
