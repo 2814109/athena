@@ -12,6 +12,8 @@ import * as types from "./graphql";
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+  "\nmutation deletePaymentMutation($paymentId:Int!){\n  deletePayment(paymentId: $paymentId)\n}\n":
+    types.DeletePaymentMutationDocument,
   "\n    query getAllPaymentQuery{\n        payments(userId: 1){\n            id\n            label\n            categoryName\n            cost\n            paymentType\n            paymentAt\n        }\n    }\n":
     types.GetAllPaymentQueryDocument,
   "\n    query getAllPredictCostQuery{\n        predictCosts(userId: 1){\n            id\n            label\n            categoryName\n            amount\n    } \n}\n":
@@ -36,6 +38,12 @@ const documents = {
     types.GetAllPaymentTypeDocument,
 };
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "\nmutation deletePaymentMutation($paymentId:Int!){\n  deletePayment(paymentId: $paymentId)\n}\n"
+): typeof import("./graphql").DeletePaymentMutationDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

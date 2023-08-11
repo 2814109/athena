@@ -128,6 +128,7 @@ export type Mutation = {
   createPredictCost: PredictCost;
   createTodo: Todo;
   createUser: User;
+  deletePayment: Scalars["Boolean"]["output"];
   deletePredictCost: Scalars["Boolean"]["output"];
   updateTodo: Todo;
 };
@@ -150,6 +151,10 @@ export type MutationCreateTodoArgs = {
 
 export type MutationCreateUserArgs = {
   input: NewUser;
+};
+
+export type MutationDeletePaymentArgs = {
+  paymentId: Scalars["Int"]["input"];
 };
 
 export type MutationDeletePredictCostArgs = {
@@ -256,6 +261,15 @@ export type User = {
   email: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
   name: Scalars["String"]["output"];
+};
+
+export type DeletePaymentMutationMutationVariables = Exact<{
+  paymentId: Scalars["Int"]["input"];
+}>;
+
+export type DeletePaymentMutationMutation = {
+  __typename?: "Mutation";
+  deletePayment: boolean;
 };
 
 export type GetAllPaymentQueryQueryVariables = Exact<{ [key: string]: never }>;
@@ -402,6 +416,14 @@ export const UserItemFragmentDoc = new TypedDocumentString(
     `,
   { fragmentName: "UserItem" }
 ) as unknown as TypedDocumentString<UserItemFragment, unknown>;
+export const DeletePaymentMutationDocument = new TypedDocumentString(`
+    mutation deletePaymentMutation($paymentId: Int!) {
+  deletePayment(paymentId: $paymentId)
+}
+    `) as unknown as TypedDocumentString<
+  DeletePaymentMutationMutation,
+  DeletePaymentMutationMutationVariables
+>;
 export const GetAllPaymentQueryDocument = new TypedDocumentString(`
     query getAllPaymentQuery {
   payments(userId: 1) {

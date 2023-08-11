@@ -7,6 +7,8 @@ import {
 } from "@tanstack/react-table";
 
 import { PaymentsType } from "../../types/PaymentsType";
+import { PaymentRow } from "./row";
+import { Payment } from "~/gql/graphql";
 
 export const Table = ({ payments }: PaymentsType) => {
   type User = {
@@ -79,7 +81,7 @@ export const Table = ({ payments }: PaymentsType) => {
       </table>
 
       {payments?.map((payment) => (
-        <div>{JSON.stringify(payment)}</div>
+        <PaymentRow payment={payment as Payment} />
       ))}
     </>
   );
