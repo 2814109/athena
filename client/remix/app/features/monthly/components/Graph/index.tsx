@@ -10,6 +10,7 @@ import {
 import { PaymentsType } from "../../types/PaymentsType";
 import { getAllDatesInMonth } from "~/libs/getAllDatesInMonth";
 import { isDatesEqual } from "~/libs/isDatesEqual";
+import { formatDate } from "~/libs/formatDate";
 
 type Props = {
   totalCounts: number | undefined;
@@ -26,8 +27,6 @@ export const Graph = ({ payments, totalCounts }: Props) => {
     date: element,
     count: 0,
   }));
-  const formatDate = (date: Date): string =>
-    `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
 
   const dataSet = datesDataset.map((dateObject, index) => {
     const countByDate = payments

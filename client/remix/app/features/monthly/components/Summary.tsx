@@ -1,6 +1,6 @@
 import { useGetAllPayment } from "../hooks/useGetAllPayment";
 import { Graph } from "./Graph";
-import { Table } from "./Table";
+import { TableContainer } from "./Table/TableContainer";
 
 export const Summary = () => {
   const { payments } = useGetAllPayment();
@@ -19,7 +19,7 @@ export const Summary = () => {
       <h2>Total : ¥{`${totalCounts?.toLocaleString()}`}</h2>
       <Graph payments={payments} totalCounts={totalCounts} />
 
-      <Table payments={payments} />
+      <TableContainer payments={payments} />
     </>
   );
 };
