@@ -72,7 +72,7 @@ export const Graph = ({ payments, totalCounts }: Props) => {
 
   return (
     <>
-      <h2>prediction : ¥{Math.ceil(restCost + (totalCounts ?? 0))}</h2>
+      <h2>(prediction : ¥{Math.ceil(restCost + (totalCounts ?? 0))})</h2>
       <ComposedChart
         width={800}
         height={300}
