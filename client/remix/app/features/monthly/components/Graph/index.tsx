@@ -26,8 +26,10 @@ export const Graph = ({ payments, totalCounts }: Props) => {
     date: element,
     count: 0,
   }));
+  const formatDate = (date: Date): string =>
+    `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
 
-  const dataSet = datesDataset.map((dateObject) => {
+  const dataSet = datesDataset.map((dateObject, index) => {
     const countByDate = payments
       ?.filter(({ paymentAt }) =>
         isDatesEqual(dateObject.date, new Date(paymentAt))
@@ -35,20 +37,36 @@ export const Graph = ({ payments, totalCounts }: Props) => {
       .map(({ cost }) => cost)
       .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-    const formatDate = (date: Date): string =>
-      `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
-
     return {
       date: formatDate(dateObject.date),
       count: countByDate,
     };
   });
 
-  const averageConst = (totalCounts ?? 0) / today.getDate();
+  const averageCost = (totalCounts ?? 0) / today.getDate();
 
-  const restCost = averageConst * restDates;
+  const restCost = averageCost * restDates;
 
-  console.log(restCost + (totalCounts ?? 0));
+  const restDataset = datesDataset
+    .slice(today.getDate() - 1, -1)
+    .map((dateObject) => ({
+      date: formatDate(dateObject.date),
+      count: averageCost,
+    }));
+
+  const mergeData = [...dataSet.slice(0, today.getDate()), ...restDataset];
+
+  const addAccumulateCount = mergeData.map((data, index, array) => {
+    const accumulateCount = array
+      .slice(0, index + 1)
+      .map(({ count }) => count)
+      .reduce(
+        (accumulator, currentValue) => (accumulator ?? 0) + (currentValue ?? 0),
+        0
+      );
+
+    return { accumulateCount, date: data.date, count: data.count };
+  });
 
   return (
     <>
@@ -63,14 +81,14 @@ export const Graph = ({ payments, totalCounts }: Props) => {
           bottom: 5,
         }}
         barSize={20}
-        data={dataSet}
+        data={addAccumulateCount}
       >
         <XAxis dataKey="date" padding={{ left: 10, right: 10 }} />
         <YAxis />
         <Tooltip />
         <Bar dataKey="count" fill="#8884d8" />
 
-        <Line type="monotone" dataKey="count" stroke="#ff7300" />
+        <Line type="monotone" dataKey="accumulateCount" stroke="#ff7300" />
 
         <CartesianGrid strokeDasharray="4 6" />
       </ComposedChart>
