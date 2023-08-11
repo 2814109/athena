@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { css } from "styled-system/css";
 import { Spinner } from "~/components/Spinner";
-import { Modal } from "~/features/monthly/components/Modal/index";
+import { ModalContainer } from "~/features/monthly/components/Modal/index";
 import { Summary } from "~/features/monthly/components/Summary";
 import { useGetAllPayment } from "~/features/monthly/hooks/useGetAllPayment";
 
@@ -14,7 +14,7 @@ export default function MonthlyPage() {
             width: "800px",
           })}
         >
-          <Modal />
+          <ModalContainer />
         </div>
         <Summary />
       </Suspense>

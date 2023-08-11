@@ -1,9 +1,11 @@
-import { useState, forwardRef } from "react";
+import { useState } from "react";
 import { MonthlyForm } from "../Form/MonthlyForm";
-import { Button, ButtonToolbar, Animation } from "rsuite";
+import { Modal, Button, ButtonToolbar } from "rsuite";
+import { Spacer } from "~/components/Spacer";
 
-export const Modal = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+export const ModalContainer = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const handleClose = () => setIsOpen(false);
 
   return (
     <>
@@ -17,7 +19,14 @@ export const Modal = () => {
         </Button>
       </ButtonToolbar>
       <div style={{ height: "24px" }} />
-      {isOpen && <MonthlyForm />}
+
+      <Modal open={isOpen} onClose={handleClose}>
+        <Modal.Header>
+          <Modal.Title>Payment</Modal.Title>
+        </Modal.Header>
+        <Spacer size={24} />
+        <MonthlyForm />
+      </Modal>
     </>
   );
 };
