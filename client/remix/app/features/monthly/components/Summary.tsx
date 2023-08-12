@@ -18,7 +18,7 @@ export const Summary = () => {
     <>
       <h2>Total : ¥{`${totalCounts?.toLocaleString()}`}</h2>
       <Graph payments={payments} totalCounts={totalCounts} />
-      <CsvDownload />
+      <CsvDownload payments={payments} />
       <TableContainer payments={payments} />
     </>
   );

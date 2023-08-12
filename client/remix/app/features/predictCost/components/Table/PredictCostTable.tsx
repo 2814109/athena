@@ -22,9 +22,6 @@ export const PredictCostTable = ({ predictCosts }: Props) => {
     );
   return (
     <>
-      <h1>Table Component</h1>
-      <h2>Total : {`${totalCounts?.toLocaleString()}`}</h2>
-
       <Table
         height={400}
         data={predictCosts}

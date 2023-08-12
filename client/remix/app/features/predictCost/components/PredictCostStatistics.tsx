@@ -2,6 +2,7 @@ import { css } from "styled-system/css";
 import { useGetAllPredictCost } from "../hooks/useAllPredictCost";
 import { PredictCostPieChart } from "./PieChart/PredictCostPieChart";
 import { PredictCostTable } from "./Table/PredictCostTable";
+import { CsvDownload } from "./CsvDownload";
 
 export const PredictCostStatistics = () => {
   const { predictCosts } = useGetAllPredictCost();
@@ -40,6 +41,7 @@ export const PredictCostStatistics = () => {
       <div>
         <PredictCostPieChart pieChartData={result} />
       </div>
+      <CsvDownload predictCosts={predictCosts} />
       <PredictCostTable predictCosts={predictCosts} />
     </>
   );

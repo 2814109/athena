@@ -1,13 +1,18 @@
 import { Parser } from "@json2csv/plainjs";
 import { Button } from "rsuite";
-import { PaymentsType } from "../../types/PaymentsType";
+import { PaymentsType } from "../../../monthly/types/PaymentsType";
+import { PredictCost } from "~/gql/graphql";
 
-export const CsvDownload = ({ payments }: PaymentsType) => {
+export const CsvDownload = ({
+  predictCosts,
+}: {
+  predictCosts: PredictCost[] | undefined;
+}) => {
   const download = () => {
     try {
       const opts = {};
       const parser = new Parser(opts);
-      const csv = parser.parse(payments ?? []);
+      const csv = parser.parse(predictCosts ?? []);
       const blob = new Blob([csv], { type: "text/csv" });
       const fileUrl = window.URL.createObjectURL(blob);
       return fileUrl;
