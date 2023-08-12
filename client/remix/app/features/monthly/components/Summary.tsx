@@ -1,4 +1,5 @@
 import { useGetAllPayment } from "../hooks/useGetAllPayment";
+import { CsvDownload } from "./CsvDownload";
 import { Graph } from "./Graph";
 import { TableContainer } from "./Table/TableContainer";
 
@@ -17,7 +18,7 @@ export const Summary = () => {
     <>
       <h2>Total : ¥{`${totalCounts?.toLocaleString()}`}</h2>
       <Graph payments={payments} totalCounts={totalCounts} />
-
+      <CsvDownload />
       <TableContainer payments={payments} />
     </>
   );
