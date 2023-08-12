@@ -20,7 +20,7 @@ export const Header = () => {
             justifyContent: "space-between",
           })}
         >
-          <h1>title</h1>
+          <h1>Athena</h1>
           <div
             className={css({
               display: "flex",

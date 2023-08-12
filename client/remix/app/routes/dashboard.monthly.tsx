@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { css } from "styled-system/css";
-import { Spinner } from "~/components/Spinner";
+import { Spinner } from "~/styles/Spinner";
 import { ModalContainer } from "~/features/monthly/components/Modal/index";
 import { Summary } from "~/features/monthly/components/Summary";
 
