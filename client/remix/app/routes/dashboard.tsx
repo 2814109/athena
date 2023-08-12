@@ -4,7 +4,6 @@ import { Outlet } from "@remix-run/react";
 import { Suspense, useState } from "react";
 import { MainContainer } from "~/styles/MainContainer";
 import styles from "rsuite/dist/rsuite.min.css";
-import { IconButton, ButtonToolbar, Navbar } from "rsuite";
 import { TypeAttributes } from "rsuite/esm/@types/common";
 import { DrawerHeader } from "~/components/DrawerHeader";
 import { createIconFont } from "@rsuite/icons";
