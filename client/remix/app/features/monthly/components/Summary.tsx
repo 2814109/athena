@@ -13,7 +13,6 @@ export const Summary = () => {
       (accumulator, currentValue) => accumulator + currentValue,
       initialValue
     );
-  console.log(payments);
   return (
     <>
       <h2>Total : ¥{`${totalCounts?.toLocaleString()}`}</h2>
