@@ -11,16 +11,14 @@ type Props = {
 
 export const DrawerHeader = ({ handleClick, openState, placement }: Props) => (
   <Drawer placement={placement} open={openState} onClose={handleClick}>
-    <Drawer.Header>
-      <Drawer.Title>
-        <Header />
-      </Drawer.Title>
+    <Drawer.Header closeButton={false}>
       <Drawer.Actions>
         <Button onClick={handleClick}>Close</Button>
       </Drawer.Actions>
     </Drawer.Header>
+    <Header />
     <Drawer.Body>
-      <Placeholder.Paragraph rows={8} />
+      <Placeholder.Paragraph rows={6} />
     </Drawer.Body>
   </Drawer>
 );
