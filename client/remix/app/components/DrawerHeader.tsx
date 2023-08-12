@@ -1,5 +1,5 @@
 import { DispatchWithoutAction } from "react";
-import { Drawer, Placeholder } from "rsuite";
+import { Button, Drawer, Placeholder } from "rsuite";
 import { TypeAttributes } from "rsuite/esm/@types/common";
 import { Header } from "./Header";
 
@@ -15,7 +15,9 @@ export const DrawerHeader = ({ handleClick, openState, placement }: Props) => (
       <Drawer.Title>
         <Header />
       </Drawer.Title>
-      <Drawer.Actions></Drawer.Actions>
+      <Drawer.Actions>
+        <Button onClick={handleClick}>Close</Button>
+      </Drawer.Actions>
     </Drawer.Header>
     <Drawer.Body>
       <Placeholder.Paragraph rows={8} />

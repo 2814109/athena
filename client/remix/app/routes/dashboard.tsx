@@ -4,10 +4,20 @@ import { Outlet } from "@remix-run/react";
 import { Suspense, useState } from "react";
 import { MainContainer } from "~/styles/MainContainer";
 import styles from "rsuite/dist/rsuite.min.css";
-import { IconButton, ButtonToolbar } from "rsuite";
+import { IconButton, ButtonToolbar, Navbar } from "rsuite";
 import { TypeAttributes } from "rsuite/esm/@types/common";
 import { DrawerHeader } from "~/components/DrawerHeader";
+import { createIconFont } from "@rsuite/icons";
+import Header from "rsuite/Header";
+import { css } from "styled-system/css";
 
+const IconFont = createIconFont({
+  scriptUrl: "//at.alicdn.com/t/font_2144422_r174s9i1orl.js",
+  commonProps: { style: { fontSize: 30, color: "#1675e0" } },
+  onLoaded: () => {
+    console.log("onLoaded");
+  },
+});
 export function links() {
   return [{ rel: "stylesheet", href: styles }];
 }
@@ -33,9 +43,14 @@ export default function Index() {
   };
   return (
     <>
-      <ButtonToolbar>
-        <IconButton onClick={() => handleOpen("top")}>Top</IconButton>
-      </ButtonToolbar>
+      <Header className={css({ px: 10, py: 4, textAlign: "right" })}>
+        <IconFont
+          className={css({ cursor: "pointer" })}
+          onClick={() => handleOpen("top")}
+          icon="rs-icongear-16"
+          spin
+        />
+      </Header>
       <DrawerHeader
         handleClick={handleClose}
         openState={open}
