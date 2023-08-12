@@ -1,10 +1,17 @@
 import { PredictCost } from "~/gql/graphql";
-import { PredictCostRow } from "./PredictCostRow";
+import { Table, Button } from "rsuite";
+import { useDeletePredictCost } from "../../hooks/useDeletePredictCost";
+const { Column, HeaderCell, Cell } = Table;
 
 type Props = {
   predictCosts: PredictCost[] | undefined;
 };
 export const PredictCostTable = ({ predictCosts }: Props) => {
+  const { mutation } = useDeletePredictCost();
+
+  const handleOnClick = (predictCostId: number) => {
+    mutation.mutate(predictCostId);
+  };
   const initialValue = 0;
 
   const totalCounts = predictCosts
@@ -17,11 +24,50 @@ export const PredictCostTable = ({ predictCosts }: Props) => {
     <>
       <h1>Table Component</h1>
       <h2>Total : {`${totalCounts?.toLocaleString()}`}</h2>
-      <>
-        {predictCosts?.map((predictCost) => (
-          <PredictCostRow key={predictCost.id} predictCost={predictCost} />
-        ))}
-      </>
+
+      <Table
+        height={400}
+        data={predictCosts}
+        onRowClick={(rowData) => {
+          console.log(rowData);
+        }}
+      >
+        <Column width={60} align="center" fixed>
+          <HeaderCell>Id</HeaderCell>
+          <Cell dataKey="id" />
+        </Column>
+
+        <Column width={200}>
+          <HeaderCell>Label</HeaderCell>
+          <Cell dataKey="label" />
+        </Column>
+
+        <Column width={200}>
+          <HeaderCell>Category</HeaderCell>
+          <Cell dataKey="categoryName" />
+        </Column>
+
+        <Column width={200}>
+          <HeaderCell>Amount</HeaderCell>
+          <Cell dataKey="amount" />
+        </Column>
+
+        <Column width={200} fixed="right">
+          <HeaderCell>...</HeaderCell>
+
+          <Cell style={{ padding: "6px" }}>
+            {(rowData) => (
+              <Button
+                appearance="link"
+                color="red"
+                onClick={() => handleOnClick(rowData.id)}
+              >
+                Delete
+              </Button>
+            )}
+          </Cell>
+        </Column>
+      </Table>
     </>
   );
 };
