@@ -1,6 +1,5 @@
 import { Parser } from "@json2csv/plainjs";
 import { Button } from "rsuite";
-import { PaymentsType } from "../../../monthly/types/PaymentsType";
 import { PredictCost } from "~/gql/graphql";
 
 export const CsvDownload = ({
