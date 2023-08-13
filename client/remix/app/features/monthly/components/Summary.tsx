@@ -18,7 +18,6 @@ export const Summary = () => {
     );
   return (
     <>
-      <h2>Total : ¥{`${totalCounts?.toLocaleString()}`}</h2>
       <Graph payments={payments} totalCounts={totalCounts} />
       <TableOptionContainer>
         <ModalContainer />

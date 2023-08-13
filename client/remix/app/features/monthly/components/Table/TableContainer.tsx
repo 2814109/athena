@@ -33,12 +33,12 @@ export const TableContainer = ({ payments }: PaymentsType) => {
         <Cell dataKey="categoryName" />
       </Column>
 
-      <Column width={120}>
+      <Column width={100}>
         <HeaderCell>Cost</HeaderCell>
         <Cell dataKey="cost" />
       </Column>
 
-      <Column width={100}>
+      <Column width={120}>
         <HeaderCell>PaymentType</HeaderCell>
         <Cell dataKey="paymentType" />
       </Column>
