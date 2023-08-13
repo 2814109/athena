@@ -67,8 +67,6 @@ export const Graph = ({ payments, totalCounts }: Props) => {
     return { accumulateCount, date: data.date, count: data.count };
   });
 
-  console.log(addAccumulateCount);
-
   return (
     <>
       <h2>
