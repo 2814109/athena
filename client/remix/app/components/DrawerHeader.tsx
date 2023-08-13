@@ -1,4 +1,4 @@
-import { DispatchWithoutAction, useState } from "react";
+import { DispatchWithoutAction, Suspense, useState } from "react";
 import { Button, Drawer } from "rsuite";
 import { TypeAttributes } from "rsuite/esm/@types/common";
 import { Header } from "./Header";
@@ -24,7 +24,9 @@ export const DrawerHeader = ({ handleClick, openState, placement }: Props) => {
           <Button onClick={handleClick}>Close</Button>
         </Drawer.Actions>
       </Drawer.Header>
-      <Header />
+      <Suspense fallback={<>Loading</>}>
+        <Header />
+      </Suspense>
       <Drawer.Body>
         <Navbar active={active} onSelect={setActive} />
       </Drawer.Body>

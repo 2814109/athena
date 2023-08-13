@@ -9,13 +9,6 @@ import { createIconFont } from "@rsuite/icons";
 import Header from "rsuite/Header";
 import { css } from "styled-system/css";
 
-const IconFont = createIconFont({
-  scriptUrl: "//at.alicdn.com/t/font_2144422_r174s9i1orl.js",
-  commonProps: { style: { fontSize: 30, color: "#1675e0" } },
-  onLoaded: () => {
-    console.log("onLoaded");
-  },
-});
 export function links() {
   return [{ rel: "stylesheet", href: styles }];
 }
@@ -29,6 +22,14 @@ export const loader: LoaderFunction = async (args) => {
 };
 
 export default function Index() {
+  const IconFont = createIconFont({
+    scriptUrl: "//at.alicdn.com/t/font_2144422_r174s9i1orl.js",
+    commonProps: { style: { fontSize: 30, color: "#1675e0" } },
+    onLoaded: () => {
+      console.log("onLoaded");
+    },
+  });
+
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState<TypeAttributes.Placement4>();
   const handleOpen = (key: TypeAttributes.Placement4) => {
@@ -41,19 +42,21 @@ export default function Index() {
   };
   return (
     <>
-      <Header className={css({ px: 10, py: 4, textAlign: "right" })}>
-        <IconFont
-          className={css({ cursor: "pointer" })}
-          onClick={() => handleOpen("top")}
-          icon="rs-icongear-16"
-          spin
+      <Suspense fallback={<>Loading</>}>
+        <Header className={css({ px: 10, py: 4, textAlign: "right" })}>
+          <IconFont
+            className={css({ cursor: "pointer" })}
+            onClick={() => handleOpen("top")}
+            icon="rs-icongear-16"
+            spin
+          />
+        </Header>
+        <DrawerHeader
+          handleClick={handleClose}
+          openState={open}
+          placement={placement}
         />
-      </Header>
-      <DrawerHeader
-        handleClick={handleClose}
-        openState={open}
-        placement={placement}
-      />
+      </Suspense>
       <div
         className={css({
           display: "flex",
