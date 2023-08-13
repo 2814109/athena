@@ -7,7 +7,6 @@ export default function PredictCostPage() {
   return (
     <>
       <Suspense fallback={<Spinner />}>
-        <ModalContainer />
         <PredictCostStatistics />
       </Suspense>
     </>
