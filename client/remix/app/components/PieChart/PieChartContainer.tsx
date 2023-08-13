@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import { PieChartData } from "../../types/PieChartData";
+import { PieChartData } from "../../features/predictCost/types/PieChartData";
 import { PieChart, Pie } from "recharts";
-import { PIE_CHART_COLORS as COLORS } from "~/features/predictCost/constants/PIE_CHART_COLORS";
+import { PIE_CHART_COLORS as COLORS } from "~/constants/PIE_CHART_COLORS";
 
 type PieChartContainerProps = {
   children: ReactNode;

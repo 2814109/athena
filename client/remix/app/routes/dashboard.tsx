@@ -2,7 +2,6 @@ import { getAuth } from "@clerk/remix/ssr.server";
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { Suspense, useState } from "react";
-import { MainContainer } from "~/styles/MainContainer";
 import styles from "rsuite/dist/rsuite.min.css";
 import { TypeAttributes } from "rsuite/esm/@types/common";
 import { DrawerHeader } from "~/components/DrawerHeader";
@@ -55,14 +54,20 @@ export default function Index() {
         openState={open}
         placement={placement}
       />
-
-      <MainContainer>
+      <div
+        className={css({
+          display: "flex",
+          justifyContent: "center",
+          paddingTop: "clamp(2rem,10vw,2rem)",
+        })}
+      >
+        {" "}
         <Suspense fallback={<>Loading</>}>
           <div>
             <Outlet />
           </div>
         </Suspense>
-      </MainContainer>
+      </div>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { Cell } from "recharts";
-import { PIE_CHART_COLORS as COLORS } from "~/features/predictCost/constants/PIE_CHART_COLORS";
+import { PIE_CHART_COLORS as COLORS } from "~/constants/PIE_CHART_COLORS";
 import { PieChartData } from "../../types/PieChartData";
-import { PieChartContainer } from "./PieChartContainer";
+import { PieChartContainer } from "../../../../components/PieChart/PieChartContainer";
 
 type Props = {
   pieChartData: PieChartData[];

@@ -6,6 +6,7 @@ import { ModalContainer } from "./Modal";
 import { TableContainer } from "./Table/TableContainer";
 import { TableOptionContainer } from "~/styles/TableOptionContainer";
 import AddOutlineIcon from "@rsuite/icons/AddOutline";
+import { MonthlyPieChart } from "./PieChart";
 
 export const Summary = () => {
   const { payments } = useGetAllPayment();
@@ -21,6 +22,8 @@ export const Summary = () => {
   return (
     <>
       <Graph payments={payments} totalCounts={totalCounts} />
+
+      <MonthlyPieChart payments={payments} />
       <TableOptionContainer>
         <ModalContainer />
         <IconButton icon={<AddOutlineIcon />} appearance="primary">
