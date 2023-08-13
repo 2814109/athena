@@ -8,8 +8,8 @@ export const MonthlyPieChart = ({ payments }: PaymentsType) => {
     payments?.map(({ categoryName }) => categoryName)
   );
 
-  const predictCostData = [...setPredictCost.values()];
-  const result = predictCostData.map((key) => {
+  const predictCostData = [...setPredictCost?.values()];
+  const result = predictCostData?.map((key) => {
     const calcValue = payments
       ?.filter(({ categoryName }) => categoryName === key)
       .map((element) => element.cost)
@@ -19,7 +19,7 @@ export const MonthlyPieChart = ({ payments }: PaymentsType) => {
 
   return (
     <PieChartContainer pieChartData={result}>
-      {result.map((_, index) => (
+      {result?.map((_, index) => (
         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
       ))}
     </PieChartContainer>

@@ -5,9 +5,17 @@ import { DatePicker } from "rsuite";
 import { FlexEndContainer } from "~/styles/FlexEndContainer";
 
 import { useMonthly } from "~/hooks/states/useMonthly";
+import { useGetAllPayment } from "~/features/monthly/hooks/useGetAllPayment";
+import { isMonthEqual } from "~/libs/isDatesEqual";
 
 export default function MonthlyPage() {
   const { monthly, handleSetMontly } = useMonthly();
+  const { payments: originPayments } = useGetAllPayment();
+
+  const payments = originPayments?.filter(({ paymentAt }) => {
+    return isMonthEqual(new Date(paymentAt), monthly);
+  });
+
   return (
     <>
       <FlexEndContainer>
@@ -23,7 +31,7 @@ export default function MonthlyPage() {
       </FlexEndContainer>
 
       <Suspense fallback={<Spinner />}>
-        <Summary />
+        <Summary payments={payments} />
       </Suspense>
     </>
   );

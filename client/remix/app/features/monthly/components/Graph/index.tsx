@@ -12,7 +12,7 @@ import { getAllDatesInMonth } from "~/libs/getAllDatesInMonth";
 import { isDatesEqual } from "~/libs/isDatesEqual";
 import { formatDate } from "~/libs/formatDate";
 import { IconButton, InputNumber } from "rsuite";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReloadIcon from "@rsuite/icons/Reload";
 import { Spacer } from "~/components/Spacer";
 import { useMonthly } from "~/hooks/states/useMonthly";
@@ -30,6 +30,10 @@ export const Graph = ({ payments, totalCounts }: Props) => {
   const [predictionCostPerDay, setPredictionCostOerDay] =
     useState<number>(averageCost);
 
+  useEffect(() => {
+    setPredictionCostOerDay((totalCounts ?? 0) / today.getDate());
+  }, [monthly]);
+
   const handleReset = () => {
     setPredictionCostOerDay(() => averageCost);
   };
@@ -41,7 +45,7 @@ export const Graph = ({ payments, totalCounts }: Props) => {
     count: 0,
   }));
 
-  const dataSet = datesDataset.map((dateObject, index) => {
+  const dataSet = datesDataset.map((dateObject, _) => {
     const countByDate = payments
       ?.filter(({ paymentAt }) =>
         isDatesEqual(dateObject.date, new Date(paymentAt))
@@ -55,6 +59,9 @@ export const Graph = ({ payments, totalCounts }: Props) => {
       predictCount: 0,
     };
   });
+
+  console.log(predictionCostPerDay);
+  console.log(restDates);
 
   const restCost = predictionCostPerDay * restDates;
 
@@ -92,6 +99,7 @@ export const Graph = ({ payments, totalCounts }: Props) => {
         <div style={{ width: 160, display: "inline-block" }}>
           <InputNumber
             postfix="￥"
+            step={10}
             value={Math.ceil(predictionCostPerDay)}
             onChange={(event) => {
               setPredictionCostOerDay(Number(event));

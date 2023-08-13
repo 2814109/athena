@@ -1,5 +1,4 @@
 import { IconButton } from "rsuite";
-import { useGetAllPayment } from "../hooks/useGetAllPayment";
 import { CsvDownload } from "./CsvDownload";
 import { Graph } from "./Graph";
 import { ModalContainer } from "./Modal";
@@ -7,11 +6,13 @@ import { TableContainer } from "./Table/TableContainer";
 import { FlexEndContainer } from "~/styles/FlexEndContainer";
 import AddOutlineIcon from "@rsuite/icons/AddOutline";
 import { MonthlyPieChart } from "./PieChart";
+import { Suspense } from "react";
+import { PaymentsType } from "../types/PaymentsType";
 
-export const Summary = () => {
-  const { payments } = useGetAllPayment();
-
+export const Summary = ({ payments: originPayments }: PaymentsType) => {
   const initialValue = 0;
+
+  const payments = originPayments;
 
   const totalCounts = payments
     ?.map(({ cost }) => cost)
@@ -19,19 +20,24 @@ export const Summary = () => {
       (accumulator, currentValue) => accumulator + currentValue,
       initialValue
     );
+
   return (
     <>
-      <Graph payments={payments} totalCounts={totalCounts} />
+      <Suspense fallback={<>Loading</>}>
+        <Graph payments={payments} totalCounts={totalCounts} />
 
-      <MonthlyPieChart payments={payments} />
-      <FlexEndContainer>
-        <ModalContainer />
-        <IconButton icon={<AddOutlineIcon />} appearance="primary">
-          Bulk
-        </IconButton>
-        <CsvDownload payments={payments} />
-      </FlexEndContainer>
-      <TableContainer payments={payments} />
+        <MonthlyPieChart payments={payments} />
+        <FlexEndContainer>
+          <ModalContainer />
+          <IconButton icon={<AddOutlineIcon />} appearance="primary">
+            Bulk
+          </IconButton>
+          {(originPayments?.length ?? 0) > 0 && (
+            <CsvDownload payments={payments} />
+          )}
+        </FlexEndContainer>
+        <TableContainer payments={payments} />
+      </Suspense>
     </>
   );
 };
