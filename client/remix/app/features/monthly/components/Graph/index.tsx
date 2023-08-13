@@ -11,7 +11,10 @@ import { PaymentsType } from "../../types/PaymentsType";
 import { getAllDatesInMonth } from "~/libs/getAllDatesInMonth";
 import { isDatesEqual } from "~/libs/isDatesEqual";
 import { formatDate } from "~/libs/formatDate";
-
+import { IconButton, InputNumber } from "rsuite";
+import { useState } from "react";
+import ReloadIcon from "@rsuite/icons/Reload";
+import { Spacer } from "~/components/Spacer";
 type Props = {
   totalCounts: number | undefined;
 } & PaymentsType;
@@ -19,6 +22,14 @@ export const Graph = ({ payments, totalCounts }: Props) => {
   const today = new Date();
   const targetYear = today.getFullYear();
   const targetMonth = today.getMonth() + 1;
+  const averageCost = (totalCounts ?? 0) / today.getDate();
+
+  const [predictionCostPerDay, setPredictionCostOerDay] =
+    useState<number>(averageCost);
+
+  const handleReset = () => {
+    setPredictionCostOerDay(() => averageCost);
+  };
 
   const allDatesInMonth = getAllDatesInMonth(targetYear, targetMonth);
   const restDates = allDatesInMonth.length - today.getDate();
@@ -42,13 +53,12 @@ export const Graph = ({ payments, totalCounts }: Props) => {
     };
   });
 
-  const averageCost = (totalCounts ?? 0) / today.getDate();
-  const restCost = averageCost * restDates;
+  const restCost = predictionCostPerDay * restDates;
 
   const restDataset = datesDataset.slice(today.getDate()).map((dateObject) => ({
     date: formatDate(dateObject.date),
     count: 0,
-    predictCount: averageCost,
+    predictCount: predictionCostPerDay,
   }));
 
   const mergeData = [...dataSet.slice(0, today.getDate()), ...restDataset];
@@ -71,9 +81,23 @@ export const Graph = ({ payments, totalCounts }: Props) => {
       <h2>
         Total : ¥{`${totalCounts?.toLocaleString()}`} (Prediction : ¥
         {Math.ceil(restCost + (totalCounts ?? 0)).toLocaleString()})
-        <br />
-        Average:¥{Math.ceil(averageCost)?.toLocaleString()}
       </h2>
+
+      <div>
+        Average：¥
+        <Spacer horizontal size={8} />
+        <div style={{ width: 160, display: "inline-block" }}>
+          <InputNumber
+            postfix="￥"
+            value={predictionCostPerDay}
+            onChange={(event) => {
+              setPredictionCostOerDay(Number(event));
+            }}
+          />
+        </div>
+        <Spacer horizontal size={12} />
+        <IconButton onClick={handleReset} icon={<ReloadIcon />} circle />
+      </div>
 
       <ComposedChart
         width={800}
