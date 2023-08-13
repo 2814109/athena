@@ -23,6 +23,8 @@ import { rootAuthLoader } from "@clerk/remix/ssr.server";
 import type { LoaderFunction } from "@remix-run/node";
 import { ClerkApp, V2_ClerkErrorBoundary } from "@clerk/remix";
 
+import { RecoilRoot } from "recoil";
+
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 import type { V2_MetaFunction } from "@remix-run/node";
 
@@ -65,7 +67,9 @@ function App() {
                     </div>
                   )}
                 >
-                  <Outlet />
+                  <RecoilRoot>
+                    <Outlet />
+                  </RecoilRoot>
                 </ErrorBoundaryLib>
               )}
             </QueryErrorResetBoundary>

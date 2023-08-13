@@ -29,6 +29,7 @@
     "react-error-boundary": "^4.0.10",
     "react-hook-form": "^7.45.2",
     "recharts": "^2.7.2",
+    "recoil": "^0.7.7",
     "rsuite": "^5.37.3",
     "use-dehydrated-state": "^0.1.0"
   },

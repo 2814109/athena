@@ -3,7 +3,7 @@ import { useGetAllPredictCost } from "../hooks/useAllPredictCost";
 import { PredictCostPieChart } from "./PieChart/PredictCostPieChart";
 import { PredictCostTable } from "./Table/PredictCostTable";
 import { CsvDownload } from "./CsvDownload";
-import { TableOptionContainer } from "~/styles/TableOptionContainer";
+import { FlexEndContainer } from "~/styles/FlexEndContainer";
 import { ModalContainer } from "./Modal";
 
 export const PredictCostStatistics = () => {
@@ -43,11 +43,10 @@ export const PredictCostStatistics = () => {
       <div>
         <PredictCostPieChart pieChartData={result} />
       </div>
-      <TableOptionContainer>
+      <FlexEndContainer>
         <ModalContainer />
-
         <CsvDownload predictCosts={predictCosts} />
-      </TableOptionContainer>
+      </FlexEndContainer>
       <PredictCostTable predictCosts={predictCosts} />
     </>
   );

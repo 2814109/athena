@@ -15,11 +15,14 @@ import { IconButton, InputNumber } from "rsuite";
 import { useState } from "react";
 import ReloadIcon from "@rsuite/icons/Reload";
 import { Spacer } from "~/components/Spacer";
+import { useMonthly } from "~/hooks/states/useMonthly";
 type Props = {
   totalCounts: number | undefined;
 } & PaymentsType;
 export const Graph = ({ payments, totalCounts }: Props) => {
-  const today = new Date();
+  const { monthly } = useMonthly();
+
+  const today = monthly;
   const targetYear = today.getFullYear();
   const targetMonth = today.getMonth() + 1;
   const averageCost = (totalCounts ?? 0) / today.getDate();

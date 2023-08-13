@@ -4,7 +4,7 @@ import { CsvDownload } from "./CsvDownload";
 import { Graph } from "./Graph";
 import { ModalContainer } from "./Modal";
 import { TableContainer } from "./Table/TableContainer";
-import { TableOptionContainer } from "~/styles/TableOptionContainer";
+import { FlexEndContainer } from "~/styles/FlexEndContainer";
 import AddOutlineIcon from "@rsuite/icons/AddOutline";
 import { MonthlyPieChart } from "./PieChart";
 
@@ -24,13 +24,13 @@ export const Summary = () => {
       <Graph payments={payments} totalCounts={totalCounts} />
 
       <MonthlyPieChart payments={payments} />
-      <TableOptionContainer>
+      <FlexEndContainer>
         <ModalContainer />
         <IconButton icon={<AddOutlineIcon />} appearance="primary">
           Bulk
         </IconButton>
         <CsvDownload payments={payments} />
-      </TableOptionContainer>
+      </FlexEndContainer>
       <TableContainer payments={payments} />
     </>
   );
