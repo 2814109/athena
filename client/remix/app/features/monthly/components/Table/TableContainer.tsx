@@ -23,12 +23,7 @@ export const TableContainer = ({ payments }: PaymentsType) => {
         console.log(rowData);
       }}
     >
-      <Column width={60} align="center" fixed>
-        <HeaderCell>Id</HeaderCell>
-        <Cell dataKey="id" />
-      </Column>
-
-      <Column width={150}>
+      <Column width={200}>
         <HeaderCell>Label</HeaderCell>
         <Cell dataKey="label" />
       </Column>
@@ -38,7 +33,7 @@ export const TableContainer = ({ payments }: PaymentsType) => {
         <Cell dataKey="categoryName" />
       </Column>
 
-      <Column width={100}>
+      <Column width={120}>
         <HeaderCell>Cost</HeaderCell>
         <Cell dataKey="cost" />
       </Column>
@@ -48,7 +43,7 @@ export const TableContainer = ({ payments }: PaymentsType) => {
         <Cell dataKey="paymentType" />
       </Column>
 
-      <Column width={150}>
+      <Column width={140}>
         <HeaderCell>PaymentAt</HeaderCell>
         <Cell dataKey="paymentAt" />
       </Column>
