@@ -21,7 +21,6 @@ export const Graph = ({ payments, totalCounts }: Props) => {
   const targetMonth = today.getMonth() + 1;
 
   const allDatesInMonth = getAllDatesInMonth(targetYear, targetMonth);
-
   const restDates = allDatesInMonth.length - today.getDate();
   const datesDataset = allDatesInMonth.map((element) => ({
     date: element,
@@ -47,13 +46,11 @@ export const Graph = ({ payments, totalCounts }: Props) => {
 
   const restCost = averageCost * restDates;
 
-  const restDataset = datesDataset
-    .slice(today.getDate() - 1, -1)
-    .map((dateObject) => ({
-      date: formatDate(dateObject.date),
-      count: 0,
-      predictCount: averageCost,
-    }));
+  const restDataset = datesDataset.slice(today.getDate()).map((dateObject) => ({
+    date: formatDate(dateObject.date),
+    count: 0,
+    predictCount: averageCost,
+  }));
 
   const mergeData = [...dataSet.slice(0, today.getDate()), ...restDataset];
 
@@ -70,6 +67,8 @@ export const Graph = ({ payments, totalCounts }: Props) => {
     return { accumulateCount, date: data.date, count: data.count };
   });
 
+  console.log(addAccumulateCount);
+
   return (
     <>
       <h2>
@@ -82,8 +81,8 @@ export const Graph = ({ payments, totalCounts }: Props) => {
         height={300}
         margin={{
           top: 5,
-          right: 30,
-          left: 20,
+          right: 20,
+          left: 0,
           bottom: 5,
         }}
         barSize={20}
