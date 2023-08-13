@@ -1,6 +1,7 @@
 import { ReactNode, useState } from "react";
-import { Modal, Button, ButtonToolbar } from "rsuite";
+import { Modal, IconButton } from "rsuite";
 import { Spacer } from "~/components/Spacer";
+import PlusIcon from "@rsuite/icons/Plus";
 
 type Props = {
   children: ReactNode;
@@ -12,11 +13,13 @@ export const ModalWrapper = ({ children, modalTitle }: Props) => {
 
   return (
     <>
-      <ButtonToolbar>
-        <Button appearance="primary" block onClick={handleToggle}>
-          {!isOpen ? "open" : "close"}
-        </Button>
-      </ButtonToolbar>
+      <IconButton
+        onClick={handleToggle}
+        icon={<PlusIcon />}
+        circle
+        color="blue"
+        appearance="primary"
+      />
       <div style={{ height: "24px" }} />
 
       <Modal open={isOpen} onClose={handleToggle}>
