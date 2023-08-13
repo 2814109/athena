@@ -20,7 +20,6 @@ export const ModalWrapper = ({ children, modalTitle }: Props) => {
         color="blue"
         appearance="primary"
       />
-      <div style={{ height: "24px" }} />
 
       <Modal open={isOpen} onClose={handleToggle}>
         <Modal.Header>
