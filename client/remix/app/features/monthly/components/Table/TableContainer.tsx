@@ -1,7 +1,8 @@
 import { PaymentsType } from "../../types/PaymentsType";
-import { Table, Button } from "rsuite";
+import { Table, Button, IconButton } from "rsuite";
 import { formatDate } from "~/libs/formatDate";
 import { useDeletePayment } from "../../hooks/useDeletePayment";
+import EditIcon from "@rsuite/icons/Edit";
 
 const { Column, HeaderCell, Cell } = Table;
 export const TableContainer = ({ payments }: PaymentsType) => {
@@ -16,6 +17,7 @@ export const TableContainer = ({ payments }: PaymentsType) => {
   const handleOnClick = (paymentId: number) => {
     mutation.mutate(paymentId);
   };
+
   return (
     <Table
       height={400}
@@ -49,9 +51,17 @@ export const TableContainer = ({ payments }: PaymentsType) => {
         <Cell dataKey="paymentAt" />
       </Column>
 
-      <Column width={100} fixed="right">
+      <Column width={50} fixed="right">
         <HeaderCell>...</HeaderCell>
+        <Cell style={{ padding: "6px" }}>
+          {(rowData) => (
+            <IconButton onClick={() => null} icon={<EditIcon />} circle />
+          )}
+        </Cell>
+      </Column>
 
+      <Column width={80} fixed="right">
+        <HeaderCell>...</HeaderCell>
         <Cell style={{ padding: "6px" }}>
           {(rowData) => (
             <Button

@@ -61,7 +61,6 @@ export default function Index() {
           paddingTop: "clamp(2rem,10vw,2rem)",
         })}
       >
-        {" "}
         <Suspense fallback={<>Loading</>}>
           <div>
             <Outlet />
