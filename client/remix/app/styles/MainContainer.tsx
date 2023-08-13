@@ -6,7 +6,7 @@ export const MainContainer = ({ children }: { children: ReactNode }) => (
     className={css({
       display: "flex",
       justifyContent: "center",
-      paddingTop: "clamp(2rem,10vw,5rem)",
+      paddingTop: "clamp(2rem,10vw,2rem)",
     })}
   >
     {children}
