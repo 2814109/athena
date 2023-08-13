@@ -61,7 +61,7 @@ export const TableContainer = ({ payments }: PaymentsType) => {
       </Column>
 
       <Column width={80} fixed="right">
-        <HeaderCell>...</HeaderCell>
+        <HeaderCell>{null}</HeaderCell>
         <Cell style={{ padding: "6px" }}>
           {(rowData) => (
             <Button
