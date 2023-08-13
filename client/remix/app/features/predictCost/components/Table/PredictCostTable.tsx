@@ -29,11 +29,6 @@ export const PredictCostTable = ({ predictCosts }: Props) => {
           console.log(rowData);
         }}
       >
-        <Column width={60} align="center" fixed>
-          <HeaderCell>Id</HeaderCell>
-          <Cell dataKey="id" />
-        </Column>
-
         <Column width={200}>
           <HeaderCell>Label</HeaderCell>
           <Cell dataKey="label" />
