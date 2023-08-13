@@ -79,7 +79,7 @@ export const Graph = ({ payments, totalCounts }: Props) => {
         height={300}
         margin={{
           top: 5,
-          right: 20,
+          right: 0,
           left: 0,
           bottom: 5,
         }}
