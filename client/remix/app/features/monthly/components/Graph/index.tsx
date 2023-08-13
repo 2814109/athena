@@ -89,7 +89,7 @@ export const Graph = ({ payments, totalCounts }: Props) => {
         <div style={{ width: 160, display: "inline-block" }}>
           <InputNumber
             postfix="￥"
-            value={predictionCostPerDay}
+            value={Math.ceil(predictionCostPerDay)}
             onChange={(event) => {
               setPredictionCostOerDay(Number(event));
             }}
