@@ -12,19 +12,16 @@ export const PredictCostTable = ({ predictCosts }: Props) => {
   const handleOnClick = (predictCostId: number) => {
     mutation.mutate(predictCostId);
   };
-  const initialValue = 0;
 
-  const totalCounts = predictCosts
-    ?.map(({ amount }) => amount)
-    .reduce(
-      (accumulator, currentValue) => accumulator + currentValue,
-      initialValue
-    );
+  const tableData = predictCosts?.map((data) => ({
+    ...data,
+    amount: `¥${data.amount.toLocaleString()}`,
+  }));
   return (
     <>
       <Table
         height={400}
-        data={predictCosts}
+        data={tableData}
         onRowClick={(rowData) => {
           console.log(rowData);
         }}

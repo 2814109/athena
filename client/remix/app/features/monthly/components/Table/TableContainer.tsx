@@ -7,6 +7,7 @@ const { Column, HeaderCell, Cell } = Table;
 export const TableContainer = ({ payments }: PaymentsType) => {
   const rowData = payments?.map((data) => ({
     ...data,
+    cost: `¥${data.cost.toLocaleString()}`,
     paymentAt: formatDate(new Date(data.paymentAt)),
   }));
 

@@ -43,7 +43,6 @@ export const Graph = ({ payments, totalCounts }: Props) => {
   });
 
   const averageCost = (totalCounts ?? 0) / today.getDate();
-
   const restCost = averageCost * restDates;
 
   const restDataset = datesDataset.slice(today.getDate()).map((dateObject) => ({
@@ -72,6 +71,8 @@ export const Graph = ({ payments, totalCounts }: Props) => {
       <h2>
         Total : ¥{`${totalCounts?.toLocaleString()}`} (Prediction : ¥
         {Math.ceil(restCost + (totalCounts ?? 0)).toLocaleString()})
+        <br />
+        Average:¥{Math.ceil(averageCost)?.toLocaleString()}
       </h2>
 
       <ComposedChart
