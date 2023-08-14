@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Spinner } from "~/styles/Spinner";
 import { Summary } from "~/features/monthly/components/Summary";
-import { DatePicker } from "rsuite";
+import { Button, DatePicker } from "rsuite";
 import { FlexEndContainer } from "~/styles/FlexEndContainer";
 
 import { useMonthly } from "~/hooks/states/useMonthly";
@@ -28,6 +28,15 @@ export default function MonthlyPage() {
           style={{ width: 200 }}
           value={monthly}
         />
+        <Button
+          appearance="default"
+          active
+          onClick={() => {
+            handleSetMontly(new Date());
+          }}
+        >
+          Today
+        </Button>
       </FlexEndContainer>
 
       <Suspense fallback={<Spinner />}>
