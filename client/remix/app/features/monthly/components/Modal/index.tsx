@@ -35,7 +35,7 @@ export const ModalContainer = () => {
         onClose={() => setOpen(false)}
       >
         <Drawer.Header>
-          <Drawer.Title>Drawer Title</Drawer.Title>
+          <Drawer.Title></Drawer.Title>
           <Drawer.Actions>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
           </Drawer.Actions>
