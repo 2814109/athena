@@ -5,9 +5,10 @@ import { ModalContainer } from "./Modal";
 import { TableContainer } from "./Table/TableContainer";
 import { FlexEndContainer } from "~/styles/FlexEndContainer";
 import AddOutlineIcon from "@rsuite/icons/AddOutline";
-import { MonthlyPieChart } from "./PieChart";
+import { MonthlyPieChart } from "./PieChart/MonthlyPieChart";
 import { Suspense } from "react";
 import { PaymentsType } from "../types/PaymentsType";
+import { PaymentTypePieChart } from "./PieChart/PaymentTypePieChart";
 
 export const Summary = ({ payments: originPayments }: PaymentsType) => {
   const initialValue = 0;
@@ -27,6 +28,8 @@ export const Summary = ({ payments: originPayments }: PaymentsType) => {
         <Graph payments={payments} totalCounts={totalCounts} />
 
         <MonthlyPieChart payments={payments} />
+        <PaymentTypePieChart payments={payments} />
+
         <FlexEndContainer>
           <ModalContainer />
           <IconButton icon={<AddOutlineIcon />} appearance="primary">
