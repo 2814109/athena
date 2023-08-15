@@ -39,6 +39,13 @@ export const Navbar = ({
       >
         monthly
       </Nav.Item>
+
+      <Nav.Item
+        eventKey="knowledge"
+        onClick={() => navigate(`/dashboard/knowledge`)}
+      >
+        knowledge
+      </Nav.Item>
     </Nav>
   );
 };
