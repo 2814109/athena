@@ -33,11 +33,14 @@ export const Navbar = ({
       >
         Predict Cost
       </Nav.Item>
+      <Nav.Item eventKey="income" onClick={() => navigate(`/income`)}>
+        Income
+      </Nav.Item>
       <Nav.Item
         eventKey="monthly"
         onClick={() => navigate(`/dashboard/monthly`)}
       >
-        monthly
+        Monthly
       </Nav.Item>
 
       <Nav.Item
