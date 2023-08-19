@@ -20,6 +20,7 @@ export const Navbar = ({
       onSelect={onSelect}
       style={{ marginBottom: 50 }}
     >
+      {/* mapでループ展開 */}
       <Nav.Item
         eventKey="home"
         icon={<HomeIcon />}
