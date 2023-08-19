@@ -31,7 +31,6 @@ export const Summary = ({ payments: originPayments }: PaymentsType) => {
         <PaymentTypePieChart payments={payments} />
 
         <FlexEndContainer>
-          <ModalContainer />
           <IconButton icon={<AddOutlineIcon />} appearance="primary">
             Bulk
           </IconButton>
