@@ -1,7 +1,6 @@
 import { IconButton } from "rsuite";
 import { CsvDownload } from "./CsvDownload";
 import { Graph } from "./Graph";
-import { ModalContainer } from "./Modal";
 import { TableContainer } from "./Table/TableContainer";
 import { FlexEndContainer } from "~/styles/FlexEndContainer";
 import AddOutlineIcon from "@rsuite/icons/AddOutline";

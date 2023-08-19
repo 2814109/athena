@@ -1,5 +1,5 @@
 import { Button, Drawer, IconButton } from "rsuite";
-import { MonthlyForm } from "../Form/MonthlyForm";
+import { MonthlyForm } from "../../../monthly/components/Form/MonthlyForm";
 import AngleRightIcon from "@rsuite/icons/legacy/AngleRight";
 
 import { useState } from "react";
