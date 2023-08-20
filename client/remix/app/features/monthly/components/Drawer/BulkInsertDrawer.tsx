@@ -1,17 +1,20 @@
 import { Button, Drawer, IconButton } from "rsuite";
 import AddOutlineIcon from "@rsuite/icons/AddOutline";
-import { Uploader } from "rsuite";
 import { useState } from "react";
 import { TypeAttributes } from "rsuite/esm/@types/common";
+import { useCreatePayment } from "~/hooks/features/payment/useCreatePayment";
+import { CreatePayment, Scalars } from "~/gql/graphql";
 
 export const BulkInsertDrawer = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const [fileState, setFileState] = useState<File>();
 
+  const { mutation } = useCreatePayment();
+
   const [placement, setPlacement] = useState<
     TypeAttributes.Placement4 | undefined
-  >();
+  >("bottom");
 
   const handleOpen = (key: TypeAttributes.Placement4 | undefined) => {
     setOpen(true);
@@ -20,14 +23,27 @@ export const BulkInsertDrawer = () => {
 
   const handleSubmit = async () => {
     const text = await fileState?.text();
+    const arrayOfCSV = text?.split("\n");
+    arrayOfCSV?.slice(1)?.forEach((line, index) => {
+      const lineElement = line.split(",");
+      // console.log(Date(lineElement[5]));
+      console.log(lineElement[5]);
+
+      const requestData: CreatePayment = {
+        categoryName: lineElement[2],
+        label: lineElement[1],
+        cost: Number(lineElement[3]),
+        paymentType: lineElement[4],
+        paymentAt: lineElement[5].split(/[TZ]/)[0],
+        userId: 1,
+      };
+      mutation.mutate(requestData);
+    });
   };
   const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e?.target?.files;
     if (files == null) return;
-
     const fileObject = files[0];
-    console.log(fileObject);
-
     setFileState(fileObject);
   };
 
