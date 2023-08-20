@@ -6,6 +6,9 @@ import { TypeAttributes } from "rsuite/esm/@types/common";
 
 export const BulkInsertDrawer = () => {
   const [open, setOpen] = useState(false);
+
+  const [fileState, setFileState] = useState<File>();
+
   const [placement, setPlacement] = useState<
     TypeAttributes.Placement4 | undefined
   >();
@@ -13,6 +16,19 @@ export const BulkInsertDrawer = () => {
   const handleOpen = (key: TypeAttributes.Placement4 | undefined) => {
     setOpen(true);
     setPlacement(key);
+  };
+
+  const handleSubmit = async () => {
+    const text = await fileState?.text();
+  };
+  const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e?.target?.files;
+    if (files == null) return;
+
+    const fileObject = files[0];
+    console.log(fileObject);
+
+    setFileState(fileObject);
   };
 
   return (
@@ -34,12 +50,7 @@ export const BulkInsertDrawer = () => {
         <Drawer.Header>
           <Drawer.Title></Drawer.Title>
           <Drawer.Actions>
-            <Button
-              appearance="primary"
-              onClick={() => {
-                console.log("run");
-              }}
-            >
+            <Button appearance="primary" onClick={handleSubmit}>
               Insert
             </Button>
 
@@ -47,22 +58,21 @@ export const BulkInsertDrawer = () => {
           </Drawer.Actions>
         </Drawer.Header>
         <Drawer.Body>
-          <Uploader
-            accept=".csv"
-            action="//jsonplaceholder.typicode.com/posts/"
-            draggable
+          <div
+            style={{
+              height: 200,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            <div
-              style={{
-                height: 200,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <span>Click or Drag files to this area to upload</span>
-            </div>
-          </Uploader>
+            <input
+              type="file"
+              accept=".csv"
+              multiple={false}
+              onChange={onFileInputChange}
+            />
+          </div>
         </Drawer.Body>
       </Drawer>
     </>
