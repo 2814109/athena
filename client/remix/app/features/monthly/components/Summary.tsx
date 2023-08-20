@@ -26,10 +26,12 @@ export const Summary = ({ payments: originPayments }: PaymentsType) => {
     <>
       <Suspense fallback={<>Loading</>}>
         <Graph payments={payments} totalCounts={totalCounts} />
-
-        <MonthlyPieChart payments={payments} />
-        <PaymentTypePieChart payments={payments} />
-
+        {(originPayments?.length ?? 0) > 0 && (
+          <>
+            <MonthlyPieChart payments={payments} />
+            <PaymentTypePieChart payments={payments} />
+          </>
+        )}
         <FlexEndContainer>
           <BulkInsertDrawer />
           {(originPayments?.length ?? 0) > 0 && (
