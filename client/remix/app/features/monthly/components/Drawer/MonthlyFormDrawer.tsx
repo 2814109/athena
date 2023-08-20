@@ -5,7 +5,7 @@ import AngleRightIcon from "@rsuite/icons/legacy/AngleRight";
 import { useState } from "react";
 import { TypeAttributes } from "rsuite/esm/@types/common";
 
-export const ModalContainer = () => {
+export const MonthlyFormDrawer = () => {
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState<
     TypeAttributes.Placement4 | undefined

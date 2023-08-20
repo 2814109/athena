@@ -7,7 +7,7 @@ import { FlexEndContainer } from "~/styles/FlexEndContainer";
 import { useMonthly } from "~/hooks/states/useMonthly";
 import { useGetAllPayment } from "~/features/monthly/hooks/useGetAllPayment";
 import { isMonthEqual } from "~/libs/isDatesEqual";
-import { ModalContainer } from "~/features/monthly/components/Modal";
+import { MonthlyFormDrawer } from "~/features/monthly/components/Drawer/MonthlyFormDrawer";
 
 export default function MonthlyPage() {
   const { monthly, handleSetMontly } = useMonthly();
@@ -39,7 +39,7 @@ export default function MonthlyPage() {
           Today
         </Button>
 
-        <ModalContainer />
+        <MonthlyFormDrawer />
       </FlexEndContainer>
 
       <Suspense fallback={<Spinner />}>

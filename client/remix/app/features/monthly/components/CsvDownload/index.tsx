@@ -13,6 +13,7 @@ export const CsvDownload = ({ payments }: PaymentsType) => {
       return fileUrl;
     } catch (err) {
       throw new Error(`${err}`);
+    } finally {
     }
   };
   return (
