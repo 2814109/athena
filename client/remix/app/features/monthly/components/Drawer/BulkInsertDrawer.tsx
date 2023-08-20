@@ -24,17 +24,15 @@ export const BulkInsertDrawer = () => {
   const handleSubmit = async () => {
     const text = await fileState?.text();
     const arrayOfCSV = text?.split("\n");
-    arrayOfCSV?.slice(1)?.forEach((line, index) => {
+    arrayOfCSV?.slice(1)?.forEach(async (line, index) => {
       const lineElement = line.split(",");
-      // console.log(Date(lineElement[5]));
-      console.log(lineElement[5]);
-
+      console.log(lineElement[2]);
       const requestData: CreatePayment = {
-        categoryName: lineElement[2],
-        label: lineElement[1],
+        categoryName: lineElement[2].replace(/"/g, ""),
+        label: lineElement[1].replace(/"/g, ""),
         cost: Number(lineElement[3]),
-        paymentType: lineElement[4],
-        paymentAt: lineElement[5].split(/[TZ]/)[0],
+        paymentType: lineElement[4].replace(/"/g, ""),
+        paymentAt: new Date(lineElement[5].replace(/"/g, "")),
         userId: 1,
       };
       mutation.mutate(requestData);
