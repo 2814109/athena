@@ -8,6 +8,7 @@ import { MonthlyPieChart } from "./PieChart/MonthlyPieChart";
 import { Suspense } from "react";
 import { PaymentsType } from "../types/PaymentsType";
 import { PaymentTypePieChart } from "./PieChart/PaymentTypePieChart";
+import { BulkInsertDrawer } from "./Drawer/BulkInsertDrawer";
 
 export const Summary = ({ payments: originPayments }: PaymentsType) => {
   const initialValue = 0;
@@ -30,9 +31,7 @@ export const Summary = ({ payments: originPayments }: PaymentsType) => {
         <PaymentTypePieChart payments={payments} />
 
         <FlexEndContainer>
-          <IconButton icon={<AddOutlineIcon />} appearance="primary">
-            Bulk
-          </IconButton>
+          <BulkInsertDrawer />
           {(originPayments?.length ?? 0) > 0 && (
             <CsvDownload payments={payments} />
           )}
