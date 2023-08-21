@@ -6,7 +6,7 @@ import { useCreatePayment } from "~/hooks/features/payment/useCreatePayment";
 import { CreatePayment, Scalars } from "~/gql/graphql";
 
 export const BulkInsertDrawer = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const [fileState, setFileState] = useState<File>();
 
