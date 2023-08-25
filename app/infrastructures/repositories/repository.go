@@ -21,6 +21,7 @@ type RepositoryInterface interface {
 	GetPaymentsByUserId(ctx context.Context, userId int) (models.PaymentSlice, error)
 	FindAllPaymentType(ctx context.Context) (*models.PaymentTypeSlice, error)
 	DeletePaymentById(ctx context.Context, paymentId int) (bool, error)
+	CreateIncome(ctx context.Context, input model.CreateIncome) (*models.Income, error)
 }
 
 func NewRepository() RepositoryInterface {
