@@ -1,6 +1,9 @@
-"use client";
-import { Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/button";
 
-export default function Index() {
-  return <Button>Click me</Button>;
+export default function Page() {
+  return (
+    <div>
+      <Button>Click me</Button>
+    </div>
+  );
 }
