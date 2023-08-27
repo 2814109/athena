@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import { PaymentsType } from "../types/PaymentsType";
 import { PaymentTypePieChart } from "./PieChart/PaymentTypePieChart";
 import { BulkInsertDrawer } from "./Drawer/BulkInsertDrawer";
+import { EngelCoefficient } from "./EngelCoefficient";
 
 export const Summary = ({ payments: originPayments }: PaymentsType) => {
   const initialValue = 0;
@@ -29,6 +30,7 @@ export const Summary = ({ payments: originPayments }: PaymentsType) => {
         {(originPayments?.length ?? 0) > 0 && (
           <>
             <MonthlyPieChart payments={payments} />
+            <EngelCoefficient payments={payments} />
             <PaymentTypePieChart payments={payments} />
           </>
         )}
