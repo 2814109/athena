@@ -18,7 +18,7 @@ import (
 
 func UpsertSeederOfPaymentTypes(ctx context.Context, connectDB *sql.DB) {
 	// string as status pattern
-	paymentTypes := []string{"Cash", "CreditCard", "Loan"}
+	paymentTypes := []string{"Cash", "CreditCard", "Loan", "DirectDebit"}
 
 	paymentTypesModel := lop.Map(paymentTypes, func(paymentType string, _ int) models.PaymentType {
 		return models.PaymentType{
