@@ -12,7 +12,7 @@ func (repository *repository) CreateIncome(ctx context.Context, input model.Crea
 
 	resource := &models.Income{
 		Label:    input.Label,
-		Amount:   input.Cost,
+		Amount:   input.Amount,
 		UserID:   input.UserID,
 		IncomeAt: input.IncomeAt,
 	}

@@ -1,7 +1,6 @@
 input CreateIncome {
   label: String!
   incomeAt: Time!
-  cost: Int!
   userId: Int!
   amount: Int!
 }
